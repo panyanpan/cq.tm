@@ -9,8 +9,8 @@
 // @icon         https://sdk.zwnet.cn/favicon.ico
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.hep.main.user.js
-// @updateURL https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.hep.main.user.js
+// @downloadURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.user.js
+// @updateURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.user.js
 // ==/UserScript==
 
 (function () {
@@ -851,8 +851,7 @@
                 }
             }
             if (!rewardBool_Mochao && new Date().getDay() == 0 && new Date().toLocaleTimeString() >= '22:25:00') {
-                for (i = 1; i < 12; i++) {// i=n?
-                    await new Promise(resolve => setTimeout(resolve, 400));
+                for (i = 1; i < 12; i++) {// i=n?                    
                     //net.MochaoModel.ins().send11(t.info.id);  //reward 1-n
                 }
                 rewardBool_Mochao = true;

@@ -816,6 +816,7 @@
         p_alert_success('已关闭');
     }
 
+    var para_IntervalId_Hot = null;
     function beginTimer_f_Hot(mapid, deliverId) {
         console.log("benginTime-Hot:" + new Date().toLocaleString());
         if (para_IntervalId_Hot != null) {

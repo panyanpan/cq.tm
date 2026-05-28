@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.01
+// @version      1.02
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -168,11 +168,6 @@
         { name: "造化2", mapId: 6268, deliverId: 600149 },
         { name: "造化3", mapId: 5570, deliverId: 600150 },
         { name: "造化4", mapId: 5568, deliverId: 600151 },
-        // { name: "木仙1", mapId: 31001, deliverId: 6101 },
-        // { name: "木仙2", mapId: 31002, deliverId: 6102 },
-        // { name: "木仙3", mapId: 31003, deliverId: 6103 },
-        // { name: "木仙4", mapId: 31004, deliverId: 6104 },
-        // { name: "炽热1", mapId: 31005, deliverId: 6105 },//???
         { name: "镇狱1", mapId: 6122, deliverId: 400101 },
         { name: "镇狱2", mapId: 6123, deliverId: 400102 },
         { name: "福地1", mapId: 200072, deliverId: 600141 },
@@ -183,10 +178,6 @@
         { name: "圣地6", mapId: 7129, deliverId: 600177 },
         { name: "圣地5el", mapId: 7155, deliverId: 600276 },
         { name: "圣地6el", mapId: 7156, deliverId: 600277 },
-        // { name: "造化1", mapId: 1621, deliverId: 600147 },//???
-        // { name: "造化2", mapId: 1621, deliverId: 600148 },//???
-        // { name: "造化3", mapId: 1621, deliverId: 600149 },//???
-        // { name: "造化4", mapId: 1621, deliverId: 600150 },//???
         { name: "灵魂1", mapId: 1621, deliverId: 1497 },
         { name: "灵魂2", mapId: 1622, deliverId: 1498 },
         { name: "灵魂3", mapId: 1623, deliverId: 1499 }
@@ -470,23 +461,23 @@
                 await new Promise(resolve => setTimeout(resolve, 400));
                 net.PlayModel.ins().send3(4901);    //gotomap
                 await new Promise(resolve => setTimeout(resolve, 400));
-                gd.map.gotoStagePoint(55, 60, gd.map.curMapId, false);
+                gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
             }
             if (gd.map.curMapId == 4901 && emIns.firstPlayer.fighterObject.delayhp == 0) {
                 await new Promise(resolve => setTimeout(resolve, 10200));
                 clickCanvasAt(1130, 400);
                 await new Promise(resolve => setTimeout(resolve, 500));
-                gd.map.gotoStagePoint(55, 60, gd.map.curMapId, false);
+                gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
             }
             if (gd.arpgInst.autoFightType == 3) {
                 gd.arpgInst.setAutoFight(1);
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 2018 && !rewardBool_Sifang) {
-                for (i = 1; i < 11; i++) {
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    net.FairyislandModel.ins().send3(i); //reward  1-10
-                }
+            if (new Date().getHours() * 100 + new Date().getMinutes() > 2017 && !rewardBool_Sifang) {
                 rewardBool_Sifang = true;
+                for (i = 1; i < 11; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    net.FairyislandModel.ins().send3(i); //reward  1-10
+                }                
             }
             if (new Date().getHours() * 100 + new Date().getMinutes() > 2020) {
                 clearInterval(para_intervalIdSifang);
@@ -662,11 +653,11 @@
                 gd.arpgInst.setAutoFight(1);
             }
             if (new Date().getHours() * 100 + new Date().getMinutes() > 2028 && !rewardBool_Qunxiong) {
-                for (i = 1; i < 12; i++) {
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    net.PvpShabakeModel.ins().send7(i); //reward  1-11
-                }
                 rewardBool_Qunxiong = true;
+                for (i = 1; i < 12; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    net.PvpShabakeModel.ins().send7(i); //reward  1-11
+                }                
             }
             if (new Date().getHours() * 100 + new Date().getMinutes() > 2030) {
                 clearInterval(para_intervalIdQunxiong);
@@ -771,6 +762,7 @@
         p_alert_success('已关闭');
     }
 
+    var para_IntervalId_Ice3 = null;
     function beginTimer_f_Ice3(mapid, deliverId) {
         console.log("benginTime-Ice3:" + new Date().toLocaleString());
         if (para_IntervalId_Ice3 != null) {
@@ -824,6 +816,65 @@
         p_alert_success('已关闭');
     }
 
+    function beginTimer_f_Hot(mapid, deliverId) {
+        console.log("benginTime-Hot:" + new Date().toLocaleString());
+        if (para_IntervalId_Hot != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Hot");
+            p_alert_success('运行中...');
+            return;
+        }
+        para_IntervalId_Hot = setInterval(async () => {//Hot 17:30-17:40
+            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            if ((nowDate > 1729 && nowDate < 1740) && para_IntervalId_Hot != null) {
+                if (para_globalBool == true) {
+                    para_globalBool = false;
+                }
+                if (emIns.firstPlayer.fighterObject.delayhp == 0) {
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    clickCanvasAt(1130, 400);
+                }
+                if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
+                    && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
+                    Logic.deliverToFindNpc(600300);//biqi1  81
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    await new Promise(resolve => setTimeout(resolve, 4000));
+                    net.CureModel.ins().send2(0);    //click cure
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    net.PlayModel.ins().send3(5618);      //hot  5618  
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
+                }
+                if (gd.map.curMapId != 5618) {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    net.PlayModel.ins().send3(5618);//5618 5618  
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
+                }
+                if (gd.arpgInst.autoFightType == 3) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    gd.arpgInst.setAutoFight(1);
+                }
+            }
+            if (nowDate > 1740) {
+                stopTimer_f_Hot();
+            }
+        }, 6000);
+        p_alert_success('开始（Hot）');
+    }
+
+    function stopTimer_f_Hot() {
+        if (para_IntervalId_Hot != null) {
+            clearInterval(para_IntervalId_Hot);
+            para_IntervalId_Hot = null;
+            para_globalBool = true;
+            console.log('定时器已关闭time-Hot:' + new Date().toLocaleString());
+        } else {
+            console.log('暂无运行中的定时器time-Hot:' + new Date().toLocaleString());
+        }
+        p_alert_success('已关闭');
+    }
+
     //child shentai mochao---------------------------------------------------------------------------------------------------
     function findMochao(start, end) {//auto-MoChao(Shentai)
         for (let i = start; i <= end; i++) {
@@ -851,10 +902,10 @@
                 }
             }
             if (!rewardBool_Mochao && new Date().getDay() == 0 && new Date().toLocaleTimeString() >= '22:25:00') {
-                for (i = 1; i < 12; i++) {// i=n?                    
-                    //net.MochaoModel.ins().send11(t.info.id);  //reward 1-n
-                }
                 rewardBool_Mochao = true;
+                for (i = 1; i < 12; i++) {                   
+                    //net.MochaoModel.ins().send11(i);  //reward 1-n
+                }                
             }
         }
     }
@@ -892,6 +943,7 @@
             case 5: stopTimer_f_Yanhuo(); break;
             case 6: stopTimer_f_Cjzc(); break;
             case 7: stopTimer_f_Ice3(); break;
+            case 8: stopTimer_f_Hot(); break;
 
             case 21: stopTimer_f_Xian(31001, 6101); break;
             case 22: stopTimer_f_Xian(31002, 6102); break;
@@ -911,6 +963,7 @@
             case 5: beginTimer_f_Yanhuo(); break;
             case 6: beginTimer_f_Cjzc(); break;
             case 7: beginTimer_f_Ice3(); break;
+            case 8: beginTimer_f_Hot(); break;
 
             case 21: beginTimer_f_Xian(31001, 6101); break;
             case 22: beginTimer_f_Xian(31002, 6102); break;
@@ -937,6 +990,7 @@
         { value: 5, text: '焰火' },
         { value: 6, text: '刺激' },
         { value: 7, text: '冰宫3' },
+        { value: 8, text: '炽热' },
         // { value: 11, text: '猴1' },
         // { value: 12, text: '猴2' },
         // { value: 13, text: '猴3' },

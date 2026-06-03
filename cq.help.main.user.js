@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.03
+// @version      1.04
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -57,9 +57,13 @@
                 try {
                     para_mochaoCount++;
                     if (para_mochaoCount % 10 == 0) {
-                        uim.show(503, new UIData(null, 3));
+                        uim.show(503, new UIData(null, 3));                        
                         await new Promise(resolve => setTimeout(resolve, 500));
                         uim.hide(503);
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        uim.show(820);
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        uim.hide(820);
                     }
                     findMochao_Occupy();
                 }
@@ -297,7 +301,7 @@
                     await new Promise(resolve => setTimeout(resolve, 100));
                     gd.arpgInst.setAutoFight(1);
                 }
-                if (new Date().getHours() * 100 + new Date().getMinutes() > 1220) {
+                if (new Date().getHours() * 100 + new Date().getMinutes() > 1220 || gd.honourbattle.wzzbCountInfo.leftCount == 0) {
                     // if(new Date().getHours() * 100 + new Date().getMinutes() > 2130){
                     clearInterval(para_IntervalId_wzzb);
                     uim.hide(318);//wzzb
@@ -887,8 +891,10 @@
 
     //child shentai mochao---------------------------------------------------------------------------------------------------
     function findMochao(start, end) {//auto-MoChao(Shentai)
-        for (let i = start; i <= end; i++) {
-            if (gd.mochao.moChaoInfo[i].status == 0) { return i; }
+        if (gd.mochao.moChaoInfo != null) {
+            for (let i = start; i <= end; i++) {
+                if (gd.mochao.moChaoInfo[i].status == 0) { return i; }
+            }
         }
         return null;
     }
@@ -905,7 +911,7 @@
             //     console.log("moChaoTimelog:" + new Date().toLocaleString() + gd.mochao.moChaoInfo[para_mc.moChaoId].occupyRoleName + "----" + para_mc.moChaoId);
             // }
             if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
-                var para_Shentai = findMochao(810, 850) || findMochao(910, 999);//findMochao(704, 751) || findMochao(804, 999);
+                var para_Shentai = findMochao(711, 751) || findMochao(850, 999);//findMochao(704, 751) || findMochao(804, 999);
                 if (para_Shentai) {
                     net.MochaoModel.ins().send3(para_Shentai, 0);
                     console.log("moChaoTimeOccupy:" + new Date().toLocaleString());

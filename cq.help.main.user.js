@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.04
+// @version      1.05
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -56,16 +56,16 @@
                 console.log("logServerTime:" + new Date(DateUtil.serverNow()).toLocaleString());
                 try {
                     para_mochaoCount++;
-                    if (para_mochaoCount % 10 == 0) {
-                        uim.show(503, new UIData(null, 3));                        
+                    if (para_mochaoCount % 5 == 0) {
+                        uim.show(503, new UIData(null, 3));
                         await new Promise(resolve => setTimeout(resolve, 500));
                         uim.hide(503);
                         await new Promise(resolve => setTimeout(resolve, 500));
                         uim.show(820);
                         await new Promise(resolve => setTimeout(resolve, 500));
                         uim.hide(820);
+                        findMochao_Occupy();
                     }
-                    findMochao_Occupy();
                 }
                 catch (error) { console.log1("time-findMochao_Occupy-error:" + error); }  //auto occupy MoChao
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
@@ -78,7 +78,7 @@
                     Logic.deliverToFindNpc(600300);//biqi1
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
-                    await new Promise(resolve => setTimeout(resolve, 4000));
+                    await new Promise(resolve => setTimeout(resolve, 60000));
                     net.CureModel.ins().send2(0);    //click cure
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 }
@@ -534,7 +534,8 @@
                     await new Promise(resolve => setTimeout(resolve, 100));
                     gd.arpgInst.setAutoFight(1);
                 }
-                if (new Date().getHours() * 100 + new Date().getMinutes() > 1900) {
+                //if (new Date().getHours() * 100 + new Date().getMinutes() > 1900) {
+                if (nowDate > 1900 || gd.honourbattle.dfData.leftCount == 0) {
                     clearInterval(para_IntervalId_cjzc);
                     uim.hide(318);//cjzc
                     console.log("clearIntervalTime-Cjzc:" + new Date().toLocaleString());
@@ -753,7 +754,7 @@
                     Logic.deliverToFindNpc(deliverId);
                 }
             }
-            if (nowDate > 1715) {
+            if (nowDate > 1715 || (nowDate > 1705 && gd.map.curMapId == mapid && gd.map.tombInfo.length == 1)) {
                 clearInterval(para_IntervalId_Xian);
                 para_IntervalId_Xian = null;
                 para_globalBool = true;
@@ -776,7 +777,7 @@
     }
 
     var para_IntervalId_Ice3 = null;
-    function beginTimer_f_Ice3(mapid, deliverId) {
+    function beginTimer_f_Ice3() {
         console.log("benginTime-Ice3:" + new Date().toLocaleString());
         if (para_IntervalId_Ice3 != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Ice3");
@@ -799,8 +800,10 @@
                     await new Promise(resolve => setTimeout(resolve, 4000));
                     net.CureModel.ins().send2(0);    //click cure
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    Logic.deliverToFindNpc(600089);      //bingong3  200052
-                    console.log("gotoMapTime:" + new Date().toLocaleString());
+                    if (emIns.firstPlayer.fighterObject.delayhp > emIns.firstPlayer.fighterObject.maxHp * 0.9) {
+                        Logic.deliverToFindNpc(600089);      //bingong3  200052
+                        console.log("gotoMapTime:" + new Date().toLocaleString());
+                    }
                 }
                 if (gd.map.curMapId != 200052) {
                     await new Promise(resolve => setTimeout(resolve, 200));
@@ -811,7 +814,7 @@
                     gd.arpgInst.setAutoFight(1);
                 }
             }
-            if (nowDate > 1145) {
+            if (nowDate > 1145 || (nowDate > 1135 && gd.map.curMapId == 200052 && gd.map.tombInfo.length == 7)) {
                 stopTimer_f_Ice3();
             }
         }, 2000);
@@ -830,7 +833,13 @@
     }
 
     var para_IntervalId_Hot = null;
-    function beginTimer_f_Hot(mapid, deliverId) {
+    var para_boss_hot = [
+        { mid: 9900101, x: 17, y: 87 },
+        { mid: 9900102, x: 17, y: 23 },
+        { mid: 9900103, x: 77, y: 23 },
+        { mid: 9900104, x: 77, y: 86 }
+    ];
+    function beginTimer_f_Hot() {
         console.log("benginTime-Hot:" + new Date().toLocaleString());
         if (para_IntervalId_Hot != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Hot");
@@ -864,13 +873,22 @@
                     net.PlayModel.ins().send3(5618);//5618 5618  
                     await new Promise(resolve => setTimeout(resolve, 400));
                     gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
+                    // para_boss_hot.forEach((item) => {
+                    //     if (!gd.map.tombInfo.some(p => p.mid === item.mid)) {
+                    //         var para_xy = gd.emIns.firstPlayer.fighterObject;
+                    //         if (Math.abs(item.x - para_xy.x) > 10 || Math.abs(item.y - para_xy.y) > 10) {
+                    //             gd.map.gotoStagePoint(item.x, item.y, gd.map.curMapId, false);
+                    //             break;
+                    //         }
+                    //     }
+                    // });
                 }
                 if (gd.arpgInst.autoFightType == 3) {
                     await new Promise(resolve => setTimeout(resolve, 100));
                     gd.arpgInst.setAutoFight(1);
                 }
             }
-            if (nowDate > 1740) {
+            if (nowDate > 1740 || (nowDate > 1732 && gd.map.curMapId == 5618 && gd.map.tombInfo.length == 4)) {
                 stopTimer_f_Hot();
             }
         }, 6000);

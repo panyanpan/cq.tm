@@ -351,10 +351,10 @@
                     f_Child_Blood();
                 }
             }
-            if (nowHourPY >= 1930 && nowHourPY <= 1949 && gd.map.curMapId == 700 && para_IntervalId == null) {
-                para_globalBool = false;
-                f_Child_Blood();
-            }
+            // if (nowHourPY >= 1930 && nowHourPY <= 1949 && gd.map.curMapId == 700 && para_IntervalId == null) {
+            //     para_globalBool = false;
+            //     f_Child_Blood();
+            // }
             if (nowHourPY > 1950) {
                 stopTimer_f_Blood();
             }
@@ -371,16 +371,13 @@
                 await new Promise(resolve => setTimeout(resolve, 100));
                 gd.arpgInst.setAutoFight(1);
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 1950) {
-                clearInterval(para_IntervalId);
-                clearInterval(para_intervalIdBlood);
-                console.log("clearIntervalTime-blood:" + new Date().toLocaleString());
-            }
         }, 1000);
     }
 
     function stopTimer_f_Blood() {
         if (para_intervalIdBlood != null) {
+            clearInterval(para_IntervalId);
+            para_IntervalId = null;
             clearInterval(para_intervalIdBlood);
             para_intervalIdBlood = null;
             console.log('定时器已关闭time-Blood:' + new Date().toLocaleString());
@@ -488,16 +485,15 @@
             if (gd.arpgInst.autoFightType == 3) {
                 gd.arpgInst.setAutoFight(1);
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 2016 && !rewardBool_Sifang) {
+            if (nowHourPY > 2017 && !rewardBool_Sifang) {
                 rewardBool_Sifang = true;
                 for (i = 1; i < 11; i++) {
                     await new Promise(resolve => setTimeout(resolve, 100));
                     net.FairyislandModel.ins().send3(i); //reward  1-10
                 }
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 2020) {
-                clearInterval(para_intervalIdSifang);
-                console.log("clearIntervalTime-Sifang:" + new Date().toLocaleString());
+            if (nowHourPY > 2020) {
+                stopTimer_f_Sifang();
             }
         }, 2000);
         p_alert_success('开始辅助（四方）');
@@ -669,17 +665,15 @@
             if (gd.arpgInst.autoFightType == 3) {
                 gd.arpgInst.setAutoFight(1);
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 2026 && !rewardBool_Qunxiong) {
+            if (nowHourPY > 2026 && !rewardBool_Qunxiong) {
                 rewardBool_Qunxiong = true;
                 for (i = 1; i < 12; i++) {
                     await new Promise(resolve => setTimeout(resolve, 100));
                     net.PvpShabakeModel.ins().send7(i); //reward  1-11
                 }
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 2030) {
-                clearInterval(para_intervalIdQunxiong);
-                para_intervalIdQunxiong = null;
-                console.log("clearIntervalTime-Qunxiong:" + new Date().toLocaleString());
+            if (nowHourPY > 2030) {
+                stopTimer_f_Qunxiong();
             }
         }, 2000);
         p_alert_success('开始辅助（群雄）');
@@ -930,21 +924,26 @@
         //     net.MochaoModel.ins().send3(para_Shentai1, 0);
         //     console.log("moChaoTimeOccupy:" + new Date().toLocaleString());
         // }
-        if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date().toLocaleTimeString() >= '10:00:00')) {
+        console.log("moChaoTimeOccupy11:" + new Date().toLocaleString());
+        if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date() > new Date().setHours(10, 0, 0, 0))) {
             var para_mc = gd.mochao.getMyMoChaoData();
             // if (!para_mc || Object.keys(para_mc).length > 0) {
             //     console.log("moChaoTimelog:" + new Date().toLocaleString() + gd.mochao.moChaoInfo[para_mc.moChaoId].occupyRoleName + "----" + para_mc.moChaoId);
             // }
             if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
+                console.log("moChaoTimeOccupy12:" + new Date().toLocaleString());
                 var para_Shentai = findMochao(711, 751) || findMochao(850, 999);//findMochao(704, 751) || findMochao(804, 999);
                 if (para_Shentai) {
                     net.MochaoModel.ins().send3(para_Shentai, 0);
                     console.log("moChaoTimeOccupy:" + new Date().toLocaleString());
+                    console.log("moChaoTimeOccupy13:" + new Date().toLocaleString());
+                } else {
+                    console.log("moChaoTimeOccupy14:" + new Date().toLocaleString());
                 }
             }
-            if (!rewardBool_Mochao && new Date().getDay() == 0 && new Date().toLocaleTimeString() >= '22:25:00') {
+            if (!rewardBool_Mochao && new Date().getDay() == 0 && new Date() > new Date().setHours(22, 20, 0, 0)) {
                 rewardBool_Mochao = true;
-                for (i = 1; i < 12; i++) {
+                for (var i = 1; i < 12; i++) {
                     //net.MochaoModel.ins().send11(i);  //reward 1-n
                 }
             }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.05
+// @version      1.06
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -81,6 +81,9 @@
                     await new Promise(resolve => setTimeout(resolve, 60000));
                     net.CureModel.ins().send2(0);    //click cure
                     await new Promise(resolve => setTimeout(resolve, 1000));
+                    // if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9) {
+                    //     return;
+                    // }
                 }
                 if (nowHourPY >= 1145 && nowHourPY < 1150 && gd.map.curMapId != 6077 && para_yabiaoCount == 0) {
                     // if(nowHourPY >= 2131 && nowHourPY < 2136 ){
@@ -485,7 +488,7 @@
             if (gd.arpgInst.autoFightType == 3) {
                 gd.arpgInst.setAutoFight(1);
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 2017 && !rewardBool_Sifang) {
+            if (new Date().getHours() * 100 + new Date().getMinutes() > 2016 && !rewardBool_Sifang) {
                 rewardBool_Sifang = true;
                 for (i = 1; i < 11; i++) {
                     await new Promise(resolve => setTimeout(resolve, 100));
@@ -666,7 +669,7 @@
             if (gd.arpgInst.autoFightType == 3) {
                 gd.arpgInst.setAutoFight(1);
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 2028 && !rewardBool_Qunxiong) {
+            if (new Date().getHours() * 100 + new Date().getMinutes() > 2026 && !rewardBool_Qunxiong) {
                 rewardBool_Qunxiong = true;
                 for (i = 1; i < 12; i++) {
                     await new Promise(resolve => setTimeout(resolve, 100));
@@ -675,6 +678,7 @@
             }
             if (new Date().getHours() * 100 + new Date().getMinutes() > 2030) {
                 clearInterval(para_intervalIdQunxiong);
+                para_intervalIdQunxiong = null;
                 console.log("clearIntervalTime-Qunxiong:" + new Date().toLocaleString());
             }
         }, 2000);
@@ -866,6 +870,9 @@
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     net.PlayModel.ins().send3(5618);      //hot  5618  
                     await new Promise(resolve => setTimeout(resolve, 400));
+                    // if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9) {
+                    //     return;
+                    // }
                     gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
                 }
                 if (gd.map.curMapId != 5618) {
@@ -1009,6 +1016,7 @@
     f_CreateButton(5, 5, "关闭", stopTimer);
     f_CreateButton(30, 5, "关闭", stopTimer_f_Yiji);
     f_CreateButton(55, 5, "关闭", stopTimer_f_Common);
+    f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);
     // f_CreateButton(80, 5, "relive", f_globalRelive);
 
     f_CreateButton(5, 40, "开始", beginTimer);
@@ -1171,6 +1179,28 @@
     };
     window.p_alert_error = (msg) => window.p_alert('error', msg);
     window.p_alert_success = (msg) => window.p_alert('success', msg);
+
+
+    var para_IntervalId_Ronglian = null;
+    //auto ronglian
+    function beginTimer_f_Ronglian() {
+        console.log("beginTimer_f_Ronglian:" + new Date().toLocaleString());
+        if (para_IntervalId_Ronglian != null) {
+            clearInterval(para_IntervalId_Ronglian);
+            para_IntervalId_Ronglian = null;
+            p_alert_success('已关闭（Ronglian）');
+        }
+        else {
+            para_IntervalId_Ronglian = setInterval(async () => {
+                // uim.show(503, new UIData(null, 3));
+                // await new Promise(resolve => setTimeout(resolve, 2000));
+                clickCanvasAt(725, 517); //linux
+                // await new Promise(resolve => setTimeout(resolve, 2000));
+                // uim.hide(503);
+            }, 600000);
+            p_alert_success('已开始（Ronglian）');
+        }
+    }
 
     //gotomap
     function p_TimeGotoMap(config) {

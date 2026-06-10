@@ -912,7 +912,7 @@
     function findMochao(start, end) {//auto-MoChao(Shentai)
         if (gd.mochao.moChaoInfo != null) {
             for (let i = start; i <= end; i++) {
-                if (gd.mochao.moChaoInfo[i].status == 0) { return i; }
+                if (gd.mochao.moChaoInfo[i]?.status == 0) { return i; }
             }
         }
         return null;

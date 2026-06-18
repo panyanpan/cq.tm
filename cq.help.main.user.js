@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.06
+// @version      1.07
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -67,7 +67,7 @@
                         findMochao_Occupy();
                     }
                 }
-                catch (error) { console.log1("time-findMochao_Occupy-error:" + error); }  //auto occupy MoChao
+                catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }  //auto occupy MoChao
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     clickCanvasAt(1130, 400);
                     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -81,9 +81,6 @@
                     await new Promise(resolve => setTimeout(resolve, 60000));
                     net.CureModel.ins().send2(0);    //click cure
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    // if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9) {
-                    //     return;
-                    // }
                 }
                 if (nowHourPY >= 1145 && nowHourPY < 1150 && gd.map.curMapId != 6077 && para_yabiaoCount == 0) {
                     // if(nowHourPY >= 2131 && nowHourPY < 2136 ){
@@ -109,7 +106,7 @@
                     para_yabiaoCount = 0;
                 }
 
-                if (nowHourPY >= 1200 && nowHourPY < 1230 && para_IntervalId_wzzb == null) {
+                if (nowHourPY >= 1200 && nowHourPY < 1220 && para_IntervalId_wzzb == null) {
                     beginTimer_f_Wzzb();
                 }
 
@@ -289,6 +286,9 @@
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
             if ((nowDate > 1200 && nowDate < 1220) && para_IntervalId_wzzb != null) {
                 // if((nowDate > 2100 && nowDate < 2130) && para_IntervalId_wzzb != null){
+                if (para_globalBool == true) {
+                    para_globalBool = false;
+                }
                 if (gd.map.curMapId != 3601) {
                     uim.show(318);
                 }
@@ -305,10 +305,8 @@
                     gd.arpgInst.setAutoFight(1);
                 }
                 if (new Date().getHours() * 100 + new Date().getMinutes() > 1220 || gd.honourbattle.wzzbCountInfo.leftCount == 0) {
-                    // if(new Date().getHours() * 100 + new Date().getMinutes() > 2130){
-                    clearInterval(para_IntervalId_wzzb);
                     uim.hide(318);//wzzb
-                    console.log("clearIntervalTime-Wzzb:" + new Date().toLocaleString());
+                    stopTimer_f_Wzzb();
                 }
             }
         }, 3000);
@@ -322,6 +320,7 @@
         } else {
             console.log('暂无运行中的定时器time-Wzzb:' + new Date().toLocaleString());
         }
+        para_globalBool = true;
         p_alert_success('已关闭');
     }
 
@@ -351,10 +350,10 @@
                     f_Child_Blood();
                 }
             }
-            // if (nowHourPY >= 1930 && nowHourPY <= 1949 && gd.map.curMapId == 700 && para_IntervalId == null) {
-            //     para_globalBool = false;
-            //     f_Child_Blood();
-            // }
+            if (nowHourPY >= 1930 && nowHourPY <= 1949 && gd.map.curMapId == 700 && para_IntervalId == null) {
+                para_globalBool = false;
+                f_Child_Blood();
+            }
             if (nowHourPY > 1950) {
                 stopTimer_f_Blood();
             }
@@ -471,8 +470,11 @@
         para_intervalIdSifang = setInterval(async () => {//20:00  curMapId=4901
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
             if (nowHourPY >= 2000 && nowHourPY < 2220 && gd.map.curMapId != 4901) {
+                if (para_globalBool == true) {
+                    para_globalBool = false;
+                }
                 await new Promise(resolve => setTimeout(resolve, 400));
-                net.PlayModel.ins().send3(4901);    //gotomap
+                net.PlayModel.ins().send3(4901);    //gotomap                
                 await new Promise(resolve => setTimeout(resolve, 400));
                 gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
             }
@@ -506,6 +508,7 @@
         } else {
             console.log('暂无运行中的定时器time-Sifang:' + new Date().toLocaleString());
         }
+        para_globalBool = true;
         p_alert_success('已关闭');
     }
 
@@ -521,6 +524,9 @@
         para_IntervalId_cjzc = setInterval(async () => {//cjzc 16:00-16:30    18:30-19:00
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
             if ((nowDate > 1845 && nowDate < 1900) && para_IntervalId_cjzc != null) {
+                if (para_globalBool == true) {
+                    para_globalBool = false;
+                }
                 if (gd.map.curMapId != 37001) {
                     uim.show(318, new UIData(null, 6));//cjzc
                 }
@@ -535,9 +541,8 @@
                 }
                 //if (new Date().getHours() * 100 + new Date().getMinutes() > 1900) {
                 if (nowDate > 1900 || gd.honourbattle.dfData.leftCount == 0) {
-                    clearInterval(para_IntervalId_cjzc);
                     uim.hide(318);//cjzc
-                    console.log("clearIntervalTime-Cjzc:" + new Date().toLocaleString());
+                    stopTimer_f_Cjzc();
                 }
             }
         }, 3000);
@@ -552,12 +557,11 @@
         } else {
             console.log('暂无运行中的定时器time-Cjzc:' + new Date().toLocaleString());
         }
+        para_globalBool = true;
         p_alert_success('已关闭');
     }
     //child shenmo-----------------------------------------------------------------------------------------------------------
     var para_intervalIdShenmo = null;
-    var para_lastX //emIns.firstPlayer.fighterObject.gridX;
-    var para_lastY //emIns.firstPlayer.fighterObject.gridY;
     var p_iCount = 0;
     function beginTimer_f_Shenmo() {
         console.log("benginTime-Shemo:" + new Date().toLocaleString());
@@ -568,20 +572,26 @@
         }
         para_intervalIdShenmo = setInterval(async () => {//21:30  curMapId=53001
             if (para_globalBool == true && gd.map.curMapId == 53001) {
-                para_globalBool = false;  //全局优先
+                para_globalBool = false;
             }
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
-            if (nowHourPY >= 2131 && nowHourPY < 2141 && gd.map.curMapId != 53001) {
+            if (nowHourPY >= 2131 && nowHourPY < 2135 && gd.map.curMapId != 53001) {
                 await new Promise(resolve => setTimeout(resolve, 400));
                 net.GamepvpModel.ins().send1(DaKuafuType.qdjd); //gotomap
                 await new Promise(resolve => setTimeout(resolve, 400));
-                gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
+                if (gd.map.curMapId == 53001) {
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
+                }
             }
-            if (nowHourPY >= 2143 && nowHourPY < 2153 && gd.map.curMapId != 53001) {
+            if (nowHourPY >= 2145 && nowHourPY < 2150 && gd.map.curMapId != 53001) {
                 await new Promise(resolve => setTimeout(resolve, 400));
                 net.GamepvpModel.ins().send1(DaKuafuType.qdjd); //gotomap
                 await new Promise(resolve => setTimeout(resolve, 400));
-                gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
+                if (gd.map.curMapId == 53001) {
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
+                }
             }
             if (gd.map.curMapId == 53001 && emIns.firstPlayer.fighterObject.delayhp == 0) {
                 await new Promise(resolve => setTimeout(resolve, 3200));
@@ -590,37 +600,52 @@
                 gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
             }
             p_iCount++;
-            if (p_iCount % 15 == 0 && gd.map.curMapId == 53001) {
+            if (p_iCount % 10 == 0 && gd.map.curMapId == 53001) {
                 // clickCanvasAt(222, 247);//get reward
-                const rewardNum = 0;
-                if (gd.honourbattle.nowqzjdkillnum > 9 && gd.honourbattle.nowqzjdkillnum % 2 != 0) {
-                    rewardNum = gd.honourbattle.nowqzjdkillnum - 1;
-                } else {
-                    rewardNum = gd.honourbattle.nowqzjdkillnum;
+                // const rewardNum = 1;
+                // if (gd.honourbattle.nowqzjdkillnum > 9 && gd.honourbattle.nowqzjdkillnum % 2 != 0) {
+                //     rewardNum = gd.honourbattle.nowqzjdkillnum - 1;
+                // } else {
+                //     rewardNum = gd.honourbattle.nowqzjdkillnum;
+                // }
+                // net.CanyonHegemonyModel.ins().send16(rewardNum);//get reward
+                // console.log("time-Shenmo get reward:" + rewardNum + "----" + new Date().toLocaleString());
+                try {
+                    var t = cm.kuafuduodiankillrewards
+                        , i = 0
+                        , r = 0;
+                    for (var a in t) {
+                        if (t[a].needKill > gd.honourbattle.qzjdgetkillnum) {
+                            i = t[a].id;
+                            break
+                        }
+                        r = t[a].id
+                    }
+                    var n = cm.kuafuduodiankillrewards[i];
+                    if (n.needKill <= gd.honourbattle.nowqzjdkillnum) {
+                        net.CanyonHegemonyModel.ins().send16(n.needKill);
+                    }
+                } catch (error) {
+                    console.error('time-shenmo-error:', new Date().toLocaleString() + "--" + error.message);
                 }
-                net.CanyonHegemonyModel.ins().send16(rewardNum);//get reward
 
-                var para_nowX = emIns.firstPlayer.fighterObject.gridX;
-                var para_nowY = emIns.firstPlayer.fighterObject.gridY;
-                if (para_nowX == para_lastX && para_nowY == para_lastY) {
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                    gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
+                const currentX = emIns.firstPlayer.fighterObject.gridX;
+                const currentY = emIns.firstPlayer.fighterObject.gridY;
+                if (Math.abs(currentX - x) > 15 || Math.abs(currentY - y) > 15) {
+                    gd.map.gotoStagePoint(x, y, gd.map.curMapId, false);//center xy
                 }
-                para_lastX = para_nowX;
-                para_lastY = para_nowY;
             }
             if (gd.arpgInst.autoFightType == 3) {
                 gd.arpgInst.setAutoFight(1);
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 2155) {
-                clearInterval(para_intervalIdShenmo);
-                para_globalBool = true;
-                console.log("clearIntervalTime-Shenmo:" + new Date().toLocaleString());
+            if (new Date().getHours() * 100 + new Date().getMinutes() > 2158) {
+                stopTimer_f_Shenmo();
             }
         }, 2000);
         p_alert_success('开始辅助（神魔）');
     }
     function stopTimer_f_Shenmo() {
+        para_globalBool = true;        
         if (para_intervalIdShenmo != null) {
             clearInterval(para_intervalIdShenmo);
             para_intervalIdShenmo = null;
@@ -628,7 +653,6 @@
         } else {
             console.log('暂无运行中的定时器time-Shemo:' + new Date().toLocaleString());
         }
-        para_globalBool = true;
         p_alert_success('已关闭');
     }
 
@@ -645,6 +669,9 @@
         para_intervalIdQunxiong = setInterval(async () => {//20:30  curMapId=4002,4001
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
             if (nowHourPY >= 2000 && nowHourPY < 2030 && (gd.map.curMapId != 4001 && gd.map.curMapId != 4002)) {
+                if (para_globalBool == true) {
+                    para_globalBool = false;
+                }
                 await new Promise(resolve => setTimeout(resolve, 400));
                 net.PvpShabakeModel.ins().send4();    //gotomap
                 await new Promise(resolve => setTimeout(resolve, 400));
@@ -686,6 +713,7 @@
         } else {
             console.log('暂无运行中的定时器time-Qunxiong:' + new Date().toLocaleString());
         }
+        para_globalBool = true;
         p_alert_success('已关闭');
     }
     //child yanhuo---------------------------------------------------------------------------------------------------
@@ -763,14 +791,14 @@
     }
 
     function stopTimer_f_Xian() {
+        para_globalBool = true;
         if (para_IntervalId_Xian != null) {
             clearInterval(para_IntervalId_Xian);
             para_IntervalId_Xian = null;
-            para_globalBool = true;
             console.log('定时器已关闭time-xian:' + new Date().toLocaleString());
         } else {
             console.log('暂无运行中的定时器time-xian:' + new Date().toLocaleString());
-        }
+        }        
         p_alert_success('已关闭');
     }
 
@@ -897,14 +925,14 @@
     }
 
     function stopTimer_f_Hot() {
+        para_globalBool = true;
         if (para_IntervalId_Hot != null) {
             clearInterval(para_IntervalId_Hot);
             para_IntervalId_Hot = null;
-            para_globalBool = true;
             console.log('定时器已关闭time-Hot:' + new Date().toLocaleString());
         } else {
             console.log('暂无运行中的定时器time-Hot:' + new Date().toLocaleString());
-        }
+        }        
         p_alert_success('已关闭');
     }
 
@@ -915,6 +943,7 @@
                 if (gd.mochao.moChaoInfo[i]?.status == 0) { return i; }
             }
         }
+        console.log("moChaoTimeOccupy-find-status-null:" + new Date().toLocaleString());
         return null;
     }
     var rewardBool_Mochao = false;

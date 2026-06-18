@@ -9,8 +9,8 @@
 // @icon         https://sdk.zwnet.cn/favicon.ico
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.win.user.js
-// @updateURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.win.user.js
+// @downloadURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.win.ka.user.js
+// @updateURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.win.ka.user.js
 // ==/UserScript==
 
 (function () {

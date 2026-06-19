@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.07
+// @version      1.08
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -78,7 +78,7 @@
                     Logic.deliverToFindNpc(600300);//biqi1
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
-                    await new Promise(resolve => setTimeout(resolve, 60000));
+                    await new Promise(resolve => setTimeout(resolve, 15000));
                     net.CureModel.ins().send2(0);    //click cure
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 }
@@ -577,19 +577,19 @@
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
             if (nowHourPY >= 2131 && nowHourPY < 2135 && gd.map.curMapId != 53001) {
                 await new Promise(resolve => setTimeout(resolve, 400));
+                // if (0 == gd.honourbattle.qzjdmatchState) {}
                 net.GamepvpModel.ins().send1(DaKuafuType.qdjd); //gotomap
-                await new Promise(resolve => setTimeout(resolve, 400));
+                await new Promise(resolve => setTimeout(resolve, 10000));
                 if (gd.map.curMapId == 53001) {
-                    await new Promise(resolve => setTimeout(resolve, 400));
                     gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
                 }
             }
             if (nowHourPY >= 2145 && nowHourPY < 2150 && gd.map.curMapId != 53001) {
                 await new Promise(resolve => setTimeout(resolve, 400));
+                // if (0 == gd.honourbattle.qzjdmatchState) {}
                 net.GamepvpModel.ins().send1(DaKuafuType.qdjd); //gotomap
-                await new Promise(resolve => setTimeout(resolve, 400));
+                await new Promise(resolve => setTimeout(resolve, 10000));
                 if (gd.map.curMapId == 53001) {
-                    await new Promise(resolve => setTimeout(resolve, 400));
                     gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
                 }
             }
@@ -631,8 +631,8 @@
 
                 const currentX = emIns.firstPlayer.fighterObject.gridX;
                 const currentY = emIns.firstPlayer.fighterObject.gridY;
-                if (Math.abs(currentX - x) > 15 || Math.abs(currentY - y) > 15) {
-                    gd.map.gotoStagePoint(x, y, gd.map.curMapId, false);//center xy
+                if (Math.abs(currentX - 63) > 10 || Math.abs(currentY - 68) > 10) {
+                    gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
                 }
             }
             if (gd.arpgInst.autoFightType == 3) {
@@ -645,7 +645,7 @@
         p_alert_success('开始辅助（神魔）');
     }
     function stopTimer_f_Shenmo() {
-        para_globalBool = true;        
+        para_globalBool = true;
         if (para_intervalIdShenmo != null) {
             clearInterval(para_intervalIdShenmo);
             para_intervalIdShenmo = null;
@@ -798,7 +798,7 @@
             console.log('定时器已关闭time-xian:' + new Date().toLocaleString());
         } else {
             console.log('暂无运行中的定时器time-xian:' + new Date().toLocaleString());
-        }        
+        }
         p_alert_success('已关闭');
     }
 
@@ -932,7 +932,57 @@
             console.log('定时器已关闭time-Hot:' + new Date().toLocaleString());
         } else {
             console.log('暂无运行中的定时器time-Hot:' + new Date().toLocaleString());
-        }        
+        }
+        p_alert_success('已关闭');
+    }
+
+    var para_IntervalId_Jilin = null;
+    function beginTimer_f_Jilin(id) {
+        console.log("benginTime-jilin:" + new Date().toLocaleString());
+        if (para_IntervalId_Jilin != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-jilin");
+            p_alert_success('运行中...');
+            return;
+        }
+        var expireDate = new Date(Date.now() + 20 * 60 * 1000); //20 miniute
+        para_IntervalId_Jilin = setInterval(async () => {
+            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            if ((nowDate < 600 || nowDate > 2200)) {
+                return;
+            }
+            if (para_globalBool == true) {
+                para_globalBool = false;
+            }
+            if (emIns.firstPlayer.fighterObject.delayhp == 0) {
+                await new Promise(resolve => setTimeout(resolve, 400));
+                clickCanvasAt(1206, 400);
+            }
+            if (gd.map.curMapId != id) {
+                gd.boss.dupCountData[id]?.count != null ? uim.hide(601) : uim.show(601);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                if (gd.boss.dupCountData[id]?.count > 0) {
+                    net.DuplicateModel.ins().send2(id);//32001;32002;32003;32004
+                    uim.hide(601);
+                }
+            }
+            if (gd.arpgInst.autoFightType == 3) {
+                gd.arpgInst.setAutoFight(1);
+            }
+            if (new Date() > expireDate || gd.boss.dupCountData[id]?.count == 0) {
+                stopTimer_f_Jilin();
+            }
+        }, 10000);
+        p_alert_success('开始（jilin）');
+    }
+    function stopTimer_f_Jilin() {
+        para_globalBool = true;
+        if (para_IntervalId_Jilin != null) {
+            clearInterval(para_IntervalId_Jilin);
+            para_IntervalId_Jilin = null;
+            console.log('定时器已关闭time-Jilin:' + new Date().toLocaleString());
+        } else {
+            console.log('暂无运行中的定时器time-Jilin:' + new Date().toLocaleString());
+        }
         p_alert_success('已关闭');
     }
 
@@ -1018,6 +1068,16 @@
             case 22: stopTimer_f_Xian(31002, 6102); break;
             case 23: stopTimer_f_Xian(31003, 6103); break;
             case 24: stopTimer_f_Xian(31004, 6104); break;
+
+            case 31: stopTimer_f_Jilin(32001); break;
+            case 32: stopTimer_f_Jilin(32002); break;
+            case 33: stopTimer_f_Jilin(32003); break;
+            case 34: stopTimer_f_Jilin(32004); break;
+            case 35: stopTimer_f_Jilin(32005); break;
+            case 36: stopTimer_f_Jilin(32006); break;
+            case 37: stopTimer_f_Jilin(32007); break;
+            case 38: stopTimer_f_Jilin(32008); break;
+            case 39: stopTimer_f_Jilin(32009); break;
         }
     }
 
@@ -1038,6 +1098,16 @@
             case 22: beginTimer_f_Xian(31002, 6102); break;
             case 23: beginTimer_f_Xian(31003, 6103); break;
             case 24: beginTimer_f_Xian(31004, 6104); break;
+
+            case 31: beginTimer_f_Jilin(32001); break;
+            case 32: beginTimer_f_Jilin(32002); break;
+            case 33: beginTimer_f_Jilin(32003); break;
+            case 34: beginTimer_f_Jilin(32004); break;
+            case 35: beginTimer_f_Jilin(32005); break;
+            case 36: beginTimer_f_Jilin(32006); break;
+            case 37: beginTimer_f_Jilin(32007); break;
+            case 38: beginTimer_f_Jilin(32008); break;
+            case 39: beginTimer_f_Jilin(32009); break;
         }
     }
 
@@ -1068,7 +1138,16 @@
         { value: 21, text: '仙1' },
         { value: 22, text: '仙2' },
         { value: 23, text: '仙3' },
-        { value: 24, text: '仙4' }
+        { value: 24, text: '仙4' },
+        { value: 31, text: '棘林1' },
+        { value: 32, text: '棘林2' },
+        { value: 33, text: '棘林3' },
+        { value: 34, text: '棘林4' },
+        { value: 35, text: '棘林5' },
+        { value: 36, text: '棘林6' },
+        { value: 37, text: '棘林7' },
+        { value: 38, text: '棘林8' },
+        { value: 39, text: '棘林9' }
     ];
     f_CreateSelect(57, 75, p_option1);
 
@@ -1253,6 +1332,8 @@
         const rect = canvas.getBoundingClientRect();
         // x = f_ConvertXY(x, y, canvas.width, canvas.height).x;
         // y = f_ConvertXY(x, y, canvas.width, canvas.height).y;
+        // if (x == 1130) { x = 1569; y = 478; } //windows-ka
+        // if (x == 1206) { x = 1649; y = 478; } //windows-ka
         // if (x == 1130) { x = 800; y = 300; } //1024*768  tencent001-windows 
         // if (x == 1206) { x = 845; y = 300; } //1024*768  tencent001-windows
         if (x == 1130) { x = 815; y = 305; } //1024*768  aliyun001-linux

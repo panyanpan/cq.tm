@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.08
+// @version      1.09
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -165,6 +165,10 @@
         { name: "玄英", mapId: 200057, deliverId: 600101 },
         { name: "毛颖", mapId: 200058, deliverId: 600102 },
         { name: "铜台", mapId: 200059, deliverId: 600103 },
+        // { name: "降妖4", mapId: 200047, deliverId: 600067 },
+        // { name: "降妖5", mapId: 200048, deliverId: 600068 },
+        // { name: "降妖9", mapId: 200067, deliverId: 600118 },
+        // { name: "降妖10", mapId: 200068, deliverId: 600119 },
         { name: "降妖12", mapId: 200079, deliverId: 600181 },
         { name: "降妖13", mapId: 200080, deliverId: 600182 },
         { name: "降妖14", mapId: 200081, deliverId: 600183 },
@@ -181,6 +185,7 @@
         { name: "造化3", mapId: 5570, deliverId: 600150 },
         { name: "造化4", mapId: 5568, deliverId: 600151 },
         { name: "黄金1", mapId: 200077, deliverId: 600159 },
+        { name: "镇狱0", mapId: 6124, deliverId: 400103 },
         { name: "镇狱1", mapId: 6122, deliverId: 400101 },
         { name: "镇狱2", mapId: 6123, deliverId: 400102 },
         { name: "福地1", mapId: 200072, deliverId: 600141 },
@@ -469,7 +474,7 @@
         }
         para_intervalIdSifang = setInterval(async () => {//20:00  curMapId=4901
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
-            if (nowHourPY >= 2000 && nowHourPY < 2220 && gd.map.curMapId != 4901) {
+            if (nowHourPY >= 2000 && nowHourPY < 2020 && gd.map.curMapId != 4901) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
@@ -484,8 +489,10 @@
                 await new Promise(resolve => setTimeout(resolve, 500));
                 gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
             }
-            if (gd.arpgInst.autoFightType == 3) {
-                gd.arpgInst.setAutoFight(1);
+            if (nowHourPY >= 2000 && nowHourPY < 2020) {
+                if (gd.arpgInst.autoFightType == 3) {
+                    gd.arpgInst.setAutoFight(1);
+                }
             }
             if (nowHourPY > 2017 && !rewardBool_Sifang) {
                 rewardBool_Sifang = true;
@@ -602,14 +609,6 @@
             p_iCount++;
             if (p_iCount % 10 == 0 && gd.map.curMapId == 53001) {
                 // clickCanvasAt(222, 247);//get reward
-                // const rewardNum = 1;
-                // if (gd.honourbattle.nowqzjdkillnum > 9 && gd.honourbattle.nowqzjdkillnum % 2 != 0) {
-                //     rewardNum = gd.honourbattle.nowqzjdkillnum - 1;
-                // } else {
-                //     rewardNum = gd.honourbattle.nowqzjdkillnum;
-                // }
-                // net.CanyonHegemonyModel.ins().send16(rewardNum);//get reward
-                // console.log("time-Shenmo get reward:" + rewardNum + "----" + new Date().toLocaleString());
                 try {
                     var t = cm.kuafuduodiankillrewards
                         , i = 0
@@ -635,8 +634,10 @@
                     gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
                 }
             }
-            if (gd.arpgInst.autoFightType == 3) {
-                gd.arpgInst.setAutoFight(1);
+            if (nowHourPY >= 2131 && nowHourPY < 2155) {
+                if (gd.arpgInst.autoFightType == 3) {
+                    gd.arpgInst.setAutoFight(1);
+                }
             }
             if (new Date().getHours() * 100 + new Date().getMinutes() > 2158) {
                 stopTimer_f_Shenmo();
@@ -668,7 +669,7 @@
         }
         para_intervalIdQunxiong = setInterval(async () => {//20:30  curMapId=4002,4001
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
-            if (nowHourPY >= 2000 && nowHourPY < 2030 && (gd.map.curMapId != 4001 && gd.map.curMapId != 4002)) {
+            if (nowHourPY > 2000 && nowHourPY < 2030 && (gd.map.curMapId != 4001 && gd.map.curMapId != 4002)) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
@@ -689,8 +690,10 @@
                 await new Promise(resolve => setTimeout(resolve, 500));
                 gd.map.gotoStagePoint(90, 84, gd.map.curMapId, false);
             }
-            if (gd.arpgInst.autoFightType == 3) {
-                gd.arpgInst.setAutoFight(1);
+            if (nowHourPY > 2000 && nowHourPY < 2030) {
+                if (gd.arpgInst.autoFightType == 3) {
+                    gd.arpgInst.setAutoFight(1);
+                }
             }
             if (nowHourPY > 2026 && !rewardBool_Qunxiong) {
                 rewardBool_Qunxiong = true;
@@ -907,9 +910,10 @@
                     //         var para_xy = gd.emIns.firstPlayer.fighterObject;
                     //         if (Math.abs(item.x - para_xy.x) > 10 || Math.abs(item.y - para_xy.y) > 10) {
                     //             gd.map.gotoStagePoint(item.x, item.y, gd.map.curMapId, false);
-                    //             break;
+                    //             return true;
                     //         }
                     //     }
+                    //     return false;
                     // });
                 }
                 if (gd.arpgInst.autoFightType == 3) {
@@ -947,7 +951,7 @@
         var expireDate = new Date(Date.now() + 20 * 60 * 1000); //20 miniute
         para_IntervalId_Jilin = setInterval(async () => {
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate < 600 || nowDate > 2200)) {
+            if (nowDate < 600 || nowDate > 2200) {
                 return;
             }
             if (para_globalBool == true) {
@@ -1001,23 +1005,13 @@
         // if (new Date().getDay() == 1 && new Date().toLocaleTimeString() >= '10:02:00' && new Date().toLocaleTimeString() < '10:03:00') {
         //     var para_Shentai1 = findMochao(810, 850) || findMochao(910, 999);
         //     net.MochaoModel.ins().send3(para_Shentai1, 0);
-        //     console.log("moChaoTimeOccupy:" + new Date().toLocaleString());
         // }
-        console.log("moChaoTimeOccupy11:" + new Date().toLocaleString());
         if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date() > new Date().setHours(10, 0, 0, 0))) {
             var para_mc = gd.mochao.getMyMoChaoData();
-            // if (!para_mc || Object.keys(para_mc).length > 0) {
-            //     console.log("moChaoTimelog:" + new Date().toLocaleString() + gd.mochao.moChaoInfo[para_mc.moChaoId].occupyRoleName + "----" + para_mc.moChaoId);
-            // }
             if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
-                console.log("moChaoTimeOccupy12:" + new Date().toLocaleString());
                 var para_Shentai = findMochao(711, 751) || findMochao(850, 999);//findMochao(704, 751) || findMochao(804, 999);
                 if (para_Shentai) {
                     net.MochaoModel.ins().send3(para_Shentai, 0);
-                    console.log("moChaoTimeOccupy:" + new Date().toLocaleString());
-                    console.log("moChaoTimeOccupy13:" + new Date().toLocaleString());
-                } else {
-                    console.log("moChaoTimeOccupy14:" + new Date().toLocaleString());
                 }
             }
             if (!rewardBool_Mochao && new Date().getDay() == 0 && new Date() > new Date().setHours(22, 20, 0, 0)) {
@@ -1115,7 +1109,7 @@
     f_CreateButton(30, 5, "关闭", stopTimer_f_Yiji);
     f_CreateButton(55, 5, "关闭", stopTimer_f_Common);
     f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);
-    // f_CreateButton(80, 5, "relive", f_globalRelive);
+    // f_CreateButton(105, 5, "relive", f_globalRelive);
 
     f_CreateButton(5, 40, "开始", beginTimer);
     f_CreateButton(30, 40, "遗迹", beginTimer_f_Yiji);
@@ -1361,18 +1355,19 @@
         if (!para_Relive) {
             para_Relive = {//var myEntity = emIns.getEntity("1610424320_2128603008");
                 lid: emIns.firstPlayer.fighterObject.id._string,
-                hp: emIns.firstPlayer.fighterObject.maxHp,
+                hp: { toNumber: () => emIns.firstPlayer.fighterObject.maxHp },
                 inner: emIns.firstPlayer.fighterObject.maxInner,
-                x: 78,
-                y: 16
+                x: emIns.firstPlayer.fighterObject.bornX,   //78
+                y: emIns.firstPlayer.fighterObject.bornY    //16
             };
         }
         var e = para_Relive;
         // GameSceneManager.Instance.curInstance.relive(para_Relive);
+        // GameObserverManager.Instance.arpgControl.curInstance.relive(para_Relive);
         var t = emIns.getEntity(e.lid.toString());
         if (t && t.fighterObject) {
             t.fighterObject.isDead = false;
-            t.fighterObject.delayhp = t.fighterObject.truehp = e.hp;//e.hp.toNumber();
+            t.fighterObject.delayhp = t.fighterObject.truehp = e.hp.toNumber();
             t.fighterObject.maxInner = t.fighterObject.delayInner = t.fighterObject.trueInner = e.inner;
             t._entityAI.relive(t);
             t.x = e.x * GameDefine.MAP_GRID_WIDTH + 0.5 * GameDefine.MAP_GRID_WIDTH;
@@ -1414,6 +1409,7 @@
                 gd.arpgInst.sendNotif(315);
             }
         }
+        MtwGame.Instance.doReConnect();
     }
 
     /*监听点击事件

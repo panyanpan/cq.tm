@@ -730,7 +730,11 @@
         }
         var p_arr_yanhuo = 20044;//[20044,20045,20046,20047,20048,20049,20050,20051,20052,20053,20054,20055,20056,20057,20058];
         var p_arr_yanhuo_mapid = 5446;//[5446,5447,5448,5449,5450,5451,5452,5453,5454,5455,5456,5457,5458,5459,5460];
+        var expireDate = new Date(Date.now() + 20 * 60 * 1000); //20 miniute
         para_IntervalId_yanhuo = setInterval(async () => {//yanhuo
+            if (para_globalBool == true) {
+                para_globalBool = false;
+            }
             if (gd.map.curMapId == 200043) {//biqi3.5   !p_arr_yanhuo.includes(gd.map.curMapId) &&
                 uim.show(798, new UIData({ dupId: p_arr_yanhuo, lookOtherTeam: false }));
                 gd.nest.doJionIn(2, p_arr_yanhuo, null);//create team
@@ -745,10 +749,14 @@
                 await new Promise(resolve => setTimeout(resolve, 100));
                 gd.arpgInst.setAutoFight(1);
             }
+            if (new Date() > expireDate) {
+                stopTimer_f_Yanhuo();
+            }
         }, 10000);
         p_alert_success('开始辅助（焰火）');
     }
     function stopTimer_f_Yanhuo() {
+        para_globalBool = true;
         if (para_IntervalId_yanhuo) {
             clearInterval(para_IntervalId_yanhuo);
             para_IntervalId_yanhuo = null;
@@ -773,7 +781,6 @@
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     await new Promise(resolve => setTimeout(resolve, 400));
                     clickCanvasAt(1130, 400);
-                    //console.log("deadClickTime:" + new Date().toLocaleString());
                 }
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -940,6 +947,74 @@
         p_alert_success('已关闭');
     }
 
+    var para_IntervalId_Chechi = null;
+    var para_boss_Chechi = [
+        { mid: 41000001, x: 20, y: 18 },
+        { mid: 41000002, x: 88, y: 80 },
+        { mid: 41000003, x: 20, y: 83 }
+    ];
+    function beginTimer_f_Chechi() {
+        console.log("benginTime-Chechi:" + new Date().toLocaleString());
+        if (para_IntervalId_Chechi != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Chechi");
+            p_alert_success('运行中...');
+            return;
+        }
+        para_IntervalId_Chechi = setInterval(async () => {//Chechi 22:00-22:15
+            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            if ((nowDate > 2200 && nowDate < 2215) && para_IntervalId_Chechi != null) {
+                if (para_globalBool == true) {
+                    para_globalBool = false;
+                }
+                if (emIns.firstPlayer.fighterObject.delayhp == 0) {
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    clickCanvasAt(1130, 400);
+                }
+                if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
+                    && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
+                    Logic.deliverToFindNpc(600300);//biqi1  81
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    await new Promise(resolve => setTimeout(resolve, 4000));
+                    net.CureModel.ins().send2(0);    //click cure
+
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    gd.inst.sendReqEnterArpgMapMessaged(200069)   //gotomap chechi
+
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    gd.map.gotoStagePoint(88, 80, gd.map.curMapId, false); //88,80   20,80   20,83
+                }
+                if (gd.map.curMapId != 200069) {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    gd.inst.sendReqEnterArpgMapMessaged(200069)   //gotomap chechi
+
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    gd.map.gotoStagePoint(88, 80, gd.map.curMapId, false); //88,80   20,80   20,83
+                }
+                if (gd.arpgInst.autoFightType == 3) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    gd.arpgInst.setAutoFight(1);
+                }
+            }
+            if (nowDate > 2215 || (nowDate > 2205 && gd.map.curMapId == 200069 && gd.map.tombInfo.length == 3)) {
+                stopTimer_f_Chechi();
+            }
+        }, 8000);
+        p_alert_success('开始（车迟）');
+    }
+
+    function stopTimer_f_Chechi() {
+        para_globalBool = true;
+        if (para_IntervalId_Chechi != null) {
+            clearInterval(para_IntervalId_Chechi);
+            para_IntervalId_Chechi = null;
+            console.log('定时器已关闭time-Chechi:' + new Date().toLocaleString());
+        } else {
+            console.log('暂无运行中的定时器time-Chechi:' + new Date().toLocaleString());
+        }
+        p_alert_success('已关闭');
+    }
+
     var para_IntervalId_Jilin = null;
     function beginTimer_f_Jilin(id) {
         console.log("benginTime-jilin:" + new Date().toLocaleString());
@@ -1057,6 +1132,7 @@
             case 6: stopTimer_f_Cjzc(); break;
             case 7: stopTimer_f_Ice3(); break;
             case 8: stopTimer_f_Hot(); break;
+            case 9: stopTimer_f_Chechi(); break;
 
             case 21: stopTimer_f_Xian(31001, 6101); break;
             case 22: stopTimer_f_Xian(31002, 6102); break;
@@ -1087,6 +1163,7 @@
             case 6: beginTimer_f_Cjzc(); break;
             case 7: beginTimer_f_Ice3(); break;
             case 8: beginTimer_f_Hot(); break;
+            case 9: beginTimer_f_Chechi(); break;
 
             case 21: beginTimer_f_Xian(31001, 6101); break;
             case 22: beginTimer_f_Xian(31002, 6102); break;
@@ -1125,6 +1202,7 @@
         { value: 6, text: '刺激' },
         { value: 7, text: '冰宫3' },
         { value: 8, text: '炽热' },
+        { value: 9, text: '车迟' },
         // { value: 11, text: '猴1' },
         // { value: 12, text: '猴2' },
         // { value: 13, text: '猴3' },

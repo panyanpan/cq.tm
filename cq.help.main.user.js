@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.10
+// @version      1.11
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -822,11 +822,10 @@
         }
         para_IntervalId_Ice3 = setInterval(async () => {//Ice3 11:30-11:45
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate > 1130 && nowDate < 1145) && para_IntervalId_Ice3 != null) {
+            if ((nowDate >= 1130 && nowDate < 1145) && para_IntervalId_Ice3 != null) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     await new Promise(resolve => setTimeout(resolve, 400));
                     clickCanvasAt(1130, 400);
-                    //console.log("deadClickTime:" + new Date().toLocaleString());
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
@@ -838,7 +837,6 @@
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     if (emIns.firstPlayer.fighterObject.delayhp > emIns.firstPlayer.fighterObject.maxHp * 0.9) {
                         Logic.deliverToFindNpc(600089);      //bingong3  200052
-                        console.log("gotoMapTime:" + new Date().toLocaleString());
                     }
                 }
                 if (gd.map.curMapId != 200052) {
@@ -912,16 +910,21 @@
                     net.PlayModel.ins().send3(5618);//5618 5618  
                     await new Promise(resolve => setTimeout(resolve, 400));
                     gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
-                    // para_boss_hot.forEach((item) => {
-                    //     if (!gd.map.tombInfo.some(p => p.mid === item.mid)) {
-                    //         var para_xy = gd.emIns.firstPlayer.fighterObject;
-                    //         if (Math.abs(item.x - para_xy.x) > 10 || Math.abs(item.y - para_xy.y) > 10) {
-                    //             gd.map.gotoStagePoint(item.x, item.y, gd.map.curMapId, false);
-                    //             return true;
-                    //         }
-                    //     }
-                    //     return false;
-                    // });
+                } else {
+                    try {
+                        para_boss_hot.forEach((item) => {
+                            if (!gd.map.tombInfo.some(p => p.mid === item.mid)) {
+                                var para_xy = gd.emIns.firstPlayer.fighterObject;
+                                if (Math.abs(item.x - para_xy.x) > 10 || Math.abs(item.y - para_xy.y) > 10) {
+                                    gd.map.gotoStagePoint(item.x, item.y, gd.map.curMapId, false);
+                                    return true;
+                                }
+                            }
+                            return false;
+                        });
+                    } catch (error) {
+                        console.error(error);
+                    }
                 }
                 if (gd.arpgInst.autoFightType == 3) {
                     await new Promise(resolve => setTimeout(resolve, 100));
@@ -962,7 +965,7 @@
         }
         para_IntervalId_Chechi = setInterval(async () => {//Chechi 22:00-22:15
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate > 2200 && nowDate < 2215) && para_IntervalId_Chechi != null) {
+            if ((nowDate >= 2200 && nowDate < 2215) && para_IntervalId_Chechi != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
@@ -996,7 +999,7 @@
                     gd.arpgInst.setAutoFight(1);
                 }
             }
-            if (nowDate > 2215 || (nowDate > 2205 && gd.map.curMapId == 200069 && gd.map.tombInfo.length == 3)) {
+            if (nowDate > 2215 || (nowDate > 2202 && gd.map.curMapId == 200069 && gd.map.tombInfo.length == 3)) {
                 stopTimer_f_Chechi();
             }
         }, 8000);
@@ -1036,8 +1039,8 @@
                 await new Promise(resolve => setTimeout(resolve, 400));
                 clickCanvasAt(1206, 400);
             }
+            gd.boss.dupCountData[id] == null ? uim.show(601) : uim.hide(601);
             if (gd.map.curMapId != id) {
-                gd.boss.dupCountData[id]?.count != null ? uim.hide(601) : uim.show(601);
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 if (gd.boss.dupCountData[id]?.count > 0) {
                     net.DuplicateModel.ins().send2(id);//32001;32002;32003;32004
@@ -1048,6 +1051,7 @@
                 gd.arpgInst.setAutoFight(1);
             }
             if (new Date() > expireDate || gd.boss.dupCountData[id]?.count == 0) {
+                uim.hide(601);
                 stopTimer_f_Jilin();
             }
         }, 10000);
@@ -1095,6 +1099,14 @@
                     //net.MochaoModel.ins().send11(i);  //reward 1-n
                 }
             }
+        }
+    }
+
+    function f_CheckPosition_Go(x, y, h = 5) {
+        const currentX = emIns.firstPlayer.fighterObject.gridX;
+        const currentY = emIns.firstPlayer.fighterObject.gridY;
+        if (Math.abs(currentX - x) > h || Math.abs(currentY - y) > h) {
+            gd.map.gotoStagePoint(x, y, gd.map.curMapId, false);//center xy
         }
     }
 

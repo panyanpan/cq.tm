@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.11
+// @version      1.12
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -165,10 +165,10 @@
         { name: "玄英", mapId: 200057, deliverId: 600101 },
         { name: "毛颖", mapId: 200058, deliverId: 600102 },
         { name: "铜台", mapId: 200059, deliverId: 600103 },
-        // { name: "降妖4", mapId: 200047, deliverId: 600067 },
-        // { name: "降妖5", mapId: 200048, deliverId: 600068 },
-        // { name: "降妖9", mapId: 200067, deliverId: 600118 },
-        // { name: "降妖10", mapId: 200068, deliverId: 600119 },
+        { name: "降妖4", mapId: 200047, deliverId: 600067 },
+        { name: "降妖5", mapId: 200048, deliverId: 600068 },
+        { name: "降妖9", mapId: 200067, deliverId: 600118 },
+        { name: "降妖10", mapId: 200068, deliverId: 600119 },
         { name: "降妖12", mapId: 200079, deliverId: 600181 },
         { name: "降妖13", mapId: 200080, deliverId: 600182 },
         { name: "降妖14", mapId: 200081, deliverId: 600183 },
@@ -1039,7 +1039,7 @@
                 await new Promise(resolve => setTimeout(resolve, 400));
                 clickCanvasAt(1206, 400);
             }
-            gd.boss.dupCountData[id] == null ? uim.show(601) : uim.hide(601);
+            gd.boss.dupCountData == null ? uim.show(601) : uim.hide(601);
             if (gd.map.curMapId != id) {
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 if (gd.boss.dupCountData[id]?.count > 0) {
@@ -1197,7 +1197,7 @@
     f_CreateButton(5, 5, "关闭", stopTimer);
     f_CreateButton(30, 5, "关闭", stopTimer_f_Yiji);
     f_CreateButton(55, 5, "关闭", stopTimer_f_Common);
-    f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);
+    // f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);
     // f_CreateButton(105, 5, "relive", f_globalRelive);
 
     f_CreateButton(5, 40, "开始", beginTimer);
@@ -1352,7 +1352,7 @@
         }
         .custom-toast.show {opacity: 1; transform: translateY(0);}
         .custom-toast.success {background-color: #00b42a;}
-        .custom-toast.error {background-color: #ff4d4f;}
+        .custom-toast.error {background-color: #8605ff;}
     `;
     document.head.appendChild(style);
     window.p_alert = function (type, msg) {
@@ -1379,16 +1379,23 @@
         if (para_IntervalId_Ronglian != null) {
             clearInterval(para_IntervalId_Ronglian);
             para_IntervalId_Ronglian = null;
-            p_alert_success('已关闭（Ronglian）');
+            p_alert_error('已关闭（Ronglian）');
         }
         else {
             para_IntervalId_Ronglian = setInterval(async () => {
-                // uim.show(503, new UIData(null, 3));
-                // await new Promise(resolve => setTimeout(resolve, 2000));
-                clickCanvasAt(725, 517); //linux
-                // await new Promise(resolve => setTimeout(resolve, 2000));
-                // uim.hide(503);
-            }, 600000);
+                var t = uim.show(560, new UIData(null, 0));
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                var ids = [];
+                for (var key in t.page.lids) {
+                    ids.push(t.page.lids[key]);
+                }
+                if (ids.length > 0) {
+                    net.BourseModel.ins().send21(ids);
+                }
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                uim.hide(560);
+                // clickCanvasAt(725, 517); //linux                
+            }, 5 * 60 * 1e3);
             p_alert_success('已开始（Ronglian）');
         }
     }

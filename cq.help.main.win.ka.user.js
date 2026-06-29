@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.09
+// @version      1.13
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -159,17 +159,19 @@
         { name: "爱魄1", mapId: 6134, deliverId: 400112 },
         { name: "恶魄1", mapId: 6135, deliverId: 400113 },
         { name: "无尽", mapId: 200090, deliverId: 200090 },
-        { name: "狮驼", mapId: 200039, deliverId: 600059 },
-        { name: "清华", mapId: 200040, deliverId: 600060 },
-        { name: "无底", mapId: 200041, deliverId: 600061 },
-        { name: "盘恒", mapId: 200056, deliverId: 600100 },
-        { name: "玄英", mapId: 200057, deliverId: 600101 },
-        { name: "毛颖", mapId: 200058, deliverId: 600102 },
-        { name: "铜台", mapId: 200059, deliverId: 600103 },
-        // { name: "降妖4", mapId: 200047, deliverId: 600067 },
-        // { name: "降妖5", mapId: 200048, deliverId: 600068 },
-        // { name: "降妖9", mapId: 200067, deliverId: 600118 },
-        // { name: "降妖10", mapId: 200068, deliverId: 600119 },
+        { name: "无量", mapId: 200091, deliverId: 200091 },
+        { name: "无极", mapId: 200092, deliverId: 200092 },
+        { name: "狮驼", mapId: 200039, deliverId: 600054, deliverIdNpc: 600082 },
+        { name: "清华", mapId: 200040, deliverId: 600060, deliverIdNpc: 600083 },
+        { name: "无底", mapId: 200041, deliverId: 600061, deliverIdNpc: 600084 },
+        { name: "盘恒", mapId: 200056, deliverId: 600100, deliverIdNpc: 600110 },
+        { name: "玄英", mapId: 200057, deliverId: 600101, deliverIdNpc: 600111 },
+        { name: "毛颖", mapId: 200058, deliverId: 600102, deliverIdNpc: 600112 },
+        { name: "铜台", mapId: 200059, deliverId: 600103, deliverIdNpc: 600113 },
+        { name: "降妖4", mapId: 200047, deliverId: 600067 },
+        { name: "降妖5", mapId: 200048, deliverId: 600068 },
+        { name: "降妖9", mapId: 200067, deliverId: 600118 },
+        { name: "降妖10", mapId: 200068, deliverId: 600119 },
         { name: "降妖12", mapId: 200079, deliverId: 600181 },
         { name: "降妖13", mapId: 200080, deliverId: 600182 },
         { name: "降妖14", mapId: 200081, deliverId: 600183 },
@@ -731,7 +733,11 @@
         }
         var p_arr_yanhuo = 20044;//[20044,20045,20046,20047,20048,20049,20050,20051,20052,20053,20054,20055,20056,20057,20058];
         var p_arr_yanhuo_mapid = 5446;//[5446,5447,5448,5449,5450,5451,5452,5453,5454,5455,5456,5457,5458,5459,5460];
+        var expireDate = new Date(Date.now() + 20 * 60 * 1000); //20 miniute
         para_IntervalId_yanhuo = setInterval(async () => {//yanhuo
+            if (para_globalBool == true) {
+                para_globalBool = false;
+            }
             if (gd.map.curMapId == 200043) {//biqi3.5   !p_arr_yanhuo.includes(gd.map.curMapId) &&
                 uim.show(798, new UIData({ dupId: p_arr_yanhuo, lookOtherTeam: false }));
                 gd.nest.doJionIn(2, p_arr_yanhuo, null);//create team
@@ -746,10 +752,14 @@
                 await new Promise(resolve => setTimeout(resolve, 100));
                 gd.arpgInst.setAutoFight(1);
             }
+            if (new Date() > expireDate) {
+                stopTimer_f_Yanhuo();
+            }
         }, 10000);
         p_alert_success('开始辅助（焰火）');
     }
     function stopTimer_f_Yanhuo() {
+        para_globalBool = true;
         if (para_IntervalId_yanhuo) {
             clearInterval(para_IntervalId_yanhuo);
             para_IntervalId_yanhuo = null;
@@ -774,7 +784,6 @@
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     await new Promise(resolve => setTimeout(resolve, 400));
                     clickCanvasAt(1130, 400);
-                    //console.log("deadClickTime:" + new Date().toLocaleString());
                 }
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -816,11 +825,10 @@
         }
         para_IntervalId_Ice3 = setInterval(async () => {//Ice3 11:30-11:45
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate > 1130 && nowDate < 1145) && para_IntervalId_Ice3 != null) {
+            if ((nowDate >= 1130 && nowDate < 1145) && para_IntervalId_Ice3 != null) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     await new Promise(resolve => setTimeout(resolve, 400));
                     clickCanvasAt(1130, 400);
-                    //console.log("deadClickTime:" + new Date().toLocaleString());
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
@@ -832,7 +840,6 @@
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     if (emIns.firstPlayer.fighterObject.delayhp > emIns.firstPlayer.fighterObject.maxHp * 0.9) {
                         Logic.deliverToFindNpc(600089);      //bingong3  200052
-                        console.log("gotoMapTime:" + new Date().toLocaleString());
                     }
                 }
                 if (gd.map.curMapId != 200052) {
@@ -906,16 +913,21 @@
                     net.PlayModel.ins().send3(5618);//5618 5618  
                     await new Promise(resolve => setTimeout(resolve, 400));
                     gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
-                    // para_boss_hot.forEach((item) => {
-                    //     if (!gd.map.tombInfo.some(p => p.mid === item.mid)) {
-                    //         var para_xy = gd.emIns.firstPlayer.fighterObject;
-                    //         if (Math.abs(item.x - para_xy.x) > 10 || Math.abs(item.y - para_xy.y) > 10) {
-                    //             gd.map.gotoStagePoint(item.x, item.y, gd.map.curMapId, false);
-                    //             return true;
-                    //         }
-                    //     }
-                    //     return false;
-                    // });
+                } else {
+                    try {
+                        para_boss_hot.forEach((item) => {
+                            if (!gd.map.tombInfo.some(p => p.mid === item.mid)) {
+                                var para_xy = gd.emIns.firstPlayer.fighterObject;
+                                if (Math.abs(item.x - para_xy.x) > 10 || Math.abs(item.y - para_xy.y) > 10) {
+                                    gd.map.gotoStagePoint(item.x, item.y, gd.map.curMapId, false);
+                                    return true;
+                                }
+                            }
+                            return false;
+                        });
+                    } catch (error) {
+                        console.error(error);
+                    }
                 }
                 if (gd.arpgInst.autoFightType == 3) {
                     await new Promise(resolve => setTimeout(resolve, 100));
@@ -937,6 +949,74 @@
             console.log('定时器已关闭time-Hot:' + new Date().toLocaleString());
         } else {
             console.log('暂无运行中的定时器time-Hot:' + new Date().toLocaleString());
+        }
+        p_alert_success('已关闭');
+    }
+
+    var para_IntervalId_Chechi = null;
+    var para_boss_Chechi = [
+        { mid: 41000001, x: 20, y: 18 },
+        { mid: 41000002, x: 88, y: 80 },
+        { mid: 41000003, x: 20, y: 83 }
+    ];
+    function beginTimer_f_Chechi() {
+        console.log("benginTime-Chechi:" + new Date().toLocaleString());
+        if (para_IntervalId_Chechi != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Chechi");
+            p_alert_success('运行中...');
+            return;
+        }
+        para_IntervalId_Chechi = setInterval(async () => {//Chechi 22:00-22:15
+            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            if ((nowDate >= 2200 && nowDate < 2215) && para_IntervalId_Chechi != null) {
+                if (para_globalBool == true) {
+                    para_globalBool = false;
+                }
+                if (emIns.firstPlayer.fighterObject.delayhp == 0) {
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    clickCanvasAt(1130, 400);
+                }
+                if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
+                    && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
+                    Logic.deliverToFindNpc(600300);//biqi1  81
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    await new Promise(resolve => setTimeout(resolve, 4000));
+                    net.CureModel.ins().send2(0);    //click cure
+
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    gd.inst.sendReqEnterArpgMapMessaged(200069)   //gotomap chechi
+
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    gd.map.gotoStagePoint(88, 80, gd.map.curMapId, false); //88,80   20,80   20,83
+                }
+                if (gd.map.curMapId != 200069) {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    gd.inst.sendReqEnterArpgMapMessaged(200069)   //gotomap chechi
+
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                    gd.map.gotoStagePoint(88, 80, gd.map.curMapId, false); //88,80   20,80   20,83
+                }
+                if (gd.arpgInst.autoFightType == 3) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    gd.arpgInst.setAutoFight(1);
+                }
+            }
+            if (nowDate > 2215 || (nowDate > 2202 && gd.map.curMapId == 200069 && gd.map.tombInfo.length == 3)) {
+                stopTimer_f_Chechi();
+            }
+        }, 8000);
+        p_alert_success('开始（车迟）');
+    }
+
+    function stopTimer_f_Chechi() {
+        para_globalBool = true;
+        if (para_IntervalId_Chechi != null) {
+            clearInterval(para_IntervalId_Chechi);
+            para_IntervalId_Chechi = null;
+            console.log('定时器已关闭time-Chechi:' + new Date().toLocaleString());
+        } else {
+            console.log('暂无运行中的定时器time-Chechi:' + new Date().toLocaleString());
         }
         p_alert_success('已关闭');
     }
@@ -963,12 +1043,12 @@
                 clickCanvasAt(1206, 400);
             }
             if (gd.map.curMapId != id) {
-                gd.boss.dupCountData[id]?.count != null ? uim.hide(601) : uim.show(601);
+                uim.hide(601);
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 if (gd.boss.dupCountData[id]?.count > 0) {
                     net.DuplicateModel.ins().send2(id);//32001;32002;32003;32004
-                    uim.hide(601);
                 }
+                uim.hide(601);
             }
             if (gd.arpgInst.autoFightType == 3) {
                 gd.arpgInst.setAutoFight(1);
@@ -1024,6 +1104,14 @@
         }
     }
 
+    function f_CheckPosition_Go(x, y, h = 5) {
+        const currentX = emIns.firstPlayer.fighterObject.gridX;
+        const currentY = emIns.firstPlayer.fighterObject.gridY;
+        if (Math.abs(currentX - x) > h || Math.abs(currentY - y) > h) {
+            gd.map.gotoStagePoint(x, y, gd.map.curMapId, false);//center xy
+        }
+    }
+
     //Common UI------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     function f_CreateButton(top, right, cName, onClickFn) {
         const btn = document.createElement('button');
@@ -1058,6 +1146,7 @@
             case 6: stopTimer_f_Cjzc(); break;
             case 7: stopTimer_f_Ice3(); break;
             case 8: stopTimer_f_Hot(); break;
+            case 9: stopTimer_f_Chechi(); break;
 
             case 21: stopTimer_f_Xian(31001, 6101); break;
             case 22: stopTimer_f_Xian(31002, 6102); break;
@@ -1088,6 +1177,7 @@
             case 6: beginTimer_f_Cjzc(); break;
             case 7: beginTimer_f_Ice3(); break;
             case 8: beginTimer_f_Hot(); break;
+            case 9: beginTimer_f_Chechi(); break;
 
             case 21: beginTimer_f_Xian(31001, 6101); break;
             case 22: beginTimer_f_Xian(31002, 6102); break;
@@ -1109,7 +1199,7 @@
     f_CreateButton(5, 5, "关闭", stopTimer);
     f_CreateButton(30, 5, "关闭", stopTimer_f_Yiji);
     f_CreateButton(55, 5, "关闭", stopTimer_f_Common);
-    f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);
+    // f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);
     // f_CreateButton(105, 5, "relive", f_globalRelive);
 
     f_CreateButton(5, 40, "开始", beginTimer);
@@ -1126,6 +1216,7 @@
         { value: 6, text: '刺激' },
         { value: 7, text: '冰宫3' },
         { value: 8, text: '炽热' },
+        { value: 9, text: '车迟' },
         // { value: 11, text: '猴1' },
         // { value: 12, text: '猴2' },
         // { value: 13, text: '猴3' },
@@ -1263,7 +1354,7 @@
         }
         .custom-toast.show {opacity: 1; transform: translateY(0);}
         .custom-toast.success {background-color: #00b42a;}
-        .custom-toast.error {background-color: #ff4d4f;}
+        .custom-toast.error {background-color: #8605ff;}
     `;
     document.head.appendChild(style);
     window.p_alert = function (type, msg) {
@@ -1290,16 +1381,23 @@
         if (para_IntervalId_Ronglian != null) {
             clearInterval(para_IntervalId_Ronglian);
             para_IntervalId_Ronglian = null;
-            p_alert_success('已关闭（Ronglian）');
+            p_alert_error('已关闭（Ronglian）');
         }
         else {
             para_IntervalId_Ronglian = setInterval(async () => {
-                // uim.show(503, new UIData(null, 3));
-                // await new Promise(resolve => setTimeout(resolve, 2000));
-                clickCanvasAt(725, 517); //linux
-                // await new Promise(resolve => setTimeout(resolve, 2000));
-                // uim.hide(503);
-            }, 600000);
+                var t = uim.show(560, new UIData(null, 0));
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                var ids = [];
+                for (var key in t.page.lids) {
+                    ids.push(t.page.lids[key]);
+                }
+                if (ids.length > 0) {
+                    net.BourseModel.ins().send21(ids);
+                }
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                uim.hide(560);
+                // clickCanvasAt(725, 517); //linux                
+            }, 5 * 60 * 1e3);
             p_alert_success('已开始（Ronglian）');
         }
     }
@@ -1307,11 +1405,19 @@
     //gotomap
     function p_TimeGotoMap(config) {
         let code = '';
+        var p_map = new Map(p_mapList.map(item => [item.deliverId, item.deliverIdNpc]));
         config.forEach((item, index) => {
             const p_time = item.time.split('-');
             const p_vaule = item.value.split(';');
+
+            var p_deliverIdNpc = p_map.get(Number(p_vaule[1])) ?? '';
             if (p_vaule[0] != "81") {
-                code += `if (nowHourPY >= ${p_time[0]} && nowHourPY < ${p_time[1]} && gd.map.curMapId != ${p_vaule[0]}) {Logic.deliverToFindNpc(${p_vaule[1]});}`;
+                code += `if (nowHourPY >= ${p_time[0]} && nowHourPY < ${p_time[1]} && gd.map.curMapId != ${p_vaule[0]}) {`
+                if (p_deliverIdNpc != '') {
+                    code += `Logic.deliverToFindNpc(${p_deliverIdNpc});`;
+                    // code += `await new Promise(resolve => setTimeout(resolve, 2000));`
+                }
+                code += `Logic.deliverToFindNpc(${p_vaule[1]});}`;
             }
         });
         return code;

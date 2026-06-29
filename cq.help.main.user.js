@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.12
+// @version      1.13
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -158,13 +158,15 @@
         { name: "爱魄1", mapId: 6134, deliverId: 400112 },
         { name: "恶魄1", mapId: 6135, deliverId: 400113 },
         { name: "无尽", mapId: 200090, deliverId: 200090 },
-        { name: "狮驼", mapId: 200039, deliverId: 600059 },
-        { name: "清华", mapId: 200040, deliverId: 600060 },
-        { name: "无底", mapId: 200041, deliverId: 600061 },
-        { name: "盘恒", mapId: 200056, deliverId: 600100 },
-        { name: "玄英", mapId: 200057, deliverId: 600101 },
-        { name: "毛颖", mapId: 200058, deliverId: 600102 },
-        { name: "铜台", mapId: 200059, deliverId: 600103 },
+        { name: "无量", mapId: 200091, deliverId: 200091 },
+        { name: "无极", mapId: 200092, deliverId: 200092 },
+        { name: "狮驼", mapId: 200039, deliverId: 600054, deliverIdNpc: 600082 },
+        { name: "清华", mapId: 200040, deliverId: 600060, deliverIdNpc: 600083 },
+        { name: "无底", mapId: 200041, deliverId: 600061, deliverIdNpc: 600084 },
+        { name: "盘恒", mapId: 200056, deliverId: 600100, deliverIdNpc: 600110 },
+        { name: "玄英", mapId: 200057, deliverId: 600101, deliverIdNpc: 600111 },
+        { name: "毛颖", mapId: 200058, deliverId: 600102, deliverIdNpc: 600112 },
+        { name: "铜台", mapId: 200059, deliverId: 600103, deliverIdNpc: 600113 },
         { name: "降妖4", mapId: 200047, deliverId: 600067 },
         { name: "降妖5", mapId: 200048, deliverId: 600068 },
         { name: "降妖9", mapId: 200067, deliverId: 600118 },
@@ -1039,19 +1041,18 @@
                 await new Promise(resolve => setTimeout(resolve, 400));
                 clickCanvasAt(1206, 400);
             }
-            gd.boss.dupCountData == null ? uim.show(601) : uim.hide(601);
             if (gd.map.curMapId != id) {
+                uim.hide(601);
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 if (gd.boss.dupCountData[id]?.count > 0) {
                     net.DuplicateModel.ins().send2(id);//32001;32002;32003;32004
-                    uim.hide(601);
                 }
+                uim.hide(601);
             }
             if (gd.arpgInst.autoFightType == 3) {
                 gd.arpgInst.setAutoFight(1);
             }
             if (new Date() > expireDate || gd.boss.dupCountData[id]?.count == 0) {
-                uim.hide(601);
                 stopTimer_f_Jilin();
             }
         }, 10000);
@@ -1403,11 +1404,19 @@
     //gotomap
     function p_TimeGotoMap(config) {
         let code = '';
+        var p_map = new Map(p_mapList.map(item => [item.deliverId, item.deliverIdNpc]));
         config.forEach((item, index) => {
             const p_time = item.time.split('-');
             const p_vaule = item.value.split(';');
+
+            var p_deliverIdNpc = p_map.get(Number(p_vaule[1])) ?? '';
             if (p_vaule[0] != "81") {
-                code += `if (nowHourPY >= ${p_time[0]} && nowHourPY < ${p_time[1]} && gd.map.curMapId != ${p_vaule[0]}) {Logic.deliverToFindNpc(${p_vaule[1]});}`;
+                code += `if (nowHourPY >= ${p_time[0]} && nowHourPY < ${p_time[1]} && gd.map.curMapId != ${p_vaule[0]}) {`
+                if (p_deliverIdNpc != '') {
+                    code += `Logic.deliverToFindNpc(${p_deliverIdNpc});`;
+                    // code += `await new Promise(resolve => setTimeout(resolve, 2000));`
+                }
+                code += `Logic.deliverToFindNpc(${p_vaule[1]});}`;
             }
         });
         return code;

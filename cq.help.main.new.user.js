@@ -9,8 +9,8 @@
 // @icon         https://sdk.zwnet.cn/favicon.ico
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.user.js
-// @updateURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.user.js
+// @downloadURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.new.user.js
+// @updateURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.new.user.js
 // ==/UserScript==
 
 (function () {
@@ -34,23 +34,41 @@
     console.log1 = function (...args) {
         originalConsoleLog.apply(console, args);
     };
+    const f_Sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+    var p_timerObj = {
+        Main: null, Wzzb: null, Blood: null, BloodChild: null, Yiji: null, Chechi: null
+        , Ice3: null, Sifang: null, Qunxiong: null, Cjzc: null, Shenmo: null, Yanhuo: null
+        , Jilin: null, Xian: null, Hot: null, Ronglian: null, Common: null
+    };
+    function stopTimer_f_Com(keyName) {
+        const timerId = p_timerObj[keyName];
+        if (timerId != null) {
+            clearInterval(timerId);
+            p_timerObj[keyName] = null;
+            console.log(`定时器已关闭 [${keyName}] at ${new Date().toLocaleString()}`);
+            para_globalBool = true;
+            p_alert_error(`已关闭 [${keyName}]`);
+        } else {
+            console.log(`定时器 [${keyName}] 未运行`);
+            p_alert_error(` [${keyName}] 未运行`);
+        }
+    }
     //begin main--------------------------------------------------------------------------------------------------------------------------------------------------------------------
     console.log("cq.help.main.logTime:" + new Date().toLocaleString());
-    var intervalIdPYMain = null;
     var para_globalBool = true;
     let para_yabiaoCount = 0;
     var para_mochaoCount = 0;
     function beginTimer() {
         console.log("benginTime-Main" + new Date().toLocaleString());
-        if (intervalIdPYMain != null) {
+        if (p_timerObj.Main != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Main");
             p_alert_success('运行中...');
             return;
         }
 
-        intervalIdPYMain = setInterval(async () => {
-            console.log("time-intervalIdPYMain:" + intervalIdPYMain);
+        p_timerObj.Main = setInterval(async () => {
+            console.log("time-Main:" + Main);
             if (para_globalBool) {
                 const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
                 console.log("logServerTime:" + new Date(DateUtil.serverNow()).toLocaleString());
@@ -58,46 +76,37 @@
                     para_mochaoCount++;
                     if (para_mochaoCount % 5 == 0) {
                         uim.show(503, new UIData(null, 3));
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                        uim.hide(503);
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                        uim.show(820);
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                        uim.hide(820);
+                        await f_Sleep(500); uim.hide(503);
+                        await f_Sleep(500); uim.show(820);
+                        await f_Sleep(500); uim.hide(820);
                         findMochao_Occupy();
                     }
                 }
                 catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }  //auto occupy MoChao
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     clickCanvasAt(1130, 400);
-                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    await f_Sleep(2000);
                     console.log("deadClickTime:" + new Date().toLocaleString());
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {//biqi 2+
                     Logic.deliverToFindNpc(600300);//biqi1
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
-                    await new Promise(resolve => setTimeout(resolve, 15000));
-                    net.CureModel.ins().send2(0);    //click cure
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    await f_Sleep(15000); net.CureModel.ins().send2(0);    //click cure
+                    await f_Sleep(1000);
                 }
                 if (nowHourPY >= 1145 && nowHourPY < 1150 && gd.map.curMapId != 6077 && para_yabiaoCount == 0) {
-                    // if(nowHourPY >= 2131 && nowHourPY < 2136 ){
                     Logic.deliverToFindNpc(506083);
                     if (gd.yabiao.emsNumKf < 2) {
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                        gd.yabiao.requestStart(18, 2);//gd.yabiao.requestStart(17, 2);
+                        await f_Sleep(1000); gd.yabiao.requestStart(18, 2);//gd.yabiao.requestStart(17, 2);
                         para_yabiaoCount++;
                         console.log("gotoMapTime-yabiao:" + new Date().toLocaleString());
                     }
                 }
                 if (nowHourPY >= 1150 && nowHourPY < 1155 && para_yabiaoCount == 1) {
-                    // if(nowHourPY >= 2136 && nowHourPY < 2141){
                     Logic.deliverToFindNpc(506083);
                     if (gd.yabiao.emsNumKf < 2) {
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                        gd.yabiao.requestStart(18, 2);//gd.yabiao.requestStart(17, 2);
+                        await f_Sleep(1000); gd.yabiao.requestStart(18, 2);//gd.yabiao.requestStart(17, 2);
                         para_yabiaoCount++;
                         console.log("gotoMapTime-yabiao:" + new Date().toLocaleString());
                     }
@@ -105,42 +114,30 @@
                 if ((nowHourPY > 1155 || nowHourPY < 1145) && para_yabiaoCount != 0) {
                     para_yabiaoCount = 0;
                 }
-
-                if (nowHourPY >= 1200 && nowHourPY < 1220 && para_IntervalId_wzzb == null) {
+                if (nowHourPY >= 1200 && nowHourPY < 1205 && p_timerObj.Wzzb == null) {
                     beginTimer_f_Wzzb();
                 }
 
                 const config = GM_getValue("p_MapSelectConfig");
-                if (config != null && config.length > 0) {
+                if (config != null && config.length > 0) {                    
                     await eval(p_TimeGotoMap(config).replace(/:/g, ''));
                 }
 
                 if (gd.arpgInst.autoFightType == 3 && gd.map.curMapId != 6077) {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    gd.arpgInst.setAutoFight(1);
+                    await f_Sleep(1000); gd.arpgInst.setAutoFight(1);
                     console.log("arpgClickTime:" + new Date().toLocaleString());
                 }
             }
         }, 60000);
         p_alert_success('开始辅助（主线）');
     }
-    function stopTimer() {
-        if (intervalIdPYMain) {
-            clearInterval(intervalIdPYMain);
-            intervalIdPYMain = null;
-            console.log('定时器已关闭time-cq.help.main:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-cq.help.main:' + new Date().toLocaleString());
-        }
-        p_alert_success('已关闭辅助（主线）');
-    }
 
     //main-ui----------------------------------------------------------------------------------------------------
     const p_timeList = [
         { time: "0-10:00" },
         { time: "10:00-11:00" },
-        { time: "11:00-11:43" },
-        { time: "12:20-14:30" },
+        { time: "11:00-11:40" },
+        { time: "12:05-14:30" },
         { time: "14:30-15:00" },
         { time: "15:00-18:00" },
         { time: "18:00-18:45" },
@@ -205,7 +202,7 @@
     let p_selectElements = [];
     function saveMapConfig() {
         const config = p_selectElements.map((sel, index) => ({
-            time: p_timeList[index].time == "00:00-11:00" ? "0-11:00" : p_timeList[index].time,
+            time: p_timeList[index].time,// == "00:00-11:00" ? "0-11:00" : p_timeList[index].time,
             value: sel.value
         }));
         GM_setValue("p_MapSelectConfig", config);
@@ -214,7 +211,6 @@
     function loadMapConfig() {
         const config = GM_getValue("p_MapSelectConfig");
         if (!config) return;
-
         config.forEach((item, index) => {
             if (p_selectElements[index]) {
                 p_selectElements[index].value = item.value;
@@ -281,18 +277,16 @@
 
     //begin child--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //child wzzb------------------------------------------------------------------------------------------------------
-    var para_IntervalId_wzzb = null;
     function beginTimer_f_Wzzb() {
         console.log("benginTime-Wzzb:" + new Date().toLocaleString());
-        if (para_IntervalId_wzzb != null) {
+        if (p_timerObj.Wzzb != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Wzzb");
             p_alert_success('运行中...');
             return;
         }
-        para_IntervalId_wzzb = setInterval(async () => {//wzzb 12:00-12:20    21:00-21:30
+        p_timerObj.Wzzb = setInterval(async () => {//wzzb 12:00-12:20    21:00-21:30
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate > 1200 && nowDate < 1220) && para_IntervalId_wzzb != null) {
-                // if((nowDate > 2100 && nowDate < 2130) && para_IntervalId_wzzb != null){
+            if ((nowDate > 1200 && nowDate < 1220) && p_timerObj.Wzzb != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
@@ -302,125 +296,95 @@
                 else {
                     uim.hide(318);
                 }
-                await new Promise(resolve => setTimeout(resolve, 400));
+                await f_Sleep(400);
                 if (gd.map.curMapId != 3601 && gd.honourbattle.wzzbCountInfo.leftCount > 0) {//&& gd.honourbattle.wzzbCountInfo.matchState == 0
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    net.GamepvpModel.ins().send1(DaKuafuType.wzzb);
+                    await f_Sleep(400); net.GamepvpModel.ins().send1(DaKuafuType.wzzb);
                 }
                 if (gd.arpgInst.autoFightType == 3) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    gd.arpgInst.setAutoFight(1);
+                    await f_Sleep(100); gd.arpgInst.setAutoFight(1);
                 }
-                if (new Date().getHours() * 100 + new Date().getMinutes() > 1220 || gd.honourbattle.wzzbCountInfo.leftCount == 0) {
-                    uim.hide(318);//wzzb
-                    stopTimer_f_Wzzb();
-                }
+            }
+            if (nowDate > 1220 || gd.honourbattle.wzzbCountInfo?.leftCount == 0) {
+                uim.hide(318);//wzzb
+                stopTimer_f_Com("Wzzb");
             }
         }, 3000);
         p_alert_success('开始辅助（王者）');
     }
-    function stopTimer_f_Wzzb() {
-        if (para_IntervalId_wzzb != null) {
-            clearInterval(para_IntervalId_wzzb);
-            para_IntervalId_wzzb = null;
-            console.log('定时器已关闭time-Wzzb:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Wzzb:' + new Date().toLocaleString());
-        }
-        para_globalBool = true;
-        p_alert_success('已关闭');
-    }
 
     //child blood------------------------------------------------------------------------------------------------------
-    var para_intervalIdBlood = null;
-    var para_IntervalId = null;
     var innerPY = false;
     function beginTimer_f_Blood() {
         console.log("benginTime-Blood:" + new Date().toLocaleString());
-        if (para_intervalIdBlood != null) {
+        if (p_timerObj.Blood != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Blood");
             p_alert_success('运行中...');
             return;
         }
-        para_intervalIdBlood = setInterval(async () => {
-            console.log("time-para_intervalIdBlood:" + para_intervalIdBlood);
+        p_timerObj.Blood = setInterval(async () => {
+            console.log("time-Blood:" + p_timerObj.Blood);
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
             if (nowHourPY >= 1930 && nowHourPY <= 1949 && gd.map.curMapId != 700 && !innerPY) {
+                if (para_globalBool == true) {
+                    para_globalBool = false;
+                }
                 console.log("gotoMapTimeKuafu:" + new Date().toLocaleString());
                 net.CrazebattleModel.ins().send7(3);
-                await new Promise(resolve => setTimeout(resolve, 200));
-                gd.inst.sendReqEnterArpgMapMessaged(700);//Kuafu
-                await new Promise(resolve => setTimeout(resolve, 200));
-                if (gd.map.curMapId == 700) {
-                    innerPY = true;
-                    para_globalBool = false;
-                    f_Child_Blood();
-                }
+                await f_Sleep(200); gd.inst.sendReqEnterArpgMapMessaged(700);//gotomap
+                await f_Sleep(200);
+                // if (gd.map.curMapId == 700) {
+                //     innerPY = true;
+                //     para_globalBool = false;
+                //     f_Child_Blood();
+                // }
             }
-            if (nowHourPY >= 1930 && nowHourPY <= 1949 && gd.map.curMapId == 700 && para_IntervalId == null) {
-                para_globalBool = false;
+            if (gd.map.curMapId == 700 && p_timerObj.BloodChild == null) {
+                if (para_globalBool == true) {
+                    para_globalBool = false;
+                }
                 f_Child_Blood();
             }
             if (nowHourPY > 1950) {
-                stopTimer_f_Blood();
+                stopTimer_f_Com("Blood");
+                stopTimer_f_Com("BloodChild");
             }
         }, 30000);
         p_alert_success('开始辅助（血火）');
     }
     async function f_Child_Blood() {
-        para_IntervalId = setInterval(async () => {//Kuafu
+        p_timerObj.BloodChild = setInterval(async () => {
             if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await new Promise(resolve => setTimeout(resolve, 400));
-                clickCanvasAt(1206, 400);
+                await f_Sleep(400); clickCanvasAt(1206, 400);
             }
             if (gd.arpgInst.autoFightType == 3) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-                gd.arpgInst.setAutoFight(1);
+                await f_Sleep(100); gd.arpgInst.setAutoFight(1);
             }
         }, 1000);
     }
 
-    function stopTimer_f_Blood() {
-        if (para_intervalIdBlood != null) {
-            clearInterval(para_IntervalId);
-            para_IntervalId = null;
-            clearInterval(para_intervalIdBlood);
-            para_intervalIdBlood = null;
-            console.log('定时器已关闭time-Blood:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Blood:' + new Date().toLocaleString());
-        }
-        para_globalBool = true;
-        p_alert_success('已关闭');
-    }
-
     //child yiji------------------------------------------------------------------------------------------------------
-    var para_intervalIdYiji = null;
     var para_yiji = [670, 470, 270];//670--------------------
     var para_yiji_mapid = [8036, 8024, 8012];//mapid------------------
     function beginTimer_f_Yiji() {
         console.log("benginTime-Yiji:" + new Date().toLocaleString());
-        if (para_intervalIdYiji != null) {
+        if (p_timerObj.Yiji != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Yiji");
             p_alert_success('运行中...');
             return;
         }
         para_globalBool = true;
-        para_intervalIdYiji = setInterval(async () => {
+        p_timerObj.Yiji = setInterval(async () => {
             var p_option_yji1 = document.getElementById("selectdivText");
             if (p_option_yji1 && p_option_yji1.innerHTML != "请选择") {
                 para_yiji = p_option_yji1.innerHTML.split(',');
                 para_yiji_mapid = document.getElementById("selectdivValue").innerHTML.split(',');
             }
-            console.log("time-para_intervalIdYiji:" + para_intervalIdYiji);
+            console.log("time-Yiji:" + p_timerObj.Yiji);
             if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await new Promise(resolve => setTimeout(resolve, 400));
-                clickCanvasAt(1206, 400);
-                await new Promise(resolve => setTimeout(resolve, 400));
+                await f_Sleep(400); clickCanvasAt(1206, 400); await f_Sleep(400);
             }
             if (gd.arpgInst.autoFightType == 3 && !para_globalBool) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-                gd.arpgInst.setAutoFight(1);
+                await f_Sleep(100); gd.arpgInst.setAutoFight(1);
             }
             for (var i = 0; i < para_yiji.length; i++) {
                 var timeRelive = gd.boss.arpgBossTimeDic[para_yiji_mapid[i]];
@@ -430,15 +394,14 @@
                 if (timeRelive == 0) { net.PlayModel.ins().send9(36); }
                 if (para_globalBool && timeRelive < 30 && gd.map.curMapId != para_yiji_mapid[i]) {
                     net.PlayModel.ins().send3(para_yiji_mapid[i]);
-                    await new Promise(resolve => setTimeout(resolve, 400));
+                    await f_Sleep(400);
                     if (gd.map.curMapId == para_yiji_mapid[i]) {
                         para_globalBool = false;
                     }
                     break;
                 }
                 if (timeRelive > 300 && gd.map.curMapId == para_yiji_mapid[i]) {// > 5 min
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    net.PlayModel.ins().send24();  //exit
+                    await f_Sleep(2000); net.PlayModel.ins().send24();  //exit
                     para_globalBool = true;
                     break;
                 }
@@ -452,44 +415,28 @@
         }, 6000);
         p_alert_success('开始辅助（遗迹）');
     }
-    function stopTimer_f_Yiji() {
-        para_globalBool = true;
-        if (para_intervalIdYiji) {
-            clearInterval(para_intervalIdYiji);
-            para_intervalIdYiji = null;
-            console.log('定时器已关闭time-Yiji:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Yiji:' + new Date().toLocaleString());
-        }
-        p_alert_success('已关闭');
-    }
 
     //child sifang--------------------------------------------------------------------------------------------------------------
-    var para_intervalIdSifang = null;
     var rewardBool_Sifang = false;
     function beginTimer_f_Sifang() {
         console.log("benginTime-Sifang:" + new Date().toLocaleString());
-        if (para_intervalIdSifang != null) {
+        if (p_timerObj.Sifang != null) {
             console.log("Time:" + new Date().toLocaleString() + "-Sifang");
             p_alert_success('运行中...');
             return;
         }
-        para_intervalIdSifang = setInterval(async () => {//20:00  curMapId=4901
+        p_timerObj.Sifang = setInterval(async () => {//20:00  curMapId=4901
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
             if (nowHourPY >= 2000 && nowHourPY < 2020 && gd.map.curMapId != 4901) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
-                await new Promise(resolve => setTimeout(resolve, 400));
-                net.PlayModel.ins().send3(4901);    //gotomap                
-                await new Promise(resolve => setTimeout(resolve, 400));
-                gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
+                await f_Sleep(400); net.PlayModel.ins().send3(4901);    //gotomap                
+                await f_Sleep(400); gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
             }
             if (gd.map.curMapId == 4901 && emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await new Promise(resolve => setTimeout(resolve, 10200));
-                clickCanvasAt(1130, 400);
-                await new Promise(resolve => setTimeout(resolve, 500));
-                gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
+                await f_Sleep(10200); clickCanvasAt(1130, 400);
+                await f_Sleep(500); gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
             }
             if (nowHourPY >= 2000 && nowHourPY < 2020) {
                 if (gd.arpgInst.autoFightType == 3) {
@@ -499,114 +446,80 @@
             if (nowHourPY > 2017 && !rewardBool_Sifang) {
                 rewardBool_Sifang = true;
                 for (i = 1; i < 11; i++) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    net.FairyislandModel.ins().send3(i); //reward  1-10
+                    await f_Sleep(100); net.FairyislandModel.ins().send3(i); //reward  1-10
                 }
             }
             if (nowHourPY > 2020) {
-                stopTimer_f_Sifang();
+                stopTimer_f_Com(p_timerObj.Sifang);
             }
         }, 2000);
         p_alert_success('开始辅助（四方）');
     }
-    function stopTimer_f_Sifang() {
-        if (para_intervalIdSifang) {
-            clearInterval(para_intervalIdSifang);
-            para_intervalIdSifang = null;
-            console.log('定时器已关闭time-Sifang:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Sifang:' + new Date().toLocaleString());
-        }
-        para_globalBool = true;
-        p_alert_success('已关闭');
-    }
 
     //child cjzc-----------------------------------------------------------------------------------------------------------
-    var para_IntervalId_cjzc = null;
     function beginTimer_f_Cjzc() {
         console.log("benginTime-Cjzc:" + new Date().toLocaleString());
-        if (para_IntervalId_cjzc != null) {
+        if (p_timerObj.Cjzc != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Cjzc");
             p_alert_success('运行中...');
             return;
         }
-        para_IntervalId_cjzc = setInterval(async () => {//cjzc 16:00-16:30    18:30-19:00
+        p_timerObj.Cjzc = setInterval(async () => {//cjzc 16:00-16:30    18:30-19:00
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate > 1845 && nowDate < 1900) && para_IntervalId_cjzc != null) {
+            if ((nowDate > 1845 && nowDate < 1900) && p_timerObj.Cjzc != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
                 if (gd.map.curMapId != 37001) {
                     uim.show(318, new UIData(null, 6));//cjzc
                 }
-                await new Promise(resolve => setTimeout(resolve, 400));
+                await f_Sleep(400);
                 if (gd.map.curMapId != 37001 && gd.honourbattle.dfData.leftCount > 0) {
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    net.GamepvpModel.ins().send1(DaKuafuType.dfzc);
+                    await f_Sleep(400); net.GamepvpModel.ins().send1(DaKuafuType.dfzc);
                 }
                 if (gd.arpgInst.autoFightType == 3) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    gd.arpgInst.setAutoFight(1);
+                    await f_Sleep(100); gd.arpgInst.setAutoFight(1);
                 }
-                //if (new Date().getHours() * 100 + new Date().getMinutes() > 1900) {
-                if (nowDate > 1900 || gd.honourbattle.dfData.leftCount == 0) {
-                    uim.hide(318);//cjzc
-                    stopTimer_f_Cjzc();
-                }
+            }
+            if (nowDate > 1900 || gd.honourbattle.dfData.leftCount == 0) {
+                uim.hide(318);//cjzc
+                stopTimer_f_Com("Cjzc");
             }
         }, 3000);
         p_alert_success('开始辅助（刺激）');
     }
 
-    function stopTimer_f_Cjzc() {
-        if (para_IntervalId_cjzc != null) {
-            clearInterval(para_IntervalId_cjzc);
-            para_IntervalId_cjzc = null;
-            console.log('定时器已关闭time-Cjzc:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Cjzc:' + new Date().toLocaleString());
-        }
-        para_globalBool = true;
-        p_alert_success('已关闭');
-    }
     //child shenmo-----------------------------------------------------------------------------------------------------------
-    var para_intervalIdShenmo = null;
     var p_iCount = 0;
     function beginTimer_f_Shenmo() {
         console.log("benginTime-Shemo:" + new Date().toLocaleString());
-        if (para_intervalIdShenmo != null) {
+        if (p_timerObj.Shenmo != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Shemo");
             p_alert_success('运行中...');
             return;
         }
-        para_intervalIdShenmo = setInterval(async () => {//21:30  curMapId=53001
+        p_timerObj.Shenmo = setInterval(async () => {//21:30  curMapId=53001
             if (para_globalBool == true && gd.map.curMapId == 53001) {
                 para_globalBool = false;
             }
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
             if (nowHourPY >= 2131 && nowHourPY < 2135 && gd.map.curMapId != 53001) {
-                await new Promise(resolve => setTimeout(resolve, 400));
-                // if (0 == gd.honourbattle.qzjdmatchState) {}
-                net.GamepvpModel.ins().send1(DaKuafuType.qdjd); //gotomap
-                await new Promise(resolve => setTimeout(resolve, 10000));
+                await f_Sleep(400); net.GamepvpModel.ins().send1(DaKuafuType.qdjd); //gotomap
+                await f_Sleep(10000);
                 if (gd.map.curMapId == 53001) {
                     gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
                 }
             }
             if (nowHourPY >= 2145 && nowHourPY < 2150 && gd.map.curMapId != 53001) {
-                await new Promise(resolve => setTimeout(resolve, 400));
-                // if (0 == gd.honourbattle.qzjdmatchState) {}
-                net.GamepvpModel.ins().send1(DaKuafuType.qdjd); //gotomap
-                await new Promise(resolve => setTimeout(resolve, 10000));
+                await f_Sleep(400); net.GamepvpModel.ins().send1(DaKuafuType.qdjd); //gotomap
+                await f_Sleep(10000);
                 if (gd.map.curMapId == 53001) {
                     gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
                 }
             }
             if (gd.map.curMapId == 53001 && emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await new Promise(resolve => setTimeout(resolve, 3200));
-                clickCanvasAt(1206, 400);
-                await new Promise(resolve => setTimeout(resolve, 500));
-                gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
+                await f_Sleep(3200); clickCanvasAt(1206, 400);
+                await f_Sleep(500); gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
             }
             p_iCount++;
             if (p_iCount % 10 == 0 && gd.map.curMapId == 53001) {
@@ -641,56 +554,41 @@
                     gd.arpgInst.setAutoFight(1);
                 }
             }
-            if (new Date().getHours() * 100 + new Date().getMinutes() > 2158) {
-                stopTimer_f_Shenmo();
+            if (nowHourPY > 2158) {
+                stopTimer_f_Com("Shenmo");
             }
         }, 2000);
         p_alert_success('开始辅助（神魔）');
     }
-    function stopTimer_f_Shenmo() {
-        para_globalBool = true;
-        if (para_intervalIdShenmo != null) {
-            clearInterval(para_intervalIdShenmo);
-            para_intervalIdShenmo = null;
-            console.log('定时器已关闭time-Shemo:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Shemo:' + new Date().toLocaleString());
-        }
-        p_alert_success('已关闭');
-    }
 
     //child qunxiong------------------------------------------------------------------------------------------------------
-    var para_intervalIdQunxiong = null;
     var rewardBool_Qunxiong = false;
     function beginTimer_f_Qunxiong() {
         console.log("benginTime-Qunxiong:" + new Date().toLocaleString());
-        if (para_intervalIdQunxiong != null) {
+        if (p_timerObj.Qunxiong != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Qunxiong");
             p_alert_success('运行中...');
             return;
         }
-        para_intervalIdQunxiong = setInterval(async () => {//20:30  curMapId=4002,4001
+        p_timerObj.Qunxiong = setInterval(async () => {//20:30  curMapId=4002,4001
             const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
             if (nowHourPY > 2000 && nowHourPY < 2030 && (gd.map.curMapId != 4001 && gd.map.curMapId != 4002)) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
-                await new Promise(resolve => setTimeout(resolve, 400));
-                net.PvpShabakeModel.ins().send4();    //gotomap
-                await new Promise(resolve => setTimeout(resolve, 400));
-                gd.map.gotoStagePoint(90, 84, gd.map.curMapId, false);
+                await f_Sleep(400); net.PvpShabakeModel.ins().send4();    //gotomap
+                await f_Sleep(400); gd.map.gotoStagePoint(90, 84, gd.map.curMapId, false);
             }
             if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                 console.log("ClickTime:" + new Date().toLocaleString());
-                await new Promise(resolve => setTimeout(resolve, 5200));
+                await f_Sleep(5200);
                 if (gd.map.curMapId == 4002) {
                     clickCanvasAt(1130, 400);
                 }
                 if (gd.map.curMapId == 4001) {//King
                     clickCanvasAt(1206, 400);
                 }
-                await new Promise(resolve => setTimeout(resolve, 500));
-                gd.map.gotoStagePoint(90, 84, gd.map.curMapId, false);
+                await f_Sleep(500); gd.map.gotoStagePoint(90, 84, gd.map.curMapId, false);
             }
             if (nowHourPY > 2000 && nowHourPY < 2030) {
                 if (gd.arpgInst.autoFightType == 3) {
@@ -700,32 +598,20 @@
             if (nowHourPY > 2026 && !rewardBool_Qunxiong) {
                 rewardBool_Qunxiong = true;
                 for (i = 1; i < 12; i++) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    net.PvpShabakeModel.ins().send7(i); //reward  1-11
+                    await f_Sleep(100); net.PvpShabakeModel.ins().send7(i); //reward  1-11
                 }
             }
             if (nowHourPY > 2030) {
-                stopTimer_f_Qunxiong();
+                stopTimer_f_Com("Qunxiong");
             }
         }, 2000);
         p_alert_success('开始辅助（群雄）');
     }
-    function stopTimer_f_Qunxiong() {
-        if (para_intervalIdQunxiong) {
-            clearInterval(para_intervalIdQunxiong);
-            para_intervalIdQunxiong = null;
-            console.log('定时器已关闭time-Qunxiong:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Qunxiong:' + new Date().toLocaleString());
-        }
-        para_globalBool = true;
-        p_alert_success('已关闭');
-    }
+
     //child yanhuo---------------------------------------------------------------------------------------------------
-    var para_IntervalId_yanhuo = null;
     function beginTimer_f_Yanhuo() {
         console.log("benginTime-Yanhuo:" + new Date().toLocaleString());
-        if (para_IntervalId_yanhuo != null) {
+        if (p_timerObj.Yanhuo != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Yanhuo");
             p_alert_success('运行中...');
             return;
@@ -733,142 +619,93 @@
         var p_arr_yanhuo = 20044;//[20044,20045,20046,20047,20048,20049,20050,20051,20052,20053,20054,20055,20056,20057,20058];
         var p_arr_yanhuo_mapid = 5446;//[5446,5447,5448,5449,5450,5451,5452,5453,5454,5455,5456,5457,5458,5459,5460];
         var expireDate = new Date(Date.now() + 20 * 60 * 1000); //20 miniute
-        para_IntervalId_yanhuo = setInterval(async () => {//yanhuo
+        p_timerObj.Yanhuo = setInterval(async () => {//yanhuo
             if (para_globalBool == true) {
                 para_globalBool = false;
             }
             if (gd.map.curMapId == 200043) {//biqi3.5   !p_arr_yanhuo.includes(gd.map.curMapId) &&
                 uim.show(798, new UIData({ dupId: p_arr_yanhuo, lookOtherTeam: false }));
                 gd.nest.doJionIn(2, p_arr_yanhuo, null);//create team
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await f_Sleep(1000);
                 net.SpiritmonsterModel.ins().send13(p_arr_yanhuo, gd.nest.teamData.teamId, false);//gotomap
-
-                await new Promise(resolve => setTimeout(resolve, 200));
+                await f_Sleep(200);
                 p_arr_yanhuo++;
                 p_arr_yanhuo_mapid++;
             }
             if (gd.arpgInst.autoFightType == 3) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-                gd.arpgInst.setAutoFight(1);
+                await f_Sleep(100); gd.arpgInst.setAutoFight(1);
             }
             if (new Date() > expireDate) {
-                stopTimer_f_Yanhuo();
+                stopTimer_f_Com("Yanhuo");
             }
         }, 10000);
         p_alert_success('开始辅助（焰火）');
     }
-    function stopTimer_f_Yanhuo() {
-        para_globalBool = true;
-        if (para_IntervalId_yanhuo) {
-            clearInterval(para_IntervalId_yanhuo);
-            para_IntervalId_yanhuo = null;
-            console.log('定时器已关闭time-Yanhuo:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Yanhuo:' + new Date().toLocaleString());
-        }
-        p_alert_success('已关闭');
-    }
 
-    var para_IntervalId_Xian = null;
     function beginTimer_f_Xian(mapid, deliverId) {
         console.log("benginTime-xian:" + new Date().toLocaleString());
-        if (para_IntervalId_Xian != null) {
+        if (p_timerObj.Xian != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-xian");
             p_alert_success('运行中...');
             return;
         }
-        para_IntervalId_Xian = setInterval(async () => {//xian 17:00-17:15
+        p_timerObj.Xian = setInterval(async () => {//xian 17:00-17:15
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
             if ((nowDate > 1700 && nowDate < 1715)) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    clickCanvasAt(1130, 400);
+                    await f_Sleep(400); clickCanvasAt(1130, 400);
                 }
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
                 if (gd.map.curMapId != mapid) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    Logic.deliverToFindNpc(deliverId);
+                    await f_Sleep(200); Logic.deliverToFindNpc(deliverId);
                 }
             }
             if (nowDate > 1715 || (nowDate > 1705 && gd.map.curMapId == mapid && gd.map.tombInfo.length == 1)) {
-                clearInterval(para_IntervalId_Xian);
-                para_IntervalId_Xian = null;
-                para_globalBool = true;
-                console.log('定时器已关闭time-xian:' + new Date().toLocaleString());
+                stopTimer_f_Com("Xian");
             }
         }, 3000);
         p_alert_success('开始辅助（xian）');
     }
 
-    function stopTimer_f_Xian() {
-        para_globalBool = true;
-        if (para_IntervalId_Xian != null) {
-            clearInterval(para_IntervalId_Xian);
-            para_IntervalId_Xian = null;
-            console.log('定时器已关闭time-xian:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-xian:' + new Date().toLocaleString());
-        }
-        p_alert_success('已关闭');
-    }
-
-    var para_IntervalId_Ice3 = null;
     function beginTimer_f_Ice3() {
         console.log("benginTime-Ice3:" + new Date().toLocaleString());
-        if (para_IntervalId_Ice3 != null) {
+        if (p_timerObj.Ice3 != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Ice3");
             p_alert_success('运行中...');
             return;
         }
-        para_IntervalId_Ice3 = setInterval(async () => {//Ice3 11:30-11:45
+        p_timerObj.Ice3 = setInterval(async () => {//Ice3 11:30-11:45
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate >= 1130 && nowDate < 1145) && para_IntervalId_Ice3 != null) {
+            if ((nowDate >= 1130 && nowDate < 1145) && p_timerObj.Ice3 != null) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    clickCanvasAt(1130, 400);
+                    await f_Sleep(400); clickCanvasAt(1130, 400);
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
                     Logic.deliverToFindNpc(600300);//biqi1  81
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
-                    await new Promise(resolve => setTimeout(resolve, 4000));
-                    net.CureModel.ins().send2(0);    //click cure
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    await f_Sleep(4000); net.CureModel.ins().send2(0);    //click cure
+                    await f_Sleep(1000);
                     if (emIns.firstPlayer.fighterObject.delayhp > emIns.firstPlayer.fighterObject.maxHp * 0.9) {
                         Logic.deliverToFindNpc(600089);      //bingong3  200052
                     }
                 }
                 if (gd.map.curMapId != 200052) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    Logic.deliverToFindNpc(600089);
+                    await f_Sleep(200); Logic.deliverToFindNpc(600089);
                 }
                 if (gd.arpgInst.autoFightType == 3) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    gd.arpgInst.setAutoFight(1);
+                    await f_Sleep(100); gd.arpgInst.setAutoFight(1);
                 }
             }
             if (nowDate > 1145 || (nowDate > 1135 && gd.map.curMapId == 200052 && gd.map.tombInfo.length == 7)) {
-                stopTimer_f_Ice3();
+                stopTimer_f_Com("Ice3");
             }
         }, 2000);
         p_alert_success('开始（Ice3）');
     }
 
-    function stopTimer_f_Ice3() {
-        if (para_IntervalId_Ice3 != null) {
-            clearInterval(para_IntervalId_Ice3);
-            para_IntervalId_Ice3 = null;
-            console.log('定时器已关闭time-Ice3:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Ice3:' + new Date().toLocaleString());
-        }
-        p_alert_success('已关闭');
-    }
-
-    var para_IntervalId_Hot = null;
     var para_boss_hot = [
         { mid: 9900101, x: 17, y: 87 },
         { mid: 9900102, x: 17, y: 23 },
@@ -877,41 +714,31 @@
     ];
     function beginTimer_f_Hot() {
         console.log("benginTime-Hot:" + new Date().toLocaleString());
-        if (para_IntervalId_Hot != null) {
+        if (p_timerObj.Hot != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Hot");
             p_alert_success('运行中...');
             return;
         }
-        para_IntervalId_Hot = setInterval(async () => {//Hot 17:30-17:40
+        p_timerObj.Hot = setInterval(async () => {//Hot 17:30-17:40
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate > 1729 && nowDate < 1740) && para_IntervalId_Hot != null) {
+            if ((nowDate > 1729 && nowDate < 1740) && p_timerObj.Hot != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    clickCanvasAt(1130, 400);
+                    await f_Sleep(400); clickCanvasAt(1130, 400);
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
                     Logic.deliverToFindNpc(600300);//biqi1  81
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
-                    await new Promise(resolve => setTimeout(resolve, 4000));
-                    net.CureModel.ins().send2(0);    //click cure
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    net.PlayModel.ins().send3(5618);      //hot  5618  
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    // if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9) {
-                    //     return;
-                    // }
-                    gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
+                    await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    await f_Sleep(4000); net.CureModel.ins().send2(0);    //click cure
+                    await f_Sleep(1000); net.PlayModel.ins().send3(5618);      //hot  5618  
+                    await f_Sleep(400); gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
                 }
                 if (gd.map.curMapId != 5618) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    net.PlayModel.ins().send3(5618);//5618 5618  
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
+                    await f_Sleep(200); net.PlayModel.ins().send3(5618);//5618 5618  
+                    await f_Sleep(400); gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
                 } else {
                     try {
                         para_boss_hot.forEach((item) => {
@@ -929,30 +756,16 @@
                     }
                 }
                 if (gd.arpgInst.autoFightType == 3) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    gd.arpgInst.setAutoFight(1);
+                    await f_Sleep(100); gd.arpgInst.setAutoFight(1);
                 }
             }
             if (nowDate > 1740 || (nowDate > 1732 && gd.map.curMapId == 5618 && gd.map.tombInfo.length == 4)) {
-                stopTimer_f_Hot();
+                stopTimer_f_Com("Hot");
             }
         }, 6000);
         p_alert_success('开始（Hot）');
     }
 
-    function stopTimer_f_Hot() {
-        para_globalBool = true;
-        if (para_IntervalId_Hot != null) {
-            clearInterval(para_IntervalId_Hot);
-            para_IntervalId_Hot = null;
-            console.log('定时器已关闭time-Hot:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Hot:' + new Date().toLocaleString());
-        }
-        p_alert_success('已关闭');
-    }
-
-    var para_IntervalId_Chechi = null;
     var para_boss_Chechi = [
         { mid: 41000001, x: 20, y: 18 },
         { mid: 41000002, x: 88, y: 80 },
@@ -960,76 +773,55 @@
     ];
     function beginTimer_f_Chechi() {
         console.log("benginTime-Chechi:" + new Date().toLocaleString());
-        if (para_IntervalId_Chechi != null) {
+        if (p_timerObj.Chechi != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Chechi");
             p_alert_success('运行中...');
             return;
         }
-        para_IntervalId_Chechi = setInterval(async () => {//Chechi 22:00-22:15
+        p_timerObj.Chechi = setInterval(async () => {//Chechi 22:00-22:15
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate >= 2200 && nowDate < 2215) && para_IntervalId_Chechi != null) {
+            if ((nowDate >= 2200 && nowDate < 2215) && p_timerObj.Chechi != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    clickCanvasAt(1130, 400);
+                    await f_Sleep(400); clickCanvasAt(1130, 400);
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
                     Logic.deliverToFindNpc(600300);//biqi1  81
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
-                    await new Promise(resolve => setTimeout(resolve, 4000));
-                    net.CureModel.ins().send2(0);    //click cure
+                    await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    await f_Sleep(4000); net.CureModel.ins().send2(0);    //click cure
 
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    gd.inst.sendReqEnterArpgMapMessaged(200069)   //gotomap chechi
+                    await f_Sleep(1000); gd.inst.sendReqEnterArpgMapMessaged(200069)   //gotomap chechi
 
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    gd.map.gotoStagePoint(88, 80, gd.map.curMapId, false); //88,80   20,80   20,83
+                    await f_Sleep(400); gd.map.gotoStagePoint(88, 80, gd.map.curMapId, false); //88,80   20,80   20,83
                 }
                 if (gd.map.curMapId != 200069) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    gd.inst.sendReqEnterArpgMapMessaged(200069)   //gotomap chechi
+                    await f_Sleep(200); gd.inst.sendReqEnterArpgMapMessaged(200069)   //gotomap chechi
 
-                    await new Promise(resolve => setTimeout(resolve, 400));
-                    gd.map.gotoStagePoint(88, 80, gd.map.curMapId, false); //88,80   20,80   20,83
+                    await f_Sleep(400); gd.map.gotoStagePoint(88, 80, gd.map.curMapId, false); //88,80   20,80   20,83
                 }
                 if (gd.arpgInst.autoFightType == 3) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    gd.arpgInst.setAutoFight(1);
+                    await f_Sleep(100); gd.arpgInst.setAutoFight(1);
                 }
             }
             if (nowDate > 2215 || (nowDate > 2202 && gd.map.curMapId == 200069 && gd.map.tombInfo.length == 3)) {
-                stopTimer_f_Chechi();
+                stopTimer_f_Com("Chechi");
             }
         }, 8000);
         p_alert_success('开始（车迟）');
     }
 
-    function stopTimer_f_Chechi() {
-        para_globalBool = true;
-        if (para_IntervalId_Chechi != null) {
-            clearInterval(para_IntervalId_Chechi);
-            para_IntervalId_Chechi = null;
-            console.log('定时器已关闭time-Chechi:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Chechi:' + new Date().toLocaleString());
-        }
-        p_alert_success('已关闭');
-    }
-
-    var para_IntervalId_Jilin = null;
     function beginTimer_f_Jilin(id) {
         console.log("benginTime-jilin:" + new Date().toLocaleString());
-        if (para_IntervalId_Jilin != null) {
+        if (p_timerObj.Jilin != null) {
             console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-jilin");
             p_alert_success('运行中...');
             return;
         }
         var expireDate = new Date(Date.now() + 20 * 60 * 1000); //20 miniute
-        para_IntervalId_Jilin = setInterval(async () => {
+        p_timerObj.Jilin = setInterval(async () => {
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
             if (nowDate < 600 || nowDate > 2200) {
                 return;
@@ -1038,12 +830,11 @@
                 para_globalBool = false;
             }
             if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await new Promise(resolve => setTimeout(resolve, 400));
-                clickCanvasAt(1206, 400);
+                await f_Sleep(400); clickCanvasAt(1206, 400);
             }
             if (gd.map.curMapId != id) {
                 uim.show(601);
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                await f_Sleep(2000);
                 if (gd.boss.dupCountData[id]?.count > 0) {
                     net.DuplicateModel.ins().send2(id);//32001;32002;32003;32004
                 }
@@ -1053,21 +844,10 @@
                 gd.arpgInst.setAutoFight(1);
             }
             if (new Date() > expireDate || gd.boss.dupCountData[id]?.count == 0) {
-                stopTimer_f_Jilin();
+                stopTimer_f_Com("Jilin");
             }
         }, 10000);
         p_alert_success('开始（jilin）');
-    }
-    function stopTimer_f_Jilin() {
-        para_globalBool = true;
-        if (para_IntervalId_Jilin != null) {
-            clearInterval(para_IntervalId_Jilin);
-            para_IntervalId_Jilin = null;
-            console.log('定时器已关闭time-Jilin:' + new Date().toLocaleString());
-        } else {
-            console.log('暂无运行中的定时器time-Jilin:' + new Date().toLocaleString());
-        }
-        p_alert_success('已关闭');
     }
 
     //child shentai mochao---------------------------------------------------------------------------------------------------
@@ -1133,38 +913,38 @@
         document.body.appendChild(sel);
     }
 
-    function stopTimer_f_Common() {
+    function stopTimer_f_Select() {
         var p_select = document.getElementById("select1").value;
         switch (parseInt(p_select)) {
-            case 0: stopTimer_f_Blood(); break;
-            case 1: stopTimer_f_Sifang(); break;
-            case 2: stopTimer_f_Qunxiong(); break;
-            case 3: stopTimer_f_Shenmo(); break;
-            case 4: stopTimer_f_Wzzb(); break;
-            case 5: stopTimer_f_Yanhuo(); break;
-            case 6: stopTimer_f_Cjzc(); break;
-            case 7: stopTimer_f_Ice3(); break;
-            case 8: stopTimer_f_Hot(); break;
-            case 9: stopTimer_f_Chechi(); break;
+            case 0: stopTimer_f_Com("Blood"); break;
+            case 1: stopTimer_f_Com("Sifang"); break;
+            case 2: stopTimer_f_Com("Qunxiong"); break;
+            case 3: stopTimer_f_Com("Shenmo"); break;
+            case 4: stopTimer_f_Com("Wzzb"); break;
+            case 5: stopTimer_f_Com("Yanhuo"); break;
+            case 6: stopTimer_f_Com("Cjzc"); break;
+            case 7: stopTimer_f_Com("Ice3"); break;
+            case 8: stopTimer_f_Com("Hot"); break;
+            case 9: stopTimer_f_Com("Chechi"); break;
 
-            case 21: stopTimer_f_Xian(31001, 6101); break;
-            case 22: stopTimer_f_Xian(31002, 6102); break;
-            case 23: stopTimer_f_Xian(31003, 6103); break;
-            case 24: stopTimer_f_Xian(31004, 6104); break;
+            case 21: stopTimer_f_Com("Xian"); break;
+            case 22: stopTimer_f_Com("Xian"); break;
+            case 23: stopTimer_f_Com("Xian"); break;
+            case 24: stopTimer_f_Com("Xian"); break;
 
-            case 31: stopTimer_f_Jilin(32001); break;
-            case 32: stopTimer_f_Jilin(32002); break;
-            case 33: stopTimer_f_Jilin(32003); break;
-            case 34: stopTimer_f_Jilin(32004); break;
-            case 35: stopTimer_f_Jilin(32005); break;
-            case 36: stopTimer_f_Jilin(32006); break;
-            case 37: stopTimer_f_Jilin(32007); break;
-            case 38: stopTimer_f_Jilin(32008); break;
-            case 39: stopTimer_f_Jilin(32009); break;
+            case 31: stopTimer_f_Com("Jilin"); break;
+            case 32: stopTimer_f_Com("Jilin"); break;
+            case 33: stopTimer_f_Com("Jilin"); break;
+            case 34: stopTimer_f_Com("Jilin"); break;
+            case 35: stopTimer_f_Com("Jilin"); break;
+            case 36: stopTimer_f_Com("Jilin"); break;
+            case 37: stopTimer_f_Com("Jilin"); break;
+            case 38: stopTimer_f_Com("Jilin"); break;
+            case 39: stopTimer_f_Com("Jilin"); break;
         }
     }
 
-    function beginTimer_f_Common() {
+    function beginTimer_f_Select() {
         var p_select = document.getElementById("select1").value;
         switch (parseInt(p_select)) {
             case 0: beginTimer_f_Blood(); break;
@@ -1195,15 +975,15 @@
         }
     }
 
-    f_CreateButton(5, 5, "关闭", stopTimer);
-    f_CreateButton(30, 5, "关闭", stopTimer_f_Yiji);
-    f_CreateButton(55, 5, "关闭", stopTimer_f_Common);
+    f_CreateButton(5, 5, "关闭", () => { stopTimer_f_Com("Main"); });
+    f_CreateButton(30, 5, "关闭", () => { stopTimer_f_Com("Yiji"); });
+    f_CreateButton(55, 5, "关闭", stopTimer_f_Select);
     // f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);
     // f_CreateButton(105, 5, "relive", f_globalRelive);
 
     f_CreateButton(5, 40, "开始", beginTimer);
     f_CreateButton(30, 40, "遗迹", beginTimer_f_Yiji);
-    f_CreateButton(55, 40, "开始", beginTimer_f_Common);
+    f_CreateButton(55, 40, "开始", beginTimer_f_Select);
 
     const p_option1 = [
         { value: 0, text: '血火' },
@@ -1315,7 +1095,8 @@
         { value: "8023", text: "460" },
         { value: "8018", text: "370" },
         // { value: "8017", text: "360" },
-        { value: "8012", text: "270" }
+        { value: "8012", text: "270" },
+        { value: "8011", text: "260" }
     ];
 
     f_CreateSelect1(32, 75, p_list_yiji);
@@ -1373,19 +1154,18 @@
     window.p_alert_success = (msg) => window.p_alert('success', msg);
 
 
-    var para_IntervalId_Ronglian = null;
     //auto ronglian
     function beginTimer_f_Ronglian() {
         console.log("beginTimer_f_Ronglian:" + new Date().toLocaleString());
-        if (para_IntervalId_Ronglian != null) {
-            clearInterval(para_IntervalId_Ronglian);
-            para_IntervalId_Ronglian = null;
+        if (p_timerObj.Ronglian != null) {
+            clearInterval(p_timerObj.Ronglian);
+            p_timerObj.Ronglian = null;
             p_alert_error('已关闭（Ronglian）');
         }
         else {
-            para_IntervalId_Ronglian = setInterval(async () => {
+            p_timerObj.Ronglian = setInterval(async () => {
                 var t = uim.show(560, new UIData(null, 0));
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                await f_Sleep(2000);
                 var ids = [];
                 for (var key in t.page.lids) {
                     ids.push(t.page.lids[key]);
@@ -1393,8 +1173,7 @@
                 if (ids.length > 0) {
                     net.BourseModel.ins().send21(ids);
                 }
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                uim.hide(560);
+                await f_Sleep(2000); uim.hide(560);
                 // clickCanvasAt(725, 517); //linux                
             }, 5 * 60 * 1e3);
             p_alert_success('已开始（Ronglian）');
@@ -1413,7 +1192,7 @@
             if (p_vaule[0] != "81") {
                 code += `if (nowHourPY >= ${p_time[0]} && nowHourPY < ${p_time[1]} && gd.map.curMapId != ${p_vaule[0]}) {`
                 if (p_deliverIdNpc != '') {
-                    code += `Logic.deliverToFindNpc(${p_deliverIdNpc});`;
+                    code += `Logic.deliverToFindNpc(${p_deliverIdNpc});`;   //go to npc
                     code += `(async function() {await f_Sleep(3000);Logic.deliverToFindNpc(${p_vaule[1]});})();}`;
                 } else {
                     code += `Logic.deliverToFindNpc(${p_vaule[1]});}`;

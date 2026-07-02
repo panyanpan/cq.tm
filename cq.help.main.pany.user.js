@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         cq.help.main.v2.1
+// @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.13
+// @version      1.01
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -9,8 +9,8 @@
 // @icon         https://sdk.zwnet.cn/favicon.ico
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.new.user.js
-// @updateURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.new.user.js
+// @downloadURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.pany.user.js
+// @updateURL https://ghproxy.net/https://raw.githubusercontent.com/panyanpan/cq.tm/refs/heads/main/cq.help.main.pany.user.js
 // ==/UserScript==
 
 (function () {
@@ -84,7 +84,7 @@
                 }
                 catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }  //auto occupy MoChao
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    clickCanvasAt(1130, 400);
+                    net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                     await f_Sleep(2000);
                     console.log("deadClickTime:" + new Date().toLocaleString());
                 }
@@ -354,7 +354,7 @@
     async function f_Child_Blood() {
         p_timerObj.BloodChild = setInterval(async () => {
             if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await f_Sleep(400); clickCanvasAt(1206, 400);
+                await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1206, 400);
             }
             if (gd.arpgInst.autoFightType == 3) {
                 await f_Sleep(100); gd.arpgInst.setAutoFight(1);
@@ -381,7 +381,8 @@
             }
             console.log("time-Yiji:" + p_timerObj.Yiji);
             if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await f_Sleep(400); clickCanvasAt(1206, 400); await f_Sleep(400);
+                await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1206, 400); 
+                await f_Sleep(400);
             }
             if (gd.arpgInst.autoFightType == 3 && !para_globalBool) {
                 await f_Sleep(100); gd.arpgInst.setAutoFight(1);
@@ -435,7 +436,7 @@
                 await f_Sleep(400); gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
             }
             if (gd.map.curMapId == 4901 && emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await f_Sleep(10200); clickCanvasAt(1130, 400);
+                await f_Sleep(10200); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                 await f_Sleep(500); gd.map.gotoStagePoint(55, 58, gd.map.curMapId, false);
             }
             if (nowHourPY >= 2000 && nowHourPY < 2020) {
@@ -518,7 +519,7 @@
                 }
             }
             if (gd.map.curMapId == 53001 && emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await f_Sleep(3200); clickCanvasAt(1206, 400);
+                await f_Sleep(3200); net.MapModel.ins().send25(1);//clickCanvasAt(1206, 400);
                 await f_Sleep(500); gd.map.gotoStagePoint(63, 68, gd.map.curMapId, false);//center xy
             }
             p_iCount++;
@@ -583,10 +584,10 @@
                 console.log("ClickTime:" + new Date().toLocaleString());
                 await f_Sleep(5200);
                 if (gd.map.curMapId == 4002) {
-                    clickCanvasAt(1130, 400);
+                    net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                 }
                 if (gd.map.curMapId == 4001) {//King
-                    clickCanvasAt(1206, 400);
+                    net.MapModel.ins().send25(1);//clickCanvasAt(1206, 400);
                 }
                 await f_Sleep(500); gd.map.gotoStagePoint(90, 84, gd.map.curMapId, false);
             }
@@ -653,7 +654,7 @@
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
             if ((nowDate > 1700 && nowDate < 1715)) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    await f_Sleep(400); clickCanvasAt(1130, 400);
+                    await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                 }
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -680,7 +681,7 @@
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
             if ((nowDate >= 1130 && nowDate < 1145) && p_timerObj.Ice3 != null) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    await f_Sleep(400); clickCanvasAt(1130, 400);
+                    await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
@@ -726,7 +727,7 @@
                     para_globalBool = false;
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    await f_Sleep(400); clickCanvasAt(1130, 400);
+                    await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
@@ -785,7 +786,7 @@
                     para_globalBool = false;
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    await f_Sleep(400); clickCanvasAt(1130, 400);
+                    await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
@@ -830,7 +831,7 @@
                 para_globalBool = false;
             }
             if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                await f_Sleep(400); clickCanvasAt(1206, 400);
+                await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1206, 400);
             }
             if (gd.map.curMapId != id) {
                 uim.show(601);
@@ -861,15 +862,11 @@
         return null;
     }
     var rewardBool_Mochao = false;
-    function findMochao_Occupy() {//auto occupy MoChao(Shentai)              
-        // if (new Date().getDay() == 1 && new Date().toLocaleTimeString() >= '10:02:00' && new Date().toLocaleTimeString() < '10:03:00') {
-        //     var para_Shentai1 = findMochao(810, 850) || findMochao(910, 999);
-        //     net.MochaoModel.ins().send3(para_Shentai1, 0);
-        // }
+    function findMochao_Occupy() {//auto occupy MoChao(Shentai)                      
         if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date() > new Date().setHours(10, 0, 0, 0))) {
             var para_mc = gd.mochao.getMyMoChaoData();
             if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
-                var para_Shentai = findMochao(711, 751) || findMochao(850, 999);//findMochao(704, 751) || findMochao(804, 999);
+                var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
                 if (para_Shentai) {
                     net.MochaoModel.ins().send3(para_Shentai, 0);
                 }

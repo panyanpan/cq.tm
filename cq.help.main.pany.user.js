@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.01
+// @version      1.02
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -39,7 +39,7 @@
     var p_timerObj = {
         Main: null, Wzzb: null, Blood: null, BloodChild: null, Yiji: null, Chechi: null
         , Ice3: null, Sifang: null, Qunxiong: null, Cjzc: null, Shenmo: null, Yanhuo: null
-        , Jilin: null, Xian: null, Hot: null, Ronglian: null, Common: null
+        , Jilin: null, Xian: null, Hot: null, Ronglian: null, Dianfeng: null, Common: null
     };
     function stopTimer_f_Com(keyName) {
         const timerId = p_timerObj[keyName];
@@ -119,8 +119,12 @@
                 }
 
                 const config = GM_getValue("p_MapSelectConfig");
-                if (config != null && config.length > 0) {                    
+                if (config != null && config.length > 0) {
                     await eval(p_TimeGotoMap(config).replace(/:/g, ''));
+                }
+
+                if (p_timerObj.Dianfeng == null && gd.tianti.tiantiInfo?.leftCount > 6) {
+                    beginTimer_f_Dianfeng();
                 }
 
                 if (gd.arpgInst.autoFightType == 3 && gd.map.curMapId != 6077) {
@@ -451,7 +455,7 @@
                 }
             }
             if (nowHourPY > 2020) {
-                stopTimer_f_Com(p_timerObj.Sifang);
+                stopTimer_f_Com("Sifang");
             }
         }, 2000);
         p_alert_success('开始辅助（四方）');
@@ -812,6 +816,35 @@
             }
         }, 8000);
         p_alert_success('开始（车迟）');
+    }
+
+    function beginTimer_f_Dianfeng() {
+        console.log("benginTime-Dianfeng:" + new Date().toLocaleString());
+        if (p_timerObj.Dianfeng != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Dianfeng");
+            p_alert_success('运行中...');
+            return;
+        }
+        var expireDate = new Date(Date.now() + 4 * 60 * 1000);
+        p_timerObj.Dianfeng = setInterval(async () => {
+            if (para_globalBool == true) {
+                para_globalBool = false;
+            }
+            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            if (gd.tianti.tiantiInfo.leftCount > 0) {
+                if (gd.map.curMapId != 40004) {
+                    await f_Sleep(200); net.TiantiModel.ins().send3();
+                    await f_Sleep(400);
+                }
+                if (gd.arpgInst.autoFightType == 3) {
+                    await f_Sleep(200); gd.arpgInst.setAutoFight(1);
+                }
+            }
+            if (nowDate > expireDate || gd.tianti.tiantiInfo?.leftCount == 0) {
+                stopTimer_f_Com("Dianfeng");
+            }
+        }, 2000);
+        p_alert_success('开始（Dianfeng）');
     }
 
     function beginTimer_f_Jilin(id) {

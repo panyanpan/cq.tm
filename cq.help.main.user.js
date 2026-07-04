@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.13
+// @version      1.14
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -113,6 +113,10 @@
                 const config = GM_getValue("p_MapSelectConfig");
                 if (config != null && config.length > 0) {
                     await eval(p_TimeGotoMap(config).replace(/:/g, ''));
+                }
+
+                if (para_IntervalId_Dianfeng == null && gd.tianti.tiantiInfo?.leftCount > 6) {
+                    beginTimer_f_Dianfeng();
                 }
 
                 if (gd.arpgInst.autoFightType == 3 && gd.map.curMapId != 6077) {
@@ -1016,6 +1020,48 @@
             console.log('定时器已关闭time-Chechi:' + new Date().toLocaleString());
         } else {
             console.log('暂无运行中的定时器time-Chechi:' + new Date().toLocaleString());
+        }
+        p_alert_success('已关闭');
+    }
+
+    var para_IntervalId_Dianfeng = null;
+    function beginTimer_f_Dianfeng() {
+        console.log("benginTime-Dianfeng:" + new Date().toLocaleString());
+        if (para_IntervalId_Dianfeng != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Dianfeng");
+            p_alert_success('运行中...');
+            return;
+        }
+        var expireDate = new Date(Date.now() + 4 * 60 * 1000);
+        para_IntervalId_Dianfeng = setInterval(async () => {
+            if (para_globalBool == true) {
+                para_globalBool = false;
+            }
+            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            if (gd.tianti.tiantiInfo.leftCount > 0) {
+                if (gd.map.curMapId != 40004) {
+                    await f_Sleep(200); net.TiantiModel.ins().send3();
+                    await f_Sleep(400);
+                }
+                if (gd.arpgInst.autoFightType == 3) {
+                    await f_Sleep(200); gd.arpgInst.setAutoFight(1);
+                }
+            }
+            if (nowDate > expireDate || gd.tianti.tiantiInfo?.leftCount == 0) {
+                stopTimer_f_Dianfeng();
+            }
+        }, 2000);
+        p_alert_success('开始（Dianfeng）');
+    }
+
+    function stopTimer_f_Dianfeng() {
+        para_globalBool = true;
+        if (para_IntervalId_Dianfeng != null) {
+            clearInterval(para_IntervalId_Dianfeng);
+            para_IntervalId_Dianfeng = null;
+            console.log('定时器已关闭time-Dianfeng:' + new Date().toLocaleString());
+        } else {
+            console.log('暂无运行中的定时器time-Dianfeng:' + new Date().toLocaleString());
         }
         p_alert_success('已关闭');
     }

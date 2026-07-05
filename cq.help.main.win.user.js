@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.13
+// @version      1.14
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -115,8 +115,10 @@
                     await eval(p_TimeGotoMap(config).replace(/:/g, ''));
                 }
 
-                if (para_IntervalId_Dianfeng == null && gd.tianti.tiantiInfo?.leftCount > 6) {
-                    beginTimer_f_Dianfeng();
+                if (new Date().getDay() != 0 || (new Date().getDay() == 0 && nowHourPY < 1800)) {
+                    if (p_timerObj.Dianfeng == null && gd.tianti.tiantiInfo?.leftCount > 6) {
+                        beginTimer_f_Dianfeng();
+                    }
                 }
 
                 if (gd.arpgInst.autoFightType == 3 && gd.map.curMapId != 6077) {

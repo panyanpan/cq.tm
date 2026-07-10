@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.03
+// @version      1.04
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -123,7 +123,7 @@
                     await eval(p_TimeGotoMap(config).replace(/:/g, ''));
                 }
 
-                if (new Date().getDay() != 0 || (new Date().getDay() == 0 && nowHourPY < 1800)) {
+                if (new Date().getDay() != 0 || (new Date().getDay() == 0 && nowHourPY < 1750)) {
                     if (p_timerObj.Dianfeng == null && gd.tianti.tiantiInfo?.leftCount > 6) {
                         beginTimer_f_Dianfeng();
                     }

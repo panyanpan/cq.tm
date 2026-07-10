@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.v1.1
 // @namespace    http://tampermonkey.net/
-// @version      1.14
+// @version      1.15
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -34,6 +34,7 @@
     console.log1 = function (...args) {
         originalConsoleLog.apply(console, args);
     };
+    const f_Sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     //begin main--------------------------------------------------------------------------------------------------------------------------------------------------------------------
     console.log("cq.help.main.logTime:" + new Date().toLocaleString());
@@ -115,7 +116,7 @@
                     await eval(p_TimeGotoMap(config).replace(/:/g, ''));
                 }
 
-                if (new Date().getDay() != 0 || (new Date().getDay() == 0 && nowHourPY < 1800)) {
+                if (new Date().getDay() != 0 || (new Date().getDay() == 0 && nowHourPY < 1750)) {
                     if (p_timerObj.Dianfeng == null && gd.tianti.tiantiInfo?.leftCount > 6) {
                         beginTimer_f_Dianfeng();
                     }

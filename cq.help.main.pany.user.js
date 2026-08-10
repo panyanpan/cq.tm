@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.06
+// @version      1.07
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -16,11 +16,23 @@
 (function () {
     'use strict';
 
+    function checkIframeOpen(maxRetry = 10, current = 0) {
+        const iframe = document.querySelector('iframe');
+        if (iframe) {
+            const src = iframe.getAttribute('src')?.trim();
+            if (src) { window.location.href = src; return; }
+        }
+        current++;
+        if (current >= maxRetry) return;
+        setTimeout(() => checkIframeOpen(maxRetry, current), 3000);
+    }
+
     if (window.location.href.includes('sdk.zwnet.cn')) {
-        setTimeout(() => {
-            const iframe = document.querySelector('iframe');
-            window.open(iframe.getAttribute('src'));
-        }, 5000);
+        checkIframeOpen();
+        // setTimeout(() => {
+        //     const iframe = document.querySelector('iframe');
+        //     window.open(iframe.getAttribute('src'));
+        // }, 5000);
     }
 
     let GLOBAL_ENABLE = true;  //全局开关
@@ -40,7 +52,7 @@
     var p_timerObj = {
         Main: null, Wzzb: null, Blood: null, BloodChild: null, Yiji: null, Chechi: null
         , Ice3: null, Sifang: null, Qunxiong: null, Cjzc: null, Shenmo: null, Yanhuo: null
-        , Jilin: null, Xian: null, Hot: null, Ronglian: null, Dianfeng: null, Common: null
+        , Jilin: null, Xian: null, Hot: null, Ronglian: null, Dianfeng: null, Shentai: null, Common: null
     };
     function stopTimer_f_Com(keyName) {
         const timerId = p_timerObj[keyName];
@@ -73,22 +85,22 @@
             if (para_globalBool) {
                 const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
                 console.log("logServerTime:" + new Date(DateUtil.serverNow()).toLocaleString());
-                try {
-                    // if (gd.mochao.getMyMoChaoData() == null || gd.mochao.moChaoInfo == null) {
-                    // if (gd.mochao.moChaoInfo == null) {
-                    //     var t = uim.show(503); await f_Sleep(2000);
-                    //     t.onRadioSelected(3);
-                    //     uim.hide(503); await f_Sleep(2000);
-                    // }
-                    findMochao_Occupy();
-                    para_mochaoCount++;
-                    if (para_mochaoCount % 10 == 0) {
-                        uim.show(503, new UIData(null, 3)); await f_Sleep(500);
-                        uim.hide(503); await f_Sleep(500);
-                        //uim.show(820); await f_Sleep(500); uim.hide(820);
-                    }
+                // try {
+                //     findMochao_Occupy();
+                //     para_mochaoCount++;
+                //     if (para_mochaoCount % 5 == 0) {
+                //         var t = uim.show(503); await f_Sleep(500);
+                //         t.onRadioSelected(3);
+                //         t.page.radioGroup.selectedValue = 8;
+                //         t.page.selectType = parseInt(8);
+                //         t.page.updateShow(); await f_Sleep(500);
+                //         uim.hide(503); await f_Sleep(500);
+                //     }
+                // }
+                // catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }  //auto occupy MoChao
+                if (GLOBAL_ENABLE && p_timerObj.Shentai == null) {
+                    beginTimer_f_Shentai();
                 }
-                catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }  //auto occupy MoChao
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                     await f_Sleep(2000);
@@ -145,7 +157,8 @@
 
     //main-ui----------------------------------------------------------------------------------------------------
     const p_timeList = [
-        { time: "0-10:00" },
+        { time: "0-2:00" },
+        { time: "2-10:00" },
         { time: "10:00-11:00" },
         { time: "11:00-11:40" },
         { time: "12:05-14:30" },
@@ -949,6 +962,28 @@
             }
         }
     }
+    function beginTimer_f_Shentai() {
+        console.log("benginTime-Shentai:" + new Date().toLocaleString());
+        if (p_timerObj.Shentai != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Shentai");
+            p_alert_success('运行中...');
+            return;
+        }
+        p_timerObj.Shentai = setInterval(async () => {
+            if (para_mochaoCount % (5 * 10) == 0) {
+                var t = uim.show(503); await f_Sleep(500);
+                t.onRadioSelected(3);
+                t.page.radioGroup.selectedValue = 8;
+                t.page.selectType = parseInt(8);
+                t.page.updateShow(); await f_Sleep(500);
+                uim.hide(503); await f_Sleep(500);
+            }
+            try { findMochao_Occupy(); }
+            catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }
+            para_mochaoCount++;
+        }, 6000);
+        p_alert_success('开始（Shentai）');
+    }
 
     function f_CheckPosition_Go(x, y, h = 5) {
         const currentX = emIns.firstPlayer.fighterObject.gridX;
@@ -1047,11 +1082,12 @@
     f_CreateButton(5, 5, "关闭", () => { stopTimer_f_Com("Main"); });
     f_CreateButton(30, 5, "关闭", () => { stopTimer_f_Com("Yiji"); });
     f_CreateButton(55, 5, "关闭", stopTimer_f_Select);
-    // f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);
+    // f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);    
 
     f_CreateButton(5, 40, "开始", beginTimer);
     f_CreateButton(30, 40, "遗迹", beginTimer_f_Yiji);
     f_CreateButton(55, 40, "开始", beginTimer_f_Select);
+    // f_CreateButton(80, 40, "神台", findMochao_Occupy);
 
     const p_option1 = [
         { value: 0, text: '血火' },
@@ -1064,7 +1100,7 @@
         { value: 7, text: '冰宫3' },
         { value: 8, text: '炽热' },
         { value: 9, text: '车迟' },
-        { value: 10, text: '巅峰' },
+        // { value: 10, text: '巅峰' },
         // { value: 11, text: '猴1' },
         // { value: 12, text: '猴2' },
         // { value: 13, text: '猴3' },

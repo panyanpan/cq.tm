@@ -971,12 +971,12 @@
         }
         p_timerObj.Shentai = setInterval(async () => {
             if (para_mochaoCount % (5 * 10) == 0) {
-                var t = uim.show(503); await f_Sleep(500);
-                t.onRadioSelected(3);
+                var t = uim.show(503); await f_Sleep(1500);
+                t.onRadioSelected(3); await f_Sleep(1500);
                 t.page.radioGroup.selectedValue = 8;
                 t.page.selectType = parseInt(8);
-                t.page.updateShow(); await f_Sleep(500);
-                uim.hide(503); await f_Sleep(500);
+                t.page.updateShow(); await f_Sleep(4000);
+                uim.hide(503); 
             }
             try { findMochao_Occupy(); }
             catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.07
+// @version      1.08
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -687,6 +687,14 @@
             return;
         }
         p_timerObj.Xian = setInterval(async () => {//xian 17:00-17:15
+            if (!mapid || !deliverId) {
+                var t = uim.show(601); await f_Sleep(2000);
+                t.onRadioSelected(1, 0);
+                var curindex = t.page.page.bossInfo[t.page.page.selectBoss][0];
+                deliverId = curindex.deliver;
+                mapid = curindex.mapid;
+                await f_Sleep(2000); uim.hide(601);
+            }
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
             if ((nowDate > 1700 && nowDate < 1715)) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
@@ -906,6 +914,11 @@
         }
         var expireDate = new Date(Date.now() + 20 * 60 * 1000); //20 miniute
         p_timerObj.Jilin = setInterval(async () => {
+            if (!id) {
+                var t = uim.show(601); await f_Sleep(2000);
+                id = t.page.listData.getItemAt(t.page.selIndex).id;
+                await f_Sleep(2000); uim.hide(601);
+            }
             var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
             if (nowDate < 600 || nowDate > 2200) {
                 return;
@@ -976,7 +989,7 @@
                 t.page.radioGroup.selectedValue = 8;
                 t.page.selectType = parseInt(8);
                 t.page.updateShow(); await f_Sleep(4000);
-                uim.hide(503); 
+                uim.hide(503);
             }
             try { findMochao_Occupy(); }
             catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }
@@ -1031,19 +1044,20 @@
             case 10: stopTimer_f_Com("Dianfeng"); break;
 
             case 21: stopTimer_f_Com("Xian"); break;
-            case 22: stopTimer_f_Com("Xian"); break;
-            case 23: stopTimer_f_Com("Xian"); break;
-            case 24: stopTimer_f_Com("Xian"); break;
+            // case 22: stopTimer_f_Com("Xian"); break;
+            // case 23: stopTimer_f_Com("Xian"); break;
+            // case 24: stopTimer_f_Com("Xian"); break;
+            // case 25: stopTimer_f_Com("Xian"); break;
 
             case 31: stopTimer_f_Com("Jilin"); break;
-            case 32: stopTimer_f_Com("Jilin"); break;
-            case 33: stopTimer_f_Com("Jilin"); break;
-            case 34: stopTimer_f_Com("Jilin"); break;
-            case 35: stopTimer_f_Com("Jilin"); break;
-            case 36: stopTimer_f_Com("Jilin"); break;
-            case 37: stopTimer_f_Com("Jilin"); break;
-            case 38: stopTimer_f_Com("Jilin"); break;
-            case 39: stopTimer_f_Com("Jilin"); break;
+            // case 32: stopTimer_f_Com("Jilin"); break;
+            // case 33: stopTimer_f_Com("Jilin"); break;
+            // case 34: stopTimer_f_Com("Jilin"); break;
+            // case 35: stopTimer_f_Com("Jilin"); break;
+            // case 36: stopTimer_f_Com("Jilin"); break;
+            // case 37: stopTimer_f_Com("Jilin"); break;
+            // case 38: stopTimer_f_Com("Jilin"); break;
+            // case 39: stopTimer_f_Com("Jilin"); break;
         }
     }
 
@@ -1062,20 +1076,23 @@
             case 9: beginTimer_f_Chechi(); break;
             case 10: beginTimer_f_Dianfeng(); break;
 
-            case 21: beginTimer_f_Xian(31001, 6101); break;
-            case 22: beginTimer_f_Xian(31002, 6102); break;
-            case 23: beginTimer_f_Xian(31003, 6103); break;
-            case 24: beginTimer_f_Xian(31004, 6104); break;
+            case 21: beginTimer_f_Xian(); break;
+            // case 21: beginTimer_f_Xian(31001, 6101); break;
+            // case 22: beginTimer_f_Xian(31002, 6102); break;
+            // case 23: beginTimer_f_Xian(31003, 6103); break;
+            // case 24: beginTimer_f_Xian(31004, 6104); break;
+            // case 25: beginTimer_f_Xian(31005, 6105); break;
 
-            case 31: beginTimer_f_Jilin(32001); break;
-            case 32: beginTimer_f_Jilin(32002); break;
-            case 33: beginTimer_f_Jilin(32003); break;
-            case 34: beginTimer_f_Jilin(32004); break;
-            case 35: beginTimer_f_Jilin(32005); break;
-            case 36: beginTimer_f_Jilin(32006); break;
-            case 37: beginTimer_f_Jilin(32007); break;
-            case 38: beginTimer_f_Jilin(32008); break;
-            case 39: beginTimer_f_Jilin(32009); break;
+            case 31: beginTimer_f_Jilin(); break;
+            // case 31: beginTimer_f_Jilin(32001); break;
+            // case 32: beginTimer_f_Jilin(32002); break;
+            // case 33: beginTimer_f_Jilin(32003); break;
+            // case 34: beginTimer_f_Jilin(32004); break;
+            // case 35: beginTimer_f_Jilin(32005); break;
+            // case 36: beginTimer_f_Jilin(32006); break;
+            // case 37: beginTimer_f_Jilin(32007); break;
+            // case 38: beginTimer_f_Jilin(32008); break;
+            // case 39: beginTimer_f_Jilin(32009); break;
         }
     }
 
@@ -1105,19 +1122,20 @@
         // { value: 12, text: '猴2' },
         // { value: 13, text: '猴3' },
         // { value: 14, text: '猴4' },
-        { value: 21, text: '仙1' },
-        { value: 22, text: '仙2' },
-        { value: 23, text: '仙3' },
-        { value: 24, text: '仙4' },
-        { value: 31, text: '棘林1' },
-        { value: 32, text: '棘林2' },
-        { value: 33, text: '棘林3' },
-        { value: 34, text: '棘林4' },
-        { value: 35, text: '棘林5' },
-        { value: 36, text: '棘林6' },
-        { value: 37, text: '棘林7' },
-        { value: 38, text: '棘林8' },
-        { value: 39, text: '棘林9' }
+        { value: 21, text: '仙' },
+        // { value: 22, text: '仙2' },
+        // { value: 23, text: '仙3' },
+        // { value: 24, text: '仙4' },
+        // { value: 25, text: '仙5' },
+        { value: 31, text: '棘林' }
+        // { value: 32, text: '棘林2' },
+        // { value: 33, text: '棘林3' },
+        // { value: 34, text: '棘林4' },
+        // { value: 35, text: '棘林5' },
+        // { value: 36, text: '棘林6' },
+        // { value: 37, text: '棘林7' },
+        // { value: 38, text: '棘林8' },
+        // { value: 39, text: '棘林9' }
     ];
     f_CreateSelect(57, 75, p_option1);
 

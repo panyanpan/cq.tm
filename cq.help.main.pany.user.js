@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.08
+// @version      1.09
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -695,8 +695,8 @@
                 mapid = curindex.mapid;
                 await f_Sleep(2000); uim.hide(601);
             }
-            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate > 1700 && nowDate < 1715)) {
+            var nowDate = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            if ((nowDate >= 1700 && nowDate < 1715)) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                 }
@@ -722,7 +722,7 @@
             return;
         }
         p_timerObj.Ice3 = setInterval(async () => {//Ice3 11:30-11:45
-            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            var nowDate = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
             if ((nowDate >= 1130 && nowDate < 1145) && p_timerObj.Ice3 != null) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
@@ -767,8 +767,8 @@
             return;
         }
         p_timerObj.Hot = setInterval(async () => {//Hot 17:30-17:40
-            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
-            if ((nowDate >= 1729 && nowDate < 1740) && p_timerObj.Hot != null) {
+            var nowDate = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            if ((nowDate >= 1730 && nowDate < 1740) && p_timerObj.Hot != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
                 }
@@ -828,7 +828,7 @@
             return;
         }
         p_timerObj.Chechi = setInterval(async () => {//Chechi 22:00-22:15
-            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            var nowDate = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
             if ((nowDate >= 2159 && nowDate < 2215) && p_timerObj.Chechi != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -950,7 +950,8 @@
     //child shentai mochao---------------------------------------------------------------------------------------------------
     function findMochao(start, end) {//auto-MoChao(Shentai)
         if (gd.mochao.moChaoInfo != null) {
-            for (let i = start; i <= end; i++) {
+            // for (let i = start; i <= end; i++) {
+            for (let i = end; i >= start; i--) {
                 if (gd.mochao.moChaoInfo[i]?.status == 0) { return i; }
             }
         }
@@ -984,11 +985,11 @@
         }
         p_timerObj.Shentai = setInterval(async () => {
             if (para_mochaoCount % (5 * 10) == 0) {
-                var t = uim.show(503); await f_Sleep(1500);
-                t.onRadioSelected(3); await f_Sleep(1500);
+                var t = uim.show(503); await f_Sleep(1000);
+                t.onRadioSelected(3); await f_Sleep(1000);
                 t.page.radioGroup.selectedValue = 8;
                 t.page.selectType = parseInt(8);
-                t.page.updateShow(); await f_Sleep(4000);
+                t.page.updateShow(); await f_Sleep(100);
                 uim.hide(503);
             }
             try { findMochao_Occupy(); }
@@ -998,7 +999,52 @@
         p_alert_success('开始（Shentai）');
     }
 
-    function f_CheckPosition_Go(x, y, h = 5) {
+    async function f_Tianfu(type) {//type1-3
+        const sendCount = 5;
+        const delayMs = 100;
+
+        const sendLoop = async (id) => {
+            for (let s = 0; s < sendCount; s++) {
+                net.NewtianfuModel.ins().send1(1, id);
+                await f_Sleep(delayMs);
+            }
+        };
+        try {
+            net.NewtianfuModel.ins().send5(1);
+            await f_Sleep(delayMs);
+            switch (parseInt(type)) {
+                case 1: {
+                    for (let i = 1; i < 9; i++) {
+                        await sendLoop(i);
+                    }
+                    break;
+                }
+                case 2: {
+                    const skipList = [10, 14];
+                    for (let i = 9; i < 19; i++) {
+                        if (skipList.includes(i)) continue;
+                        await sendLoop(i);
+                    }
+                    break;
+                }
+                case 3: {
+                    const skipList = [19, 23];
+                    for (let i = 19; i < 29; i++) {
+                        if (skipList.includes(i)) continue;
+                        await sendLoop(i);
+                    }
+                    break;
+                }
+                default:
+                    console.warn("f_Tianfu: 未知的type值", type);
+                    break;
+            }
+        } catch (err) {
+            console.error("发包过程出现异常中断", err);
+        }
+    }
+
+    function f_CheckPosition_Go(x, y, h = 20) {
         const currentX = emIns.firstPlayer.fighterObject.gridX;
         const currentY = emIns.firstPlayer.fighterObject.gridY;
         if (Math.abs(currentX - x) > h || Math.abs(currentY - y) > h) {
@@ -1099,11 +1145,15 @@
     f_CreateButton(5, 5, "关闭", () => { stopTimer_f_Com("Main"); });
     f_CreateButton(30, 5, "关闭", () => { stopTimer_f_Com("Yiji"); });
     f_CreateButton(55, 5, "关闭", stopTimer_f_Select);
-    // f_CreateButton(80, 5, "熔炼", beginTimer_f_Ronglian);    
+    // f_CreateButton(105, 5, "熔炼", beginTimer_f_Ronglian);    
 
     f_CreateButton(5, 40, "开始", beginTimer);
     f_CreateButton(30, 40, "遗迹", beginTimer_f_Yiji);
     f_CreateButton(55, 40, "开始", beginTimer_f_Select);
+
+    f_CreateButton(80, 47, "怪", async ()=>{await f_Tianfu(1);});
+    f_CreateButton(80, 26, "攻", async ()=>{await f_Tianfu(2);});
+    f_CreateButton(80, 5, "防", async ()=>{await f_Tianfu(3);});
     // f_CreateButton(80, 40, "神台", findMochao_Occupy);
 
     const p_option1 = [

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.09
+// @version      1.10
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -1332,8 +1332,16 @@
             const p_vaule = item.value.split(';');
 
             var p_deliverIdNpc = p_map.get(Number(p_vaule[1])) ?? '';
+
             if (p_vaule[0] != "81") {
-                code += `if (nowHourPY >= ${p_time[0]} && nowHourPY < ${p_time[1]} && gd.map.curMapId != ${p_vaule[0]}) {`
+                const arr_liupoDeliver = [400104, 400105, 400106, 400111, 400112, 400113];
+                if (arr_liupoDeliver.includes(Number(p_vaule[1]))) {//random liupo
+                    p_vaule[1] = arr_liupoDeliver[Math.floor(Math.random() * arr_liupoDeliver.length)];
+                    const bool_go = [6126, 6127, 6128, 6133, 6134, 6135].includes(gd.map.curMapId);
+                    code += `if (nowHourPY >= ${p_time[0]} && nowHourPY < ${p_time[1]} && ${!bool_go}) {`;
+                } else {
+                    code += `if (nowHourPY >= ${p_time[0]} && nowHourPY < ${p_time[1]} && gd.map.curMapId != ${p_vaule[0]}) {`;
+                }
                 if (p_deliverIdNpc != '') {
                     code += `Logic.deliverToFindNpc(${p_deliverIdNpc});`;   //go to npc
                     code += `(async function() {await f_Sleep(3000);Logic.deliverToFindNpc(${p_vaule[1]});})();}`;

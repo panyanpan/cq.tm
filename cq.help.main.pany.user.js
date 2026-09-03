@@ -85,19 +85,6 @@
             if (para_globalBool) {
                 const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
                 console.log("logServerTime:" + new Date(DateUtil.serverNow()).toLocaleString());
-                // try {
-                //     findMochao_Occupy();
-                //     para_mochaoCount++;
-                //     if (para_mochaoCount % 5 == 0) {
-                //         var t = uim.show(503); await f_Sleep(500);
-                //         t.onRadioSelected(3);
-                //         t.page.radioGroup.selectedValue = 8;
-                //         t.page.selectType = parseInt(8);
-                //         t.page.updateShow(); await f_Sleep(500);
-                //         uim.hide(503); await f_Sleep(500);
-                //     }
-                // }
-                // catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }  //auto occupy MoChao
                 if (p_timerObj.Shentai == null) {
                     beginTimer_f_Shentai();
                 }
@@ -248,7 +235,7 @@
 
         const btn = document.createElement("div");
         btn.innerText = "请选择";
-        btn.style.cssText = `position: fixed;top: ${top}px;right: ${right}px; padding: 6px 12px;background: #ff4444;color: #fff;border-radius: 4px;cursor: pointer;font-size: 10px;user-select: none;`;
+        btn.style.cssText = `position: fixed;top: ${top}px;right: ${right}px; padding: 6px 12px;background: #ff4444;color: #fff;border-radius: 4px;cursor: pointer;font-size: 10px;user-select: none; min-width: 80px;`;
 
         const panel = document.createElement("div");
         panel.style.cssText = `position: absolute;top: 105%;right: 0;background: #fff;border: 1px solid #ddd;border-radius: 4px;padding: 10px;display: none;min-width: 220px;box-shadow: 0 2px 10px rgba(0,0,0,0.1);`;
@@ -958,20 +945,14 @@
         console.log("moChaoTimeOccupy-find-status-null:" + new Date().toLocaleString());
         return null;
     }
-    var rewardBool_Mochao = false;
+    var para_mc = null;
     function findMochao_Occupy() {//auto occupy MoChao(Shentai)                      
         if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date() > new Date().setHours(10, 0, 0, 0))) {
-            var para_mc = gd.mochao.getMyMoChaoData();
+            // var para_mc = gd.mochao.getMyMoChaoData();
             if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
                 var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
                 if (para_Shentai) {
                     net.MochaoModel.ins().send3(para_Shentai, 0);
-                }
-            }
-            if (!rewardBool_Mochao && new Date().getDay() == 0 && new Date() > new Date().setHours(22, 20, 0, 0)) {
-                rewardBool_Mochao = true;
-                for (var i = 1; i < 12; i++) {
-                    //net.MochaoModel.ins().send11(i);  //reward 1-n
                 }
             }
         }
@@ -984,18 +965,16 @@
             return;
         }
         p_timerObj.Shentai = setInterval(async () => {
-            if (para_mochaoCount % (5 * 10) == 0) {
+            if (para_mochaoCount % 75 == 0) {
                 var t = uim.show(503); await f_Sleep(1000);
                 t.onRadioSelected(3); await f_Sleep(1000);
-                t.page.radioGroup.selectedValue = 8;
-                t.page.selectType = parseInt(8);
-                t.page.updateShow(); await f_Sleep(100);
+                t.page.myMoChao ? para_mc = gd.mochao.moChaoInfo[t.page.myMoChaoCfg.id] : para_mc = null;
                 uim.hide(503);
             }
             try { findMochao_Occupy(); }
             catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }
             para_mochaoCount++;
-        }, 6000);
+        }, 4000);
         p_alert_success('开始（Shentai）');
     }
 

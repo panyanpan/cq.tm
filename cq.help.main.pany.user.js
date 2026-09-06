@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         cq.help.main.pany
+// @name         cq.help.main.pany.test
 // @namespace    http://tampermonkey.net/
 // @version      1.11
 // @description  try to take over the world!
@@ -29,10 +29,6 @@
 
     if (window.location.href.includes('sdk.zwnet.cn')) {
         checkIframeOpen();
-        // setTimeout(() => {
-        //     const iframe = document.querySelector('iframe');
-        //     window.open(iframe.getAttribute('src'));
-        // }, 5000);
     }
 
     let GLOBAL_ENABLE = true;  //全局开关
@@ -54,20 +50,8 @@
         , Ice3: null, Sifang: null, Qunxiong: null, Cjzc: null, Shenmo: null, Yanhuo: null
         , Jilin: null, Xian: null, Hot: null, Ronglian: null, Dianfeng: null, Shentai: null, Common: null
     };
-    function stopTimer_f_Com(keyName) {
-        const timerId = p_timerObj[keyName];
-        if (timerId != null) {
-            clearInterval(timerId);
-            p_timerObj[keyName] = null;
-            console.log(`定时器已关闭 [${keyName}] at ${new Date().toLocaleString()}`);
-            para_globalBool = true;
-            p_alert_error(`已关闭 [${keyName}]`);
-        } else {
-            console.log(`定时器 [${keyName}] 未运行`);
-            p_alert_error(` [${keyName}] 未运行`);
-        }
-    }
-    //begin main--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //begin main------------------------------------------------------------------------------
     console.log("cq.help.main.logTime:" + new Date().toLocaleString());
     var para_globalBool = true;
     let para_yabiaoCount = 0;
@@ -142,152 +126,7 @@
         p_alert_success('开始（主线）');
     }
 
-    //main-ui----------------------------------------------------------------------------------------------------
-    const p_timeList = [
-        { time: "0-2:00" },
-        { time: "2:00-10:00" },
-        { time: "10:00-11:00" },
-        { time: "11:00-11:40" },
-        { time: "12:05-14:30" },
-        { time: "14:30-15:00" },
-        { time: "15:00-18:00" },
-        { time: "18:00-18:45" },
-        { time: "19:00-19:30" },
-        { time: "20:00-20:30" },
-        { time: "20:30-21:59" },
-        { time: "22:00-23:59" }
-    ];
-    const p_mapList = [//cm.deliver[deliverId].toMapId
-        { name: "比奇", mapId: 81, deliverId: 600300 },
-        { name: "喜魄1", mapId: 6126, deliverId: 400104 },
-        { name: "怒魄1", mapId: 6127, deliverId: 400105 },
-        { name: "哀魄1", mapId: 6128, deliverId: 400106 },
-        { name: "惧魄1", mapId: 6133, deliverId: 400111 },
-        { name: "爱魄1", mapId: 6134, deliverId: 400112 },
-        { name: "恶魄1", mapId: 6135, deliverId: 400113 },
-        { name: "无尽", mapId: 200090, deliverId: 200090 },
-        { name: "无量", mapId: 200091, deliverId: 200091 },
-        { name: "无极", mapId: 200092, deliverId: 200092 },
-        { name: "狮驼", mapId: 200039, deliverId: 600054, deliverIdNpc: 600082 },
-        { name: "清华", mapId: 200040, deliverId: 600060, deliverIdNpc: 600083 },
-        { name: "无底", mapId: 200041, deliverId: 600061, deliverIdNpc: 600084 },
-        { name: "盘恒", mapId: 200056, deliverId: 600100, deliverIdNpc: 600110 },
-        { name: "玄英", mapId: 200057, deliverId: 600101, deliverIdNpc: 600111 },
-        { name: "毛颖", mapId: 200058, deliverId: 600102, deliverIdNpc: 600112 },
-        { name: "铜台", mapId: 200059, deliverId: 600103, deliverIdNpc: 600113 },
-        { name: "降妖4", mapId: 200047, deliverId: 600067 },
-        { name: "降妖5", mapId: 200048, deliverId: 600068 },
-        { name: "降妖9", mapId: 200067, deliverId: 600118 },
-        { name: "降妖10", mapId: 200068, deliverId: 600119 },
-        { name: "降妖12", mapId: 200079, deliverId: 600181 },
-        { name: "降妖13", mapId: 200080, deliverId: 600182 },
-        { name: "降妖14", mapId: 200081, deliverId: 600183 },
-        { name: "降妖15", mapId: 200082, deliverId: 600184 },
-        { name: "降妖16", mapId: 200083, deliverId: 600185 },
-        { name: "降妖17", mapId: 200084, deliverId: 600186 },
-        { name: "降妖18", mapId: 200085, deliverId: 600187 },
-        { name: "降妖19", mapId: 200086, deliverId: 600188 },
-        { name: "降妖20", mapId: 200087, deliverId: 600189 },
-        { name: "无限试炼1", mapId: 5613, deliverId: 800210 },
-        { name: "无限试炼2", mapId: 5614, deliverId: 800211 },
-        { name: "无限试炼3", mapId: 5615, deliverId: 800212 },
-        { name: "造化2", mapId: 6268, deliverId: 600149 },
-        { name: "造化3", mapId: 5570, deliverId: 600150 },
-        { name: "造化4", mapId: 5568, deliverId: 600151 },
-        { name: "黄金1", mapId: 200077, deliverId: 600159 },
-        { name: "镇狱0", mapId: 6124, deliverId: 400103 },
-        { name: "镇狱1", mapId: 6122, deliverId: 400101 },
-        { name: "镇狱2", mapId: 6123, deliverId: 400102 },
-        { name: "福地1", mapId: 200072, deliverId: 600141 },
-        { name: "福地2", mapId: 200074, deliverId: 600143 },
-        { name: "白骨1", mapId: 60, deliverId: 600027 },
-        { name: "白骨2", mapId: 600, deliverId: 600136 },
-        { name: "圣地5", mapId: 7128, deliverId: 600176 },
-        { name: "圣地6", mapId: 7129, deliverId: 600177 },
-        { name: "圣地5el", mapId: 7155, deliverId: 600276 },
-        { name: "圣地6el", mapId: 7156, deliverId: 600277 },
-        { name: "灵魂1", mapId: 1621, deliverId: 1497 },
-        { name: "灵魂2", mapId: 1622, deliverId: 1498 },
-        { name: "灵魂3", mapId: 1623, deliverId: 1499 }
-    ];
-    let p_selectElements = [];
-    function saveMapConfig() {
-        const config = p_selectElements.map((sel, index) => ({
-            time: p_timeList[index].time,// == "00:00-11:00" ? "0-11:00" : p_timeList[index].time,
-            value: sel.value
-        }));
-        GM_setValue("p_MapSelectConfig", config);
-    }
-
-    function loadMapConfig() {
-        const config = GM_getValue("p_MapSelectConfig");
-        if (!config) return;
-        config.forEach((item, index) => {
-            if (p_selectElements[index]) {
-                p_selectElements[index].value = item.value;
-            }
-        });
-    }
-
-    function p_CreateMapSelector(top, right) {
-        const wrap = document.createElement("div");
-        wrap.style.cssText = `position: fixed;top: 32px;right: 70px;z-index: 9999;`;
-
-        const btn = document.createElement("div");
-        btn.innerText = "请选择";
-        btn.style.cssText = `position: fixed;top: ${top}px;right: ${right}px; padding: 6px 12px;background: #ff4444;color: #fff;border-radius: 4px;cursor: pointer;font-size: 10px;user-select: none;`;
-
-        const panel = document.createElement("div");
-        panel.style.cssText = `position: absolute;top: 105%;right: 0;background: #fff;border: 1px solid #ddd;border-radius: 4px;padding: 10px;display: none;min-width: 220px;box-shadow: 0 2px 10px rgba(0,0,0,0.1);`;
-
-        const ul = document.createElement("ul");
-        ul.style.cssText = `list-style: none;margin: 0;padding: 0;display: flex;flex-direction: column;gap: 6px;`;
-
-        p_timeList.forEach(item => {
-            const li = document.createElement("li");
-            li.style.cssText = `display: flex;align-items: center;justify-content: space-between;gap: 10px;font-size: 12px;`;
-
-            const timeText = document.createElement("span");
-            timeText.textContent = item.time;
-            timeText.style.width = "110px";
-
-            const sel = document.createElement("select");
-            sel.style.cssText = `padding: 3px 6px; font-size:12px; flex:1;`;
-
-            p_mapList.forEach((item, i) => {
-                const opt = document.createElement("option");
-                opt.value = item.mapId + ';' + item.deliverId;
-                opt.innerText = item.name;
-                sel.append(opt);
-            });
-
-            p_selectElements.push(sel);
-            sel.addEventListener("change", saveMapConfig);
-
-            li.append(timeText, sel);
-            ul.append(li);
-
-        });
-
-        panel.append(ul);
-        wrap.append(btn, panel);
-        document.body.append(wrap);
-
-        btn.addEventListener("click", e => {
-            e.stopPropagation();
-            panel.style.display = panel.style.display === "block" ? "none" : "block";
-        });
-
-        document.addEventListener("click", () => panel.style.display = "none");
-        panel.addEventListener("click", e => e.stopPropagation());
-
-    }
-
-    p_CreateMapSelector(5, 75);
-    loadMapConfig();
-
-    //begin child--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //child wzzb------------------------------------------------------------------------------------------------------
+    //Timer Child--------------------------------------------------------------------------------------------
     function beginTimer_f_Wzzb() {
         console.log("benginTime-Wzzb:" + new Date().toLocaleString());
         if (p_timerObj.Wzzb != null) {
@@ -323,7 +162,6 @@
         p_alert_success('开始（王者）');
     }
 
-    //child blood------------------------------------------------------------------------------------------------------
     var innerPY = false;
     function beginTimer_f_Blood() {
         console.log("benginTime-Blood:" + new Date().toLocaleString());
@@ -343,11 +181,6 @@
                 net.CrazebattleModel.ins().send7(3);
                 await f_Sleep(200); gd.inst.sendReqEnterArpgMapMessaged(700);//gotomap
                 await f_Sleep(200);
-                // if (gd.map.curMapId == 700) {
-                //     innerPY = true;
-                //     para_globalBool = false;
-                //     f_Child_Blood();
-                // }
             }
             if (gd.map.curMapId == 700 && p_timerObj.BloodChild == null) {
                 if (para_globalBool == true) {
@@ -373,7 +206,6 @@
         }, 1000);
     }
 
-    //child yiji------------------------------------------------------------------------------------------------------
     var para_yiji = [670, 470, 270];//670--------------------
     var para_yiji_mapid = [8036, 8024, 8012];//mapid------------------
     function beginTimer_f_Yiji() {
@@ -418,17 +250,16 @@
                     break;
                 }
             }
-            /*
+
             //if(guishu == 0 && xiezhu == 0)  {//-----not impl
             //clearInterval(para_intervalIdYiji);
             //console.log("clearIntervalTime:"+new Date().toLocaleString());
             //}
-            */
+
         }, 6000);
         p_alert_success('开始（遗迹）');
     }
 
-    //child sifang--------------------------------------------------------------------------------------------------------------
     var rewardBool_Sifang = false;
     function beginTimer_f_Sifang() {
         console.log("benginTime-Sifang:" + new Date().toLocaleString());
@@ -472,7 +303,6 @@
         p_alert_success('开始（四方）');
     }
 
-    //child cjzc-----------------------------------------------------------------------------------------------------------
     function beginTimer_f_Cjzc() {
         console.log("benginTime-Cjzc:" + new Date().toLocaleString());
         if (p_timerObj.Cjzc != null) {
@@ -505,7 +335,6 @@
         p_alert_success('开始（刺激）');
     }
 
-    //child shenmo-----------------------------------------------------------------------------------------------------------
     var p_iCount = 0;
     function beginTimer_f_Shenmo() {
         console.log("benginTime-Shemo:" + new Date().toLocaleString());
@@ -581,7 +410,6 @@
         p_alert_success('开始（神魔）');
     }
 
-    //child qunxiong------------------------------------------------------------------------------------------------------
     var rewardBool_Qunxiong = false;
     function beginTimer_f_Qunxiong() {
         console.log("benginTime-Qunxiong:" + new Date().toLocaleString());
@@ -630,40 +458,6 @@
             }
         }, 2000);
         p_alert_success('开始（群雄）');
-    }
-
-    //child yanhuo---------------------------------------------------------------------------------------------------
-    function beginTimer_f_Yanhuo() {
-        console.log("benginTime-Yanhuo:" + new Date().toLocaleString());
-        if (p_timerObj.Yanhuo != null) {
-            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Yanhuo");
-            p_alert_success('运行中...');
-            return;
-        }
-        var p_arr_yanhuo = 20044;//[20044,20045,20046,20047,20048,20049,20050,20051,20052,20053,20054,20055,20056,20057,20058];
-        var p_arr_yanhuo_mapid = 5446;//[5446,5447,5448,5449,5450,5451,5452,5453,5454,5455,5456,5457,5458,5459,5460];
-        var expireDate = new Date(Date.now() + 25 * 60 * 1000); //25 miniute
-        p_timerObj.Yanhuo = setInterval(async () => {//yanhuo
-            if (para_globalBool == true) {
-                para_globalBool = false;
-            }
-            if (gd.map.curMapId == 200043) {//biqi3.5   !p_arr_yanhuo.includes(gd.map.curMapId) &&
-                uim.show(798, new UIData({ dupId: p_arr_yanhuo, lookOtherTeam: false }));
-                gd.nest.doJionIn(2, p_arr_yanhuo, null);//create team
-                await f_Sleep(1000);
-                net.SpiritmonsterModel.ins().send13(p_arr_yanhuo, gd.nest.teamData.teamId, false);//gotomap
-                await f_Sleep(200);
-                p_arr_yanhuo++;
-                p_arr_yanhuo_mapid++;
-            }
-            if (gd.arpgInst.autoFightType == 3) {
-                await f_Sleep(100); gd.arpgInst.setAutoFight(1);
-            }
-            if (new Date() > expireDate) {
-                stopTimer_f_Com("Yanhuo");
-            }
-        }, 10000);
-        p_alert_success('开始（焰火）');
     }
 
     function beginTimer_f_Xian(mapid, deliverId) {
@@ -934,7 +728,39 @@
         p_alert_success('开始（jilin）');
     }
 
-    //child shentai mochao---------------------------------------------------------------------------------------------------
+    function beginTimer_f_Yanhuo() {
+        console.log("benginTime-Yanhuo:" + new Date().toLocaleString());
+        if (p_timerObj.Yanhuo != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Yanhuo");
+            p_alert_success('运行中...');
+            return;
+        }
+        var p_arr_yanhuo = 20044;//[20044,20045,20046,20047,20048,20049,20050,20051,20052,20053,20054,20055,20056,20057,20058];
+        var p_arr_yanhuo_mapid = 5446;//[5446,5447,5448,5449,5450,5451,5452,5453,5454,5455,5456,5457,5458,5459,5460];
+        var expireDate = new Date(Date.now() + 25 * 60 * 1000); //25 miniute
+        p_timerObj.Yanhuo = setInterval(async () => {//yanhuo
+            if (para_globalBool == true) {
+                para_globalBool = false;
+            }
+            if (gd.map.curMapId == 200043) {//biqi3.5   !p_arr_yanhuo.includes(gd.map.curMapId) &&
+                uim.show(798, new UIData({ dupId: p_arr_yanhuo, lookOtherTeam: false }));
+                gd.nest.doJionIn(2, p_arr_yanhuo, null);//create team
+                await f_Sleep(1000);
+                net.SpiritmonsterModel.ins().send13(p_arr_yanhuo, gd.nest.teamData.teamId, false);//gotomap
+                await f_Sleep(200);
+                p_arr_yanhuo++;
+                p_arr_yanhuo_mapid++;
+            }
+            if (gd.arpgInst.autoFightType == 3) {
+                await f_Sleep(100); gd.arpgInst.setAutoFight(1);
+            }
+            if (new Date() > expireDate) {
+                stopTimer_f_Com("Yanhuo");
+            }
+        }, 10000);
+        p_alert_success('开始（焰火）');
+    }
+
     function findMochao(start, end) {//auto-MoChao(Shentai)
         if (gd.mochao.moChaoInfo != null) {
             // for (let i = start; i <= end; i++) {
@@ -970,11 +796,12 @@
                 var t = uim.show(503); await f_Sleep(1000);
                 t.onRadioSelected(3); await f_Sleep(1000);
                 t.page.myMoChao ? para_mc = gd.mochao.moChaoInfo[t.page.myMoChaoCfg.id] : para_mc = null;
+                console.log1("Time-para_mc:" + new Date().toLocaleString() + `${para_mc ? para_mc.guardEndTime.toNumber() : 0}`);
                 uim.hide(503); await f_Sleep(1000);
             }
             para_mochaoCount++;
             try { findMochao_Occupy(); }
-            catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }
+            catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }            
         }, 4000);
         p_alert_success('开始（Shentai）');
     }
@@ -1024,91 +851,138 @@
         }
     }
 
-    function f_CheckPosition_Go(x, y, h = 20) {
-        const currentX = emIns.firstPlayer.fighterObject.gridX;
-        const currentY = emIns.firstPlayer.fighterObject.gridY;
-        if (Math.abs(currentX - x) > h || Math.abs(currentY - y) > h) {
-            gd.map.gotoStagePoint(x, y, gd.map.curMapId, false);//center xy
-        }
-    }
-
-    //Common UI------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    function f_CreateButton(top, right, cName, onClickFn) {
+    //Common UI---------------------------------------------------------------------------
+    function f_CreateButton(cName, onClickFn) {
         const btn = document.createElement('button');
-        btn.style.cssText = `position: fixed;top: ${top}px;right: ${right}px;padding: 5px 5px;background: #ff4444;color: white;border: none;border-radius: 4px;cursor: pointer;z-index: 9000;font-size: 10px;`;
+        btn.style.cssText = `margin:2px;padding: 5px 8px;background: #2563eb;color: white;border: none;border-radius: 4px;cursor: pointer;font-size: 11px;`;
         btn.innerText = cName;
         btn.onclick = onClickFn;
-        document.body.appendChild(btn);
+        return btn;
     }
 
-    function f_CreateSelect(top, right, p_list) {
+    const p_timeList = [
+        { time: "0-2:00" },
+        { time: "2:00-10:00" },
+        { time: "10:00-11:00" },
+        { time: "11:00-11:40" },
+        { time: "12:05-14:30" },
+        { time: "14:30-15:00" },
+        { time: "15:00-18:00" },
+        { time: "18:00-18:45" },
+        { time: "19:00-19:30" },
+        { time: "20:00-20:30" },
+        { time: "20:30-21:59" },
+        { time: "22:00-23:59" }
+    ];
+    const p_mapList = [//cm.deliver[deliverId].toMapId
+        { name: "比奇", mapId: 81, deliverId: 600300 },
+        { name: "喜魄1", mapId: 6126, deliverId: 400104 },
+        { name: "怒魄1", mapId: 6127, deliverId: 400105 },
+        { name: "哀魄1", mapId: 6128, deliverId: 400106 },
+        { name: "惧魄1", mapId: 6133, deliverId: 400111 },
+        { name: "爱魄1", mapId: 6134, deliverId: 400112 },
+        { name: "恶魄1", mapId: 6135, deliverId: 400113 },
+        { name: "无尽", mapId: 200090, deliverId: 200090 },
+        { name: "无量", mapId: 200091, deliverId: 200091 },
+        { name: "无极", mapId: 200092, deliverId: 200092 },
+        { name: "狮驼", mapId: 200039, deliverId: 600054, deliverIdNpc: 600082 },
+        { name: "清华", mapId: 200040, deliverId: 600060, deliverIdNpc: 600083 },
+        { name: "无底", mapId: 200041, deliverId: 600061, deliverIdNpc: 600084 },
+        { name: "盘恒", mapId: 200056, deliverId: 600100, deliverIdNpc: 600110 },
+        { name: "玄英", mapId: 200057, deliverId: 600101, deliverIdNpc: 600111 },
+        { name: "毛颖", mapId: 200058, deliverId: 600102, deliverIdNpc: 600112 },
+        { name: "铜台", mapId: 200059, deliverId: 600103, deliverIdNpc: 600113 },
+        { name: "降妖4", mapId: 200047, deliverId: 600067 },
+        { name: "降妖5", mapId: 200048, deliverId: 600068 },
+        { name: "降妖9", mapId: 200067, deliverId: 600118 },
+        { name: "降妖10", mapId: 200068, deliverId: 600119 },
+        { name: "降妖12", mapId: 200079, deliverId: 600181 },
+        { name: "降妖13", mapId: 200080, deliverId: 600182 },
+        { name: "降妖14", mapId: 200081, deliverId: 600183 },
+        { name: "降妖15", mapId: 200082, deliverId: 600184 },
+        { name: "降妖16", mapId: 200083, deliverId: 600185 },
+        { name: "降妖17", mapId: 200084, deliverId: 600186 },
+        { name: "降妖18", mapId: 200085, deliverId: 600187 },
+        { name: "降妖19", mapId: 200086, deliverId: 600188 },
+        { name: "降妖20", mapId: 200087, deliverId: 600189 },
+        { name: "无限试炼1", mapId: 5613, deliverId: 800210 },
+        { name: "无限试炼2", mapId: 5614, deliverId: 800211 },
+        { name: "无限试炼3", mapId: 5615, deliverId: 800212 },
+        { name: "造化2", mapId: 6268, deliverId: 600149 },
+        { name: "造化3", mapId: 5570, deliverId: 600150 },
+        { name: "造化4", mapId: 5568, deliverId: 600151 },
+        // { name: "黄金1", mapId: 200077, deliverId: 600159 },
+        { name: "镇狱0", mapId: 6124, deliverId: 400103 },
+        { name: "镇狱1", mapId: 6122, deliverId: 400101 },
+        { name: "镇狱2", mapId: 6123, deliverId: 400102 },
+        { name: "福地1", mapId: 200072, deliverId: 600141 },
+        { name: "福地2", mapId: 200074, deliverId: 600143 },
+        { name: "白骨1", mapId: 60, deliverId: 600027 },
+        { name: "白骨2", mapId: 600, deliverId: 600136 },
+        { name: "圣地5", mapId: 7128, deliverId: 600176 },
+        { name: "圣地6", mapId: 7129, deliverId: 600177 },
+        { name: "圣地5el", mapId: 7155, deliverId: 600276 },
+        { name: "圣地6el", mapId: 7156, deliverId: 600277 }
+        // { name: "灵魂1", mapId: 1621, deliverId: 1497 },
+        // { name: "灵魂2", mapId: 1622, deliverId: 1498 },
+        // { name: "灵魂3", mapId: 1623, deliverId: 1499 }
+    ];
+
+    let p_selectElements = [];
+    function p_CreateMapSelector() {
+        const wrap = document.createElement("div");
+        wrap.style.cssText = `margin-bottom:12px;position:relative;`;
+        const btn = document.createElement("div");
+        btn.innerText = "请选择";
+        btn.style.cssText = `padding: 5px 12px;background: #2563eb;color: #fff;border-radius: 4px;cursor: pointer;font-size: 12px;user-select: none;display:inline-block;min-width: 104px;`;
+        const panel = document.createElement("div");
+        panel.style.cssText = `position: absolute;top: 105%;left:0;background: #fff;border: 1px solid #ddd;border-radius: 4px;padding: 10px;display: none;min-width: 180px;box-shadow: 0 2px 10px rgba(0,0,0,0.1);`;
+        const ul = document.createElement("ul");
+        ul.style.cssText = `list-style: none;margin: 0;padding: 0;display: flex;flex-direction: column;gap: 6px;`;
+        p_timeList.forEach(item => {
+            const li = document.createElement("li");
+            li.style.cssText = `display: flex;align-items: center;justify-content: space-between;gap: 10px;font-size: 12px;`;
+            const timeText = document.createElement("span");
+            timeText.textContent = item.time;
+            timeText.style.width = "110px";
+            const sel = document.createElement("select");
+            sel.style.cssText = `padding: 3px 6px; font-size:12px; flex:1;`;
+            p_mapList.forEach((item, i) => {
+                const opt = document.createElement("option");
+                opt.value = item.mapId + ';' + item.deliverId;
+                opt.innerText = item.name;
+                sel.append(opt);
+            });
+            p_selectElements.push(sel);
+            sel.addEventListener("change", saveMapConfig);
+            li.append(timeText, sel);
+            ul.append(li);
+        });
+        panel.append(ul);
+        wrap.append(btn, panel);
+
+        btn.addEventListener("click", e => {
+            e.stopPropagation();
+            panel.style.display = panel.style.display === "block" ? "none" : "block";
+        });
+        document.addEventListener("click", () => panel.style.display = "none");
+        panel.addEventListener("click", e => e.stopPropagation());
+        return wrap;
+    }
+    const mapSelDom = p_CreateMapSelector();
+
+    function f_CreateSelect(p_list) {
         const sel = document.createElement("select");
         sel.id = "select1";
-        sel.style.cssText = `position: fixed;top: ${top}px;right: ${right}px;padding: 5px 5px;background: #ff4444;color: white;border: none;border-radius: 4px;cursor: pointer;z-index: 9000;font-size: 10px;`;
+        sel.style.cssText = `margin:2px;padding: 4px 6px;font-size:11px;`;
         p_list.forEach((item, i) => {
             const opt = document.createElement("option");
             opt.value = item.value;
             opt.innerText = item.text;
             sel.append(opt);
         });
-        document.body.appendChild(sel);
+        return sel;
     }
-
-    function stopTimer_f_Select() {
-        var p_select = document.getElementById("select1").value;
-        switch (parseInt(p_select)) {
-            case 0: stopTimer_f_Com("Blood"); stopTimer_f_Com("BloodChild"); break;
-            case 1: stopTimer_f_Com("Sifang"); break;
-            case 2: stopTimer_f_Com("Qunxiong"); break;
-            case 3: stopTimer_f_Com("Shenmo"); break;
-            case 4: stopTimer_f_Com("Wzzb"); break;
-            case 5: stopTimer_f_Com("Yanhuo"); break;
-            case 6: stopTimer_f_Com("Cjzc"); break;
-            case 7: stopTimer_f_Com("Ice3"); break;
-            case 8: stopTimer_f_Com("Hot"); break;
-            case 9: stopTimer_f_Com("Chechi"); break;
-            case 10: stopTimer_f_Com("Dianfeng"); break;
-
-            case 21: stopTimer_f_Com("Xian"); break;
-
-            case 31: stopTimer_f_Com("Jilin"); break;
-        }
-    }
-
-    function beginTimer_f_Select() {
-        var p_select = document.getElementById("select1").value;
-        switch (parseInt(p_select)) {
-            case 0: beginTimer_f_Blood(); break;
-            case 1: beginTimer_f_Sifang(); break;
-            case 2: beginTimer_f_Qunxiong(); break;
-            case 3: beginTimer_f_Shenmo(); break;
-            case 4: beginTimer_f_Wzzb(); break;
-            case 5: beginTimer_f_Yanhuo(); break;
-            case 6: beginTimer_f_Cjzc(); break;
-            case 7: beginTimer_f_Ice3(); break;
-            case 8: beginTimer_f_Hot(); break;
-            case 9: beginTimer_f_Chechi(); break;
-            case 10: beginTimer_f_Dianfeng(); break;
-
-            case 21: beginTimer_f_Xian(); break;
-
-            case 31: beginTimer_f_Jilin(); break;
-        }
-    }
-
-    f_CreateButton(5, 5, "关闭", () => { stopTimer_f_Com("Main"); });
-    f_CreateButton(30, 5, "关闭", () => { stopTimer_f_Com("Yiji"); });
-    f_CreateButton(55, 5, "关闭", stopTimer_f_Select);
-    // f_CreateButton(105, 5, "熔炼", beginTimer_f_Ronglian);    
-
-    f_CreateButton(5, 40, "开始", beginTimer);
-    f_CreateButton(30, 40, "遗迹", beginTimer_f_Yiji);
-    f_CreateButton(55, 40, "开始", beginTimer_f_Select);
-
-    f_CreateButton(80, 47, "怪", async () => { await f_Tianfu(1); });
-    f_CreateButton(80, 26, "攻", async () => { await f_Tianfu(2); });
-    f_CreateButton(80, 5, "防", async () => { await f_Tianfu(3); });
-    // f_CreateButton(80, 40, "神台", findMochao_Occupy);
 
     const p_option1 = [
         { value: 0, text: '血火' },
@@ -1129,76 +1003,57 @@
         { value: 21, text: '仙' },
         { value: 31, text: '棘林' }
     ];
-    f_CreateSelect(57, 75, p_option1);
+    const selDom = f_CreateSelect(p_option1);
 
     //多选下拉菜单yiji---------------------------------------------------------------------------------------------------------------------
     let checkboxList = [];
-    function f_CreateSelect1(top, right, p_list) {
-        // 1. 创建外层容器
+    function f_CreateSelect1(p_list) {
         const container = document.createElement("div");
-        container.style.cssText = `position: fixed;top: ${top}px;right: ${right}px;z-index: 9000;font-size: 10px;`;
-        // 2. 创建点击显示框（模拟你的select外观）
+        container.style.cssText = `margin:12px 2px;position:relative;font-size: 11px;`;
         const inputBox1 = document.createElement("div");
         inputBox1.id = 'selectdivValue';
         inputBox1.style.cssText = `display: none`;
         const inputBox = document.createElement("div");
-        inputBox.style.cssText = `padding: 5px 10px;background: #ff4444;color: white;border: none;border-radius: 4px;cursor: pointer;min-width: 80px;user-select: none;`;
+        inputBox.style.cssText = `display:inline-block;padding: 5px 10px;background: #2563eb;color: white;border: none;border-radius: 4px;cursor: pointer;min-width: 108px;user-select: none;`;
         inputBox.innerText = "请选择";
         inputBox.id = 'selectdivText';
-        // 3. 创建下拉面板（默认隐藏）
         const dropdown = document.createElement("div");
-        dropdown.style.cssText = `position: absolute;top: 105%;right: 0;background: #fff;border: 1px solid #ddd;border-radius: 4px;min-width: 100px;max-height: 200px;overflow-y: auto;display: none;color: #333;`;
+        dropdown.style.cssText = `position: absolute;top: 105%;left:0;background: #fff;border: 1px solid #ddd;border-radius: 4px;min-width: 100px;max-height: 200px;overflow-y: auto;display: none;color: #333;`;
 
-        // 保存所有 checkbox，方便后面获取值
-        // const checkboxList = [];
-
-        // 4. 循环生成多选选项
         p_list.forEach((item, i) => {
             const label = document.createElement("label");
             label.style.cssText = `display: flex;align-items: center;padding: 6px 10px;gap: 6px;cursor: pointer;`;
             label.onmouseover = () => (label.style.background = "#f5f5f5");
             label.onmouseout = () => (label.style.background = "#fff");
-
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.value = item.value;
-            checkboxList.push(checkbox); // 存入数组
-
+            checkboxList.push(checkbox);
             const text = document.createElement("span");
             text.innerText = item.text;
-
             label.append(checkbox, text);
             dropdown.append(label);
-
             checkbox.addEventListener("change", updateSelectedText);
         });
-
-        // 组装
         container.append(inputBox, dropdown, inputBox1);
-        document.body.append(container);
 
-        // 展开/关闭
         inputBox.addEventListener("click", (e) => {
             e.stopPropagation();
             dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
         });
-
-        // 空白关闭
         document.addEventListener("click", () => {
             dropdown.style.display = "none";
         });
         dropdown.addEventListener("click", (e) => e.stopPropagation());
 
-        // 更新显示文本
         function updateSelectedText() {
             const selected = checkboxList.filter(cb => cb.checked).map(cb => cb.nextElementSibling.innerText);
             const selected1 = checkboxList.filter(cb => cb.checked).map(cb => cb.value);
             inputBox.innerText = selected.length ? selected.join(",") : "请选择";
             inputBox1.innerText = selected1.length ? selected1.join(",") : "";
-
             saveYijiConfig();
-            //GM_setValue("p_YijiijiConfig", selected1);
         }
+        return container;
     }
 
     const p_list_yiji = [
@@ -1213,8 +1068,160 @@
         { value: "8012", text: "270" },
         { value: "8011", text: "260" }
     ];
+    const sel1Dom = f_CreateSelect1(p_list_yiji);
 
-    f_CreateSelect1(32, 75, p_list_yiji);
+    const style = document.createElement('style');
+    style.textContent = `
+            .custom-toast {
+                position: fixed;top: 20px;right: 20px;padding: 12px 20px;border-radius: 6px;color: #fff;font-size: 13px;z-index: 999999;opacity: 0;transform: translateY(-20px);transition: all 0.3s ease;max-width: 300px;word-break: break-all;
+            }
+            .custom-toast.show {opacity: 1; transform: translateY(0);}
+            .custom-toast.success {background-color: #00b42a;}
+            .custom-toast.error {background-color: #8605ff;}
+        `;
+    document.head.appendChild(style);
+
+    const uiDiv = document.createElement("div");
+    uiDiv.id = "ui_div";
+    uiDiv.style.cssText = `
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        z-index: 99999;
+        background:#ffffff;
+        border:1px solid #ccc;
+        border-radius:8px;
+        padding:16px;
+        width:40%;
+        height:80%;
+        overflow:auto;
+        display:none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    `;
+    document.body.appendChild(uiDiv);
+
+    const closeUiBtn = document.createElement("div");
+    closeUiBtn.innerText = "×";
+    closeUiBtn.style.cssText = `
+        position:absolute;
+        top:4px;
+        right:4px;
+        width:22px;
+        height:22px;
+        line-height:22px;
+        text-align:center;
+        font-size:18px;
+        cursor:pointer;
+        color:#666;
+        border-radius:4px;
+        user-select:none;
+    `;
+
+    closeUiBtn.onmouseover = () => closeUiBtn.style.background = "#eee";
+    closeUiBtn.onmouseout = () => closeUiBtn.style.background = "transparent";
+    closeUiBtn.onclick = () => {
+        uiDiv.style.display = "none";
+    };
+    uiDiv.appendChild(closeUiBtn);
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.innerText = "辅";
+    toggleBtn.style.cssText = `
+        position: fixed;
+        top:5px;
+        right:5px;
+        z-index:999999;
+        padding:6px 14px;
+        background:#2563eb;
+        color:#fff;
+        border:none;
+        border-radius:4px;
+        cursor:pointer;
+        font-size:12px;
+    `;
+    document.body.appendChild(toggleBtn);
+
+    toggleBtn.addEventListener("click", () => {
+        uiDiv.style.display = uiDiv.style.display === "none" ? "block" : "none";
+    });
+
+    function addUIControl(domElement, opts = {}) {
+        const uiDiv = document.getElementById("ui_div");
+        if (!uiDiv || !domElement) return;
+
+        if ((opts.left !== undefined) || (opts.top !== undefined)) {
+            domElement.style.position = "absolute";
+            if (opts.left !== undefined) domElement.style.left = `${opts.left}px`;
+            if (opts.top !== undefined) domElement.style.top = `${opts.top}px`;
+            if (opts.right !== undefined) domElement.style.right = `${opts.right}px`;
+            if (opts.bottom !== undefined) domElement.style.bottom = `${opts.bottom}px`;
+        }
+
+        if (opts.width !== undefined) {
+            domElement.style.width = typeof opts.width === "number" ? `${opts.width}px` : opts.width;
+        }
+        if (opts.height !== undefined) {
+            domElement.style.height = typeof opts.height === "number" ? `${opts.height}px` : opts.height;
+        }
+
+        uiDiv.appendChild(domElement);
+    }
+    window.addUIControl = addUIControl;
+
+    //common function----------------------------------------------------------------------------------------------------
+    function stopTimer_f_Com(keyName) {
+        const timerId = p_timerObj[keyName];
+        if (timerId != null) {
+            clearInterval(timerId);
+            p_timerObj[keyName] = null;
+            console.log(`定时器已关闭 [${keyName}] at ${new Date().toLocaleString()}`);
+            para_globalBool = true;
+            p_alert_error(`已关闭 [${keyName}]`);
+        } else {
+            console.log(`定时器 [${keyName}] 未运行`);
+            p_alert_error(` [${keyName}] 未运行`);
+        }
+    }
+
+    function stopTimer_f_Select() {
+        var p_select = document.getElementById("select1").value;
+        switch (parseInt(p_select)) {
+            case 0: stopTimer_f_Com("Blood"); stopTimer_f_Com("BloodChild"); break;
+            case 1: stopTimer_f_Com("Sifang"); break;
+            case 2: stopTimer_f_Com("Qunxiong"); break;
+            case 3: stopTimer_f_Com("Shenmo"); break;
+            case 4: stopTimer_f_Com("Wzzb"); break;
+            case 5: stopTimer_f_Com("Yanhuo"); break;
+            case 6: stopTimer_f_Com("Cjzc"); break;
+            case 7: stopTimer_f_Com("Ice3"); break;
+            case 8: stopTimer_f_Com("Hot"); break;
+            case 9: stopTimer_f_Com("Chechi"); break;
+            case 10: stopTimer_f_Com("Dianfeng"); break;
+
+            case 21: stopTimer_f_Com("Xian"); break;
+            case 31: stopTimer_f_Com("Jilin"); break;
+        }
+    }
+
+    function beginTimer_f_Select() {
+        var p_select = document.getElementById("select1").value;
+        switch (parseInt(p_select)) {
+            case 0: beginTimer_f_Blood(); break;
+            case 1: beginTimer_f_Sifang(); break;
+            case 2: beginTimer_f_Qunxiong(); break;
+            case 3: beginTimer_f_Shenmo(); break;
+            case 4: beginTimer_f_Wzzb(); break;
+            case 5: beginTimer_f_Yanhuo(); break;
+            case 6: beginTimer_f_Cjzc(); break;
+            case 7: beginTimer_f_Ice3(); break;
+            case 8: beginTimer_f_Hot(); break;
+            case 9: beginTimer_f_Chechi(); break;
+            case 10: beginTimer_f_Dianfeng(); break;
+
+            case 21: beginTimer_f_Xian(); break;
+            case 31: beginTimer_f_Jilin(); break;
+        }
+    }
 
     function saveYijiConfig() {
         const config = checkboxList.filter(cb => cb.checked).map(cb => ({
@@ -1227,7 +1234,6 @@
     function loadYijiConfig() {
         const config = GM_getValue("p_YijiijiConfig");
         if (!config) return;
-
         config.forEach(item => {
             checkboxList.forEach(cb => {
                 if (cb.value == item.value) {
@@ -1238,20 +1244,25 @@
         document.getElementById("selectdivText").innerHTML = config.map(item => item.text).join(",");
         document.getElementById("selectdivValue").innerHTML = config.map(item => item.value).join(",");
     }
-    loadYijiConfig();
 
-    //Common function---------------------------------------------------------------------------------------------------------------------
-    //提示框success error
-    const style = document.createElement('style');
-    style.textContent = `
-            .custom-toast {
-                position: fixed;top: 20px;right: 20px;padding: 12px 20px;border-radius: 6px;color: #fff;font-size: 13px;z-index: 999999;opacity: 0;transform: translateY(-20px);transition: all 0.3s ease;max-width: 300px;word-break: break-all;
+    function saveMapConfig() {
+        const config = p_selectElements.map((sel, index) => ({
+            time: p_timeList[index].time,// == "00:00-11:00" ? "0-11:00" : p_timeList[index].time,
+            value: sel.value
+        }));
+        GM_setValue("p_MapSelectConfig", config);
+    }
+
+    function loadMapConfig() {
+        const config = GM_getValue("p_MapSelectConfig");
+        if (!config) return;
+        config.forEach((item, index) => {
+            if (p_selectElements[index]) {
+                p_selectElements[index].value = item.value;
             }
-            .custom-toast.show {opacity: 1; transform: translateY(0);}
-            .custom-toast.success {background-color: #00b42a;}
-            .custom-toast.error {background-color: #8605ff;}
-        `;
-    document.head.appendChild(style);
+        });
+    }
+
     window.p_alert = function (type, msg) {
         const oldToast = document.querySelector('.custom-toast');// 移除旧的提示
         if (oldToast) oldToast.remove();
@@ -1268,9 +1279,7 @@
     window.p_alert_error = (msg) => window.p_alert('error', msg);
     window.p_alert_success = (msg) => window.p_alert('success', msg);
 
-
-    //auto ronglian
-    function beginTimer_f_Ronglian() {
+    function beginTimer_f_Ronglian() {//auto ronglian
         console.log("beginTimer_f_Ronglian:" + new Date().toLocaleString());
         if (p_timerObj.Ronglian != null) {
             GLOBAL_ENABLE = true;
@@ -1291,19 +1300,24 @@
                     net.BourseModel.ins().send21(ids);
                 }
                 await f_Sleep(2000); uim.hide(560);
-                // clickCanvasAt(725, 517); //linux                
             }, 5 * 60 * 1e3);
             p_alert_success('已开始（Ronglian）');
         }
     }
 
-    //check map valid
     function f_checkMapValid() {
         var e = gd.map.curMapId;
         return cm.duplicate[e] || cm.mapPlay[e] ? !1 : !0;
     }
 
-    //gotomap
+    function f_CheckPosition_Go(x, y, h = 20) {
+        const currentX = emIns.firstPlayer.fighterObject.gridX;
+        const currentY = emIns.firstPlayer.fighterObject.gridY;
+        if (Math.abs(currentX - x) > h || Math.abs(currentY - y) > h) {
+            gd.map.gotoStagePoint(x, y, gd.map.curMapId, false);//center xy
+        }
+    }
+
     function p_TimeGotoMap(config) {
         let code = '';
         var p_map = new Map(p_mapList.map(item => [item.deliverId, item.deliverIdNpc]));
@@ -1333,6 +1347,25 @@
         return code;
     }
 
+    addUIControl(f_CreateButton("关闭", () => { stopTimer_f_Com("Main"); }), { right: 30, top: 10 });
+    addUIControl(f_CreateButton("关闭", () => { stopTimer_f_Com("Yiji"); }), { right: 30, top: 40 });
+    addUIControl(f_CreateButton("关闭", stopTimer_f_Select), { right: 30, top: 70 });
+    addUIControl(f_CreateButton("开始", beginTimer), { right: 70, top: 10 });
+    addUIControl(f_CreateButton("遗迹", beginTimer_f_Yiji), { right: 70, top: 40 });
+    addUIControl(f_CreateButton("开始", beginTimer_f_Select), { right: 70, top: 70 });
+    addUIControl(f_CreateButton("怪", async () => { await f_Tianfu(1); }), { right: 90, top: 100 });
+    addUIControl(f_CreateButton("攻", async () => { await f_Tianfu(2); }), { right: 60, top: 100 });
+    addUIControl(f_CreateButton("防", async () => { await f_Tianfu(3); }), { right: 30, top: 100 });
+
+    addUIControl(selDom, { right: 120, top: 75 });
+    addUIControl(sel1Dom, { right: 120, top: 35 });
+    addUIControl(mapSelDom, { right: 100, top: 10, width: 150 });
+
+    // addUIControl(f_CreateButton("RongL", beginTimer_f_Ronglian), { right: 30, top: 130 });
+    // addUIControl(f_CreateButton("ShenT", beginTimer_f_Ronglian), { right: 70, top: 130 });
+
+    loadYijiConfig();
+    loadMapConfig();
 
 })();
 

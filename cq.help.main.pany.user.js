@@ -1361,8 +1361,8 @@
     addUIControl(sel1Dom, { right: 120, top: 35 });
     addUIControl(mapSelDom, { right: 100, top: 10, width: 150 });
 
-    // addUIControl(f_CreateButton("RongL", beginTimer_f_Ronglian), { right: 30, top: 130 });
-    // addUIControl(f_CreateButton("ShenT", beginTimer_f_Ronglian), { right: 70, top: 130 });
+    // addUIControl(f_CreateButton("熔炼", beginTimer_f_Ronglian), { right: 30, top: 130 });
+    // addUIControl(f_CreateButton("神台", findMochao_Occupy), { right: 70, top: 130 });
 
     loadYijiConfig();
     loadMapConfig();

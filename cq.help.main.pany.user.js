@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.10
+// @version      1.11
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -235,7 +235,7 @@
 
         const btn = document.createElement("div");
         btn.innerText = "请选择";
-        btn.style.cssText = `position: fixed;top: ${top}px;right: ${right}px; padding: 6px 12px;background: #ff4444;color: #fff;border-radius: 4px;cursor: pointer;font-size: 10px;user-select: none; min-width: 80px;`;
+        btn.style.cssText = `position: fixed;top: ${top}px;right: ${right}px; padding: 6px 12px;background: #ff4444;color: #fff;border-radius: 4px;cursor: pointer;font-size: 10px;user-select: none;`;
 
         const panel = document.createElement("div");
         panel.style.cssText = `position: absolute;top: 105%;right: 0;background: #fff;border: 1px solid #ddd;border-radius: 4px;padding: 10px;display: none;min-width: 220px;box-shadow: 0 2px 10px rgba(0,0,0,0.1);`;
@@ -497,7 +497,7 @@
                     await f_Sleep(100); gd.arpgInst.setAutoFight(1);
                 }
             }
-            if (nowDate > 1900 || gd.honourbattle.dfData.leftCount == 0) {
+            if (nowDate > 1900 || gd.honourbattle.dfData?.leftCount == 0) {
                 uim.hide(318);//cjzc
                 stopTimer_f_Com("Cjzc");
             }
@@ -953,6 +953,7 @@
                 var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
                 if (para_Shentai) {
                     net.MochaoModel.ins().send3(para_Shentai, 0);
+                    para_mochaoCount = 0;
                 }
             }
         }
@@ -969,11 +970,11 @@
                 var t = uim.show(503); await f_Sleep(1000);
                 t.onRadioSelected(3); await f_Sleep(1000);
                 t.page.myMoChao ? para_mc = gd.mochao.moChaoInfo[t.page.myMoChaoCfg.id] : para_mc = null;
-                uim.hide(503);
+                uim.hide(503); await f_Sleep(1000);
             }
+            para_mochaoCount++;
             try { findMochao_Occupy(); }
             catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }
-            para_mochaoCount++;
         }, 4000);
         p_alert_success('开始（Shentai）');
     }

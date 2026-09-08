@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.11
+// @version      1.12
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -80,9 +80,10 @@
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {//biqi 2+
                     Logic.deliverToFindNpc(600300);//biqi1
-                    await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
-                    await f_Sleep(15000); net.CureModel.ins().send2(0);    //click cure
-                    await f_Sleep(1000);
+                    await f_cure();
+                    // await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    // await f_Sleep(15000); net.CureModel.ins().send2(0);    //click cure
+                    // await f_Sleep(1000);
                 }
                 if (GLOBAL_ENABLE && nowHourPY >= 1145 && nowHourPY < 1150 && gd.map.curMapId != 6077 && para_yabiaoCount == 0) {
                     Logic.deliverToFindNpc(506083);
@@ -511,11 +512,12 @@
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
                     Logic.deliverToFindNpc(600300);//biqi1  81
-                    await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    // await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);  
                     // await f_Sleep(4000); net.CureModel.ins().send2(0);    //click cure
-                    await f_Sleep(1000); net.TianguanModel.ins().send3();    //mapid=70001
-                    await f_Sleep(1000); net.DuplicateModel.ins().send3();   //exit  
-                    await f_Sleep(1000);
+                    // await f_Sleep(1000);
+                    await f_cure();
+                    // await f_Sleep(1000); net.TianguanModel.ins().send3();    //mapid=70001
+                    // await f_Sleep(1000); net.DuplicateModel.ins().send3();   //exit                      
                     if (emIns.firstPlayer.fighterObject.delayhp > emIns.firstPlayer.fighterObject.maxHp * 0.9) {
                         Logic.deliverToFindNpc(600089);      //bingong3  200052
                     }
@@ -559,10 +561,11 @@
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
                     Logic.deliverToFindNpc(600300);//biqi1  81
-                    await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    // await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
                     // await f_Sleep(4000); net.CureModel.ins().send2(0);    //click cure
-                    await f_Sleep(1000); net.TianguanModel.ins().send3();    //mapid=70001
-                    await f_Sleep(1000); net.DuplicateModel.ins().send3();   //exit  
+                    await f_cure();
+                    // await f_Sleep(1000); net.TianguanModel.ins().send3();    //mapid=70001
+                    // await f_Sleep(1000); net.DuplicateModel.ins().send3();   //exit  
 
                     await f_Sleep(1000); net.PlayModel.ins().send3(5618);      //hot  5618  
                     await f_Sleep(400); gd.map.gotoStagePoint(78, 23, gd.map.curMapId, false); //(78,23)  (78,87) (17,88) (16,25)
@@ -615,13 +618,14 @@
                     para_globalBool = false;
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
-                    await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
+                    // await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
                     && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {
-                    Logic.deliverToFindNpc(600300);//biqi1  81
-                    await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
-                    await f_Sleep(4000); net.CureModel.ins().send2(0);    //click cure
+                    Logic.deliverToFindNpc(600300);//biqi1  81                    
+                    // await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+                    // await f_Sleep(4000); net.CureModel.ins().send2(0);    //click cure
+                    await f_cure();
 
                     await f_Sleep(1000); gd.inst.sendReqEnterArpgMapMessaged(200069)   //gotomap chechi
                     await f_Sleep(400); gd.map.gotoStagePoint(88, 80, gd.map.curMapId, false); //88,80   20,18   20,83
@@ -775,6 +779,7 @@
     function findMochao_Occupy() {//auto occupy MoChao(Shentai)                      
         if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date() > new Date().setHours(10, 0, 0, 0))) {
             // var para_mc = gd.mochao.getMyMoChaoData();
+            console.log(`Time-para_mc:${new Date().toLocaleString()}--${para_mc ? DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() : 0}`);
             if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
                 var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
                 if (para_Shentai) {
@@ -796,8 +801,8 @@
                 var t = uim.show(503); await f_Sleep(1000);
                 t.onRadioSelected(3); await f_Sleep(1000);
                 t.page.myMoChao ? para_mc = gd.mochao.moChaoInfo[t.page.myMoChaoCfg.id] : para_mc = null;
-                console.log1("Time-para_mc:" + new Date().toLocaleString() + `${para_mc ? para_mc.guardEndTime.toNumber() : 0}`);
-                uim.hide(503); await f_Sleep(1000);
+                console.log(`Time-para_mc:${new Date().toLocaleString()}--${para_mc ? DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() : 0}`);
+                uim.hide(503);
             }
             para_mochaoCount++;
             try { findMochao_Occupy(); }
@@ -806,7 +811,7 @@
         p_alert_success('开始（Shentai）');
     }
 
-    async function f_Tianfu(type) {//type1-3
+    async function f_Tianfu(type) {//type B1 A2 D3
         const sendCount = 5;
         const delayMs = 100;
 
@@ -849,6 +854,11 @@
         } catch (err) {
             console.error("发包过程出现异常中断", err);
         }
+    }
+
+    async function f_cure() {
+        await f_Sleep(1000); net.TianguanModel.ins().send3();    //mapid=70001
+        await f_Sleep(1000); net.DuplicateModel.ins().send3();   //exit      
     }
 
     //Common UI---------------------------------------------------------------------------
@@ -1357,15 +1367,17 @@
     addUIControl(f_CreateButton("攻", async () => { await f_Tianfu(2); }), { right: 60, top: 100 });
     addUIControl(f_CreateButton("防", async () => { await f_Tianfu(3); }), { right: 30, top: 100 });
 
+    // addUIControl(f_CreateButton("熔炼", beginTimer_f_Ronglian), { right: 30, top: 130 });
+    // addUIControl(f_CreateButton("神台", findMochao_Occupy), { right: 70, top: 130 });
+
     addUIControl(selDom, { right: 120, top: 75 });
     addUIControl(sel1Dom, { right: 120, top: 35 });
     addUIControl(mapSelDom, { right: 100, top: 10, width: 150 });
 
-    // addUIControl(f_CreateButton("熔炼", beginTimer_f_Ronglian), { right: 30, top: 130 });
-    // addUIControl(f_CreateButton("神台", findMochao_Occupy), { right: 70, top: 130 });
-
     loadYijiConfig();
     loadMapConfig();
+
+    unsafeWindow.f_shentai = findMochao_Occupy;
 
 })();
 

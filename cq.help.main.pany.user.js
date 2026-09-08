@@ -31,18 +31,13 @@
         checkIframeOpen();
     }
 
-    let GLOBAL_ENABLE = true;  //全局开关
-    // 全局日志开关（生产环境改为 false）
-    const GLOBAL_LOG_ENABLE = false;
+    let GLOBAL_ENABLE = true;           // 全局开关
+    const GLOBAL_LOG_ENABLE = false;    // 全局日志开关
     const originalConsoleLog = console.log;
     console.log = function (...args) {
-        if (GLOBAL_LOG_ENABLE) {
-            originalConsoleLog.apply(console, args);
-        }
+        if (GLOBAL_LOG_ENABLE) { originalConsoleLog.apply(console, args); }
     };
-    console.log1 = function (...args) {
-        originalConsoleLog.apply(console, args);
-    };
+    console.log1 = function (...args) { originalConsoleLog.apply(console, args); };
     const f_Sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     var p_timerObj = {
@@ -64,10 +59,11 @@
             return;
         }
 
+
         p_timerObj.Main = setInterval(async () => {
             console.log("time-Main:" + Main);
             if (para_globalBool) {
-                const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+                const nowHourPY = f_getnowHourPY();
                 console.log("logServerTime:" + new Date(DateUtil.serverNow()).toLocaleString());
                 if (p_timerObj.Shentai == null) {
                     beginTimer_f_Shentai();
@@ -136,7 +132,7 @@
             return;
         }
         p_timerObj.Wzzb = setInterval(async () => {//wzzb 12:00-12:20    21:00-21:30
-            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            var nowDate = f_getnowHourPY();
             if ((nowDate > 1200 && nowDate < 1220) && p_timerObj.Wzzb != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -173,7 +169,7 @@
         }
         p_timerObj.Blood = setInterval(async () => {
             console.log("time-Blood:" + p_timerObj.Blood);
-            const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            const nowHourPY = f_getnowHourPY();
             if (nowHourPY >= 1930 && nowHourPY <= 1949 && gd.map.curMapId != 700 && !innerPY) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -274,7 +270,7 @@
             return;
         }
         p_timerObj.Sifang = setInterval(async () => {//20:00  curMapId=4901
-            const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            const nowHourPY = f_getnowHourPY();
             if (nowHourPY >= 2000 && nowHourPY < 2020 && gd.map.curMapId != 4901) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -312,7 +308,7 @@
             return;
         }
         p_timerObj.Cjzc = setInterval(async () => {//cjzc 16:00-16:30    18:30-19:00
-            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            var nowDate = f_getnowHourPY();
             if ((nowDate > 1845 && nowDate < 1900) && p_timerObj.Cjzc != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -348,7 +344,7 @@
             if (para_globalBool == true && gd.map.curMapId == 53001) {
                 para_globalBool = false;
             }
-            const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            const nowHourPY = f_getnowHourPY();
             if (nowHourPY >= 2131 && nowHourPY < 2135 && gd.map.curMapId != 53001
                 // && 0 == gd.honourbattle.qzjdmatchState && gd.honourbattle.qzjdpanelinfo?.count > 0
             ) {
@@ -424,7 +420,7 @@
             return;
         }
         p_timerObj.Qunxiong = setInterval(async () => {//20:30  curMapId=4002,4001
-            const nowHourPY = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            const nowHourPY = f_getnowHourPY();
             if (nowHourPY > 2000 && nowHourPY < 2030 && (gd.map.curMapId != 4001 && gd.map.curMapId != 4002)) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -477,7 +473,7 @@
                 mapid = curindex.mapid;
                 await f_Sleep(2000); uim.hide(601);
             }
-            var nowDate = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            var nowDate = f_getnowHourPY();
             if ((nowDate >= 1700 && nowDate < 1715)) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
@@ -504,7 +500,7 @@
             return;
         }
         p_timerObj.Ice3 = setInterval(async () => {//Ice3 11:30-11:45
-            var nowDate = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            var nowDate = f_getnowHourPY();
             if ((nowDate >= 1130 && nowDate < 1145) && p_timerObj.Ice3 != null) {
                 if (emIns.firstPlayer.fighterObject.delayhp == 0) {
                     await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
@@ -550,7 +546,7 @@
             return;
         }
         p_timerObj.Hot = setInterval(async () => {//Hot 17:30-17:40
-            var nowDate = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            var nowDate = f_getnowHourPY();
             if ((nowDate >= 1730 && nowDate < 1740) && p_timerObj.Hot != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -612,7 +608,7 @@
             return;
         }
         p_timerObj.Chechi = setInterval(async () => {//Chechi 22:00-22:15
-            var nowDate = new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+            var nowDate = f_getnowHourPY();
             if ((nowDate >= 2159 && nowDate < 2215) && p_timerObj.Chechi != null) {
                 if (para_globalBool == true) {
                     para_globalBool = false;
@@ -672,7 +668,7 @@
             if (para_globalBool == true) {
                 para_globalBool = false;
             }
-            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            var nowDate = f_getnowHourPY();
             if (gd.tianti.tiantiInfo.leftCount > 0) {
                 if (gd.map.curMapId != 40004) {
                     await f_Sleep(200); net.TiantiModel.ins().send3();
@@ -704,7 +700,7 @@
                 id = t.page.listData.getItemAt(t.page.selIndex).id;
                 await f_Sleep(2000); uim.hide(601);
             }
-            var nowDate = new Date().getHours() * 100 + new Date().getMinutes();
+            var nowDate = f_getnowHourPY();
             if (nowDate < 600 || nowDate > 2200) {
                 return;
             }
@@ -777,7 +773,7 @@
     }
     var para_mc = null;
     function findMochao_Occupy() {//auto occupy MoChao(Shentai)                      
-        if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date() > new Date().setHours(10, 0, 0, 0))) {
+        if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date(DateUtil.serverNow()) > new Date(DateUtil.serverNow()).setHours(10, 0, 0, 0))) {
             // var para_mc = gd.mochao.getMyMoChaoData();
             console.log(`Time-para_mc:${new Date().toLocaleString()}--${para_mc ? DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() : 0}`);
             if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
@@ -858,7 +854,13 @@
 
     async function f_cure() {
         await f_Sleep(1000); net.TianguanModel.ins().send3();    //mapid=70001
-        await f_Sleep(1000); net.DuplicateModel.ins().send3();   //exit      
+        await f_Sleep(1000); net.DuplicateModel.ins().send3();   //exit  
+        // await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
+        // await f_Sleep(4000); net.CureModel.ins().send2(0);    //click cure    
+    }
+
+    function f_getnowHourPY() {
+        return new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
     }
 
     //Common UI---------------------------------------------------------------------------

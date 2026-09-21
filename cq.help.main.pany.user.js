@@ -108,7 +108,7 @@
                 if (config != null && config.length > 0) {
                     await eval(p_TimeGotoMap(config).replace(/:/g, ''));
                 }
-                if (GLOBAL_ENABLE && ((new Date().getDay() != 0 && (nowHourPY < 1000 || nowHourPY > 1220))
+                if (GLOBAL_ENABLE && f_checkMapValid() && ((new Date().getDay() != 0 && (nowHourPY < 1000 || nowHourPY > 1220))
                     || (new Date().getDay() == 0 && nowHourPY < 1750))) {
                     if (p_timerObj.Dianfeng == null && gd.tianti.tiantiInfo?.leftCount > 7) {
                         beginTimer_f_Dianfeng();
@@ -233,7 +233,7 @@
                 console.log("Time-test:" + new Date().toLocaleString() + "--" + para_yiji[i] + "--" + para_yiji_mapid[i] + "--" + timeRelive + "--" + para_globalBool);
                 if (timeRelive === undefined) { timeRelive = 0; }
                 if (timeRelive == 0) { net.PlayModel.ins().send9(36); }
-                if (para_globalBool && timeRelive < 30 && gd.map.curMapId != para_yiji_mapid[i]) {
+                if (para_globalBool && timeRelive < 15 && gd.map.curMapId != para_yiji_mapid[i]) {
                     net.PlayModel.ins().send3(para_yiji_mapid[i]);
                     await f_Sleep(400);
                     if (gd.map.curMapId == para_yiji_mapid[i]) {
@@ -693,7 +693,7 @@
             p_alert_success('运行中...');
             return;
         }
-        var expireDate = new Date(Date.now() + 20 * 60 * 1000); //20 miniute
+        var expireDate = new Date(Date.now() + 25 * 60 * 1000); //20 miniute
         p_timerObj.Jilin = setInterval(async () => {
             if (!id) {
                 var t = uim.show(601); await f_Sleep(2000);
@@ -768,19 +768,27 @@
                 if (gd.mochao.moChaoInfo[i]?.status == 0) { return i; }
             }
         }
-        console.log("moChaoTimeOccupy-find-status-null:" + new Date().toLocaleString());
         return null;
+    }
+    function f_findMyMoChao() {
+        return Object.values(gd.mochao.moChaoInfo).find(item => {
+            return item.occupyRid && item.occupyRid._low + "_" + item.occupyRid._high === emIns.firstPlayer.uid;
+        });
     }
     var para_mc = null;
     function findMochao_Occupy() {//auto occupy MoChao(Shentai)                      
-        if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date(DateUtil.serverNow()) > new Date(DateUtil.serverNow()).setHours(10, 0, 0, 0))) {
-            // var para_mc = gd.mochao.getMyMoChaoData();
-            console.log(`Time-para_mc:${new Date().toLocaleString()}--${para_mc ? DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() : 0}`);
-            if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
-                var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
-                if (para_Shentai) {
-                    net.MochaoModel.ins().send3(para_Shentai, 0);
-                    para_mochaoCount = 0;
+        var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
+        if (para_Shentai) {
+            net.MochaoModel.ins().send3(para_Shentai, 0);
+            // net.MochaoModel.ins().send1(8);        
+        }
+        else {
+            var p_leftCount = gd.mochao.myMoChaoInfo ? gd.mochao.myMoChaoInfo.lootCount : 0;
+            if (p_leftCount > 3) {
+                para_Shentai = f_getRandomNumber();
+                if (gd.mochao.moChaoInfo[para_Shentai].occupyUnionName != "豪门") {
+                    net.MochaoModel.ins().send3(para_Shentai, 1);
+                    // net.MochaoModel.ins().send1(8);
                 }
             }
         }
@@ -793,17 +801,14 @@
             return;
         }
         p_timerObj.Shentai = setInterval(async () => {
-            if (para_mochaoCount % 75 == 0) {
-                var t = uim.show(503); await f_Sleep(1000);
-                t.onRadioSelected(3); await f_Sleep(1000);
-                t.page.myMoChao ? para_mc = gd.mochao.moChaoInfo[t.page.myMoChaoCfg.id] : para_mc = null;
-                console.log(`Time-para_mc:${new Date().toLocaleString()}--${para_mc ? DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() : 0}`);
-                uim.hide(503);
+            if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date(DateUtil.serverNow()) > new Date(DateUtil.serverNow()).setHours(10, 0, 0, 0))) {
+                para_mc = f_findMyMoChao();
+                if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
+                    try { findMochao_Occupy(); }
+                    catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }
+                }
             }
-            para_mochaoCount++;
-            try { findMochao_Occupy(); }
-            catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }
-        }, 4000);
+        }, 10000);
         p_alert_success('开始（Shentai）');
     }
 
@@ -861,6 +866,10 @@
 
     function f_getnowHourPY() {
         return new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
+    }
+
+    function f_getRandomNumber(min = 940, max = 990) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     //Common UI---------------------------------------------------------------------------

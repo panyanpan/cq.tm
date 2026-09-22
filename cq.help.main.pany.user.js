@@ -805,7 +805,7 @@
                 // para_mc = f_findMyMoChao();
                 net.MochaoModel.ins().send1(0); await f_Sleep(1000);
                 para_mc = gd.mochao.getMyMoChaoData();
-                if (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000) {
+                if (para_mc != null && DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000) {
                     para_mc = null;
                 }
                 if (para_mc == null) {

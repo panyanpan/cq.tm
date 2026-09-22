@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.12
+// @version      1.13
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -43,7 +43,8 @@
     var p_timerObj = {
         Main: null, Wzzb: null, Blood: null, BloodChild: null, Yiji: null, Chechi: null
         , Ice3: null, Sifang: null, Qunxiong: null, Cjzc: null, Shenmo: null, Yanhuo: null
-        , Jilin: null, Xian: null, Hot: null, Ronglian: null, Dianfeng: null, Shentai: null, Common: null
+        , Jilin: null, Xian: null, Hot: null, Ronglian: null, Dianfeng: null, Shentai: null
+        , MochaoID: null, Common: null
     };
 
     //begin main------------------------------------------------------------------------------
@@ -780,18 +781,17 @@
         var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
         if (para_Shentai) {
             net.MochaoModel.ins().send3(para_Shentai, 0);
-            // net.MochaoModel.ins().send1(8);        
         }
         else {
             var p_leftCount = gd.mochao.myMoChaoInfo ? gd.mochao.myMoChaoInfo.lootCount : 0;
             if (p_leftCount > 3) {
                 para_Shentai = f_getRandomNumber();
-                if (gd.mochao.moChaoInfo[para_Shentai].occupyUnionName != "豪门") {
+                if (!gd.player.unionid.equals(gd.mochao.moChaoInfo[para_Shentai].occupyUnionId)) {
                     net.MochaoModel.ins().send3(para_Shentai, 1);
-                    // net.MochaoModel.ins().send1(8);
                 }
             }
         }
+        p_alert_success(`神台：${para_Shentai != null ? para_Shentai : "空"}`);
     }
     function beginTimer_f_Shentai() {
         console.log("benginTime-Shentai:" + new Date().toLocaleString());
@@ -802,13 +802,18 @@
         }
         p_timerObj.Shentai = setInterval(async () => {
             if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date(DateUtil.serverNow()) > new Date(DateUtil.serverNow()).setHours(10, 0, 0, 0))) {
-                para_mc = f_findMyMoChao();
-                if (para_mc == null || (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000)) {
+                // para_mc = f_findMyMoChao();
+                net.MochaoModel.ins().send1(0); await f_Sleep(1000);
+                para_mc = gd.mochao.getMyMoChaoData();
+                if (DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000) {
+                    para_mc = null;
+                }
+                if (para_mc == null) {
                     try { findMochao_Occupy(); }
                     catch (error) { console.error("time-findMochao_Occupy-error:" + error.message); }
                 }
             }
-        }, 10000);
+        }, 5 * 1e3);
         p_alert_success('开始（Shentai）');
     }
 

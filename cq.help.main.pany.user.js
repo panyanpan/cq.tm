@@ -75,7 +75,7 @@
                     console.log("deadClickTime:" + new Date().toLocaleString());
                 }
                 if (emIns.firstPlayer.fighterObject.delayhp < emIns.firstPlayer.fighterObject.maxHp * 0.9
-                    && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994].includes(gd.map.curMapId)) {//biqi 2+
+                    && [81, 200018, 200029, 200043, 200049, 200076, 10000, 9994, 40005].includes(gd.map.curMapId)) {//biqi 2+
                     Logic.deliverToFindNpc(600300);//biqi1
                     await f_cure();
                     // await f_Sleep(1000); gd.map.gotoStagePoint(137, 120, gd.map.curMapId, false);
@@ -109,8 +109,9 @@
                 if (config != null && config.length > 0) {
                     await eval(p_TimeGotoMap(config).replace(/:/g, ''));
                 }
-                if (GLOBAL_ENABLE && f_checkMapValid() && ((new Date().getDay() != 0 && (nowHourPY < 1000 || nowHourPY > 1220))
-                    || (new Date().getDay() == 0 && nowHourPY < 1750))) {
+                if (GLOBAL_ENABLE && f_checkMapValid() && ((new Date().getDay() != 0 && ((newHourPY > 0 && newHourPY < 1000) || (newHourPY > 1230 && newHourPY < 2020) || (newHourPY > 2105 && newHourPY < 2359)))
+                    || (new Date().getDay() == 0 && ((newHourPY > 0 && newHourPY < 1000) || (newHourPY > 1230 && newHourPY < 1750))))
+                ) {
                     if (p_timerObj.Dianfeng == null && gd.tianti.tiantiInfo?.leftCount > 7) {
                         beginTimer_f_Dianfeng();
                     }
@@ -781,6 +782,7 @@
         var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
         if (para_Shentai) {
             net.MochaoModel.ins().send3(para_Shentai, 0);
+            p_alert_success(`神台：${para_Shentai}`);
         }
         else {
             var p_leftCount = gd.mochao.myMoChaoInfo ? gd.mochao.myMoChaoInfo.lootCount : 0;
@@ -788,10 +790,10 @@
                 para_Shentai = f_getRandomNumber();
                 if (!gd.player.unionid.equals(gd.mochao.moChaoInfo[para_Shentai].occupyUnionId)) {
                     net.MochaoModel.ins().send3(para_Shentai, 1);
+                    p_alert_success(`神台：${para_Shentai}`);
                 }
             }
         }
-        p_alert_success(`神台：${para_Shentai != null ? para_Shentai : "空"}`);
     }
     function beginTimer_f_Shentai() {
         console.log("benginTime-Shentai:" + new Date().toLocaleString());

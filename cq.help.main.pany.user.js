@@ -782,7 +782,7 @@
         var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
         if (para_Shentai) {
             net.MochaoModel.ins().send3(para_Shentai, 0);
-            p_alert_success(`神台：${para_Shentai}`);
+            p_alert_success(`神台-占：${para_Shentai}`);
         }
         else {
             var p_leftCount = gd.mochao.myMoChaoInfo ? gd.mochao.myMoChaoInfo.lootCount : 0;
@@ -790,7 +790,7 @@
                 para_Shentai = f_getRandomNumber();
                 if (!gd.player.unionid.equals(gd.mochao.moChaoInfo[para_Shentai].occupyUnionId)) {
                     net.MochaoModel.ins().send3(para_Shentai, 1);
-                    p_alert_success(`神台：${para_Shentai}`);
+                    p_alert_success(`神台-抢：${para_Shentai}`);
                 }
             }
         }
@@ -805,9 +805,10 @@
         p_timerObj.Shentai = setInterval(async () => {
             if (new Date().getDay() != 1 || (new Date().getDay() == 1 && new Date(DateUtil.serverNow()) > new Date(DateUtil.serverNow()).setHours(10, 0, 0, 0))) {
                 // para_mc = f_findMyMoChao();
-                net.MochaoModel.ins().send1(0); await f_Sleep(1000);
+                net.MochaoModel.ins().send1(0);
+                net.MochaoModel.ins().send1(8); await f_Sleep(1000);
                 para_mc = gd.mochao.getMyMoChaoData();
-                if (para_mc != null && DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000) {
+                if (para_mc?.occupyStartTime != null && DateUtil.serverNow() - para_mc.occupyStartTime.toNumber() > 28800000) {
                     para_mc = null;
                 }
                 if (para_mc == null) {

@@ -109,8 +109,8 @@
                 if (config != null && config.length > 0) {
                     await eval(p_TimeGotoMap(config).replace(/:/g, ''));
                 }
-                if (GLOBAL_ENABLE && f_checkMapValid() && ((new Date().getDay() != 0 && ((newHourPY > 0 && newHourPY < 1000) || (newHourPY > 1230 && newHourPY < 2020) || (newHourPY > 2105 && newHourPY < 2359)))
-                    || (new Date().getDay() == 0 && ((newHourPY > 0 && newHourPY < 1000) || (newHourPY > 1230 && newHourPY < 1750))))
+                if (GLOBAL_ENABLE && f_checkMapValid() && ((new Date().getDay() != 0 && ((nowHourPY > 0 && nowHourPY < 1000) || (nowHourPY > 1230 && nowHourPY < 2020) || (nowHourPY > 2105 && nowHourPY < 2359)))
+                    || (new Date().getDay() == 0 && ((nowHourPY > 0 && nowHourPY < 1000) || (nowHourPY > 1230 && nowHourPY < 1750))))
                 ) {
                     if (p_timerObj.Dianfeng == null && gd.tianti.tiantiInfo?.leftCount > 7) {
                         beginTimer_f_Dianfeng();
@@ -786,7 +786,7 @@
         }
         else {
             var p_leftCount = gd.mochao.myMoChaoInfo ? gd.mochao.myMoChaoInfo.lootCount : 0;
-            if (p_leftCount > 3) {
+            if (p_leftCount > 2) {
                 para_Shentai = f_getRandomNumber();
                 if (!gd.player.unionid.equals(gd.mochao.moChaoInfo[para_Shentai].occupyUnionId)) {
                     net.MochaoModel.ins().send3(para_Shentai, 1);

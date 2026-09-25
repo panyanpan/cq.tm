@@ -104,6 +104,9 @@
                 if (GLOBAL_ENABLE && nowHourPY >= 1200 && nowHourPY < 1205 && p_timerObj.Wzzb == null) {
                     beginTimer_f_Wzzb();
                 }
+                if (GLOBAL_ENABLE && nowHourPY >= 1230 && nowHourPY < 1235 && p_timerObj.Jilin == null) {
+                    beginTimer_f_Jilin();
+                }
 
                 const config = GM_getValue("p_MapSelectConfig");
                 if (config != null && config.length > 0) {
@@ -779,10 +782,13 @@
     }
     var para_mc = null;
     function findMochao_Occupy() {//auto occupy MoChao(Shentai)                      
-        var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);
+        var para_Shentai = findMochao(711, 751) || findMochao(811, 999);//findMochao(704, 751) || findMochao(804, 999);        
         if (para_Shentai) {
-            net.MochaoModel.ins().send3(para_Shentai, 0);
-            p_alert_success(`神台-占：${para_Shentai}`);
+            var p_occupyCount = gd.mochao.myMoChaoInfo ? gd.mochao.myMoChaoInfo.occupyCount : 0;
+            if (p_occupyCount > 0) {
+                net.MochaoModel.ins().send3(para_Shentai, 0);
+                p_alert_success(`神台-占：${para_Shentai}`);
+            }
         }
         else {
             var p_leftCount = gd.mochao.myMoChaoInfo ? gd.mochao.myMoChaoInfo.lootCount : 0;
@@ -1317,7 +1323,7 @@
             p_alert_error('已关闭（Ronglian）');
         }
         else {
-            GLOBAL_ENABLE = false;
+            GLOBAL_ENABLE = true;
             p_timerObj.Ronglian = setInterval(async () => {
                 var t = uim.show(560, new UIData(null, 0));
                 await f_Sleep(2000);

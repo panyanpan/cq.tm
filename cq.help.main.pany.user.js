@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.13
+// @version      1.14
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -32,6 +32,7 @@
     }
 
     let GLOBAL_ENABLE = true;           // 全局开关
+    let GLOBAL_ENABLE_Kuafu = false;    // 全局开关
     const GLOBAL_LOG_ENABLE = false;    // 全局日志开关
     const originalConsoleLog = console.log;
     console.log = function (...args) {
@@ -64,6 +65,8 @@
         p_timerObj.Main = setInterval(async () => {
             console.log("time-Main:" + Main);
             if (para_globalBool) {
+                if (cb_benfu && !cb_benfu.input.checked) { GLOBAL_ENABLE = false; }
+                if (cb_kuafu && cb_kuafu.input.checked) { GLOBAL_ENABLE_Kuafu = true; }
                 const nowHourPY = f_getnowHourPY();
                 console.log("logServerTime:" + new Date(DateUtil.serverNow()).toLocaleString());
                 if (p_timerObj.Shentai == null) {
@@ -104,8 +107,32 @@
                 if (GLOBAL_ENABLE && nowHourPY >= 1200 && nowHourPY < 1205 && p_timerObj.Wzzb == null) {
                     beginTimer_f_Wzzb();
                 }
+                if (GLOBAL_ENABLE && nowHourPY >= 1925 && nowHourPY < 1930 && p_timerObj.Blood == null) {
+                    beginTimer_f_Blood();
+                }
+                if (GLOBAL_ENABLE && nowHourPY >= 1955 && nowHourPY < 2000 && p_timerObj.Sifang == null) {
+                    if (new Date().getDay() == 2 || new Date().getDay() == 5) { beginTimer_f_Sifang(); }
+                }
+                if (GLOBAL_ENABLE && nowHourPY >= 1955 && nowHourPY < 2000 && p_timerObj.Qunxiong == null) {
+                    if (new Date().getDay() == 0) { beginTimer_f_Qunxiong(); }
+                }
+                if (GLOBAL_ENABLE && nowHourPY >= 1840 && nowHourPY < 1845 && p_timerObj.Cjzc == null) {
+                    if (new Date().getDate() >= 1 && new Date().getDate() <= 7) { beginTimer_f_Cjzc(); }
+                }
+                if (GLOBAL_ENABLE && nowHourPY >= 2125 && nowHourPY < 2130 && p_timerObj.Shenmo == null) {
+                    if (f_isWeekN(3)) { beginTimer_f_Shenmo(); }
+                }
                 if (GLOBAL_ENABLE && nowHourPY >= 1230 && nowHourPY < 1235 && p_timerObj.Jilin == null) {
                     beginTimer_f_Jilin();
+                }
+                if (GLOBAL_ENABLE_Kuafu && nowHourPY >= 1655 && nowHourPY < 1700 && p_timerObj.Xian == null) {
+                    beginTimer_f_Xian();
+                }
+                if (GLOBAL_ENABLE_Kuafu && nowHourPY >= 1725 && nowHourPY < 1730 && p_timerObj.Hot == null) {
+                    beginTimer_f_Hot();
+                }
+                if (GLOBAL_ENABLE_Kuafu && nowHourPY >= 2155 && nowHourPY < 2200 && p_timerObj.Chechi == null) {
+                    beginTimer_f_Chechi();
                 }
 
                 const config = GM_getValue("p_MapSelectConfig");
@@ -748,6 +775,9 @@
                 para_globalBool = false;
             }
             if (gd.map.curMapId == 200043) {//biqi3.5   !p_arr_yanhuo.includes(gd.map.curMapId) &&
+                var t = uim.show(519); await f_Sleep(1000);
+                p_arr_yanhuo = t.page.dupId;
+                uim.hide(519); await f_Sleep(1000);
                 uim.show(798, new UIData({ dupId: p_arr_yanhuo, lookOtherTeam: false }));
                 gd.nest.doJionIn(2, p_arr_yanhuo, null);//create team
                 await f_Sleep(1000);
@@ -882,6 +912,20 @@
         return new Date(DateUtil.serverNow()).getHours() * 100 + new Date(DateUtil.serverNow()).getMinutes();
     }
 
+    function f_isWeekN(n, date) {
+        var d = date ? new Date(date) : new Date(DateUtil.serverNow());
+
+        var first = new Date(d.getFullYear(), d.getMonth(), 1);
+        var firstWeekday = first.getDay();
+        var wd = (firstWeekday === 0) ? 7 : firstWeekday;
+        var mondayOfFirstWeek = 1 - (wd - 1);
+        var day = d.getDate();
+        var diff = day - mondayOfFirstWeek;
+        var weekIndex = Math.floor(diff / 7) + 1;
+
+        return weekIndex === n;
+    }
+
     function f_getRandomNumber(min = 940, max = 990) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -893,6 +937,30 @@
         btn.innerText = cName;
         btn.onclick = onClickFn;
         return btn;
+    }
+
+    function f_CreateCheckbox(cName, checked, onChangeFn) {
+        const label = document.createElement('label');
+        label.style.cssText = `display:inline-flex;align-items:center;margin:2px 6px 2px 0;font-size:11px;cursor:pointer;user-select:none;`;
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = !!checked;
+        cb.style.cssText = `margin:0 4px 0 0;cursor:pointer;accent-color:#2563eb;`;
+
+        if (typeof onChangeFn === 'function') {
+            cb.onchange = onChangeFn;
+        }
+
+        const text = document.createElement('span');
+        text.innerText = cName;
+
+        label.appendChild(cb);
+        label.appendChild(text);
+
+        label.input = cb;
+
+        return label;
     }
 
     const p_timeList = [
@@ -911,6 +979,7 @@
     ];
     const p_mapList = [//cm.deliver[deliverId].toMapId
         { name: "比奇", mapId: 81, deliverId: 600300 },
+        { name: "星陨", mapId: 6441, deliverId: 420019 },
         { name: "喜魄1", mapId: 6126, deliverId: 400104 },
         { name: "怒魄1", mapId: 6127, deliverId: 400105 },
         { name: "哀魄1", mapId: 6128, deliverId: 400106 },
@@ -1036,6 +1105,10 @@
         // { value: 13, text: '猴3' },
         // { value: 14, text: '猴4' },
         { value: 21, text: '仙' },
+        // { value: 420020, text: '青龙' },
+        // { value: 420021, text: '白虎' },
+        // { value: 420022, text: '朱雀' },
+        // { value: 420023, text: '玄武' },
         { value: 31, text: '棘林' }
     ];
     const selDom = f_CreateSelect(p_option1);
@@ -1388,12 +1461,16 @@
     addUIControl(f_CreateButton("开始", beginTimer), { right: 70, top: 10 });
     addUIControl(f_CreateButton("遗迹", beginTimer_f_Yiji), { right: 70, top: 40 });
     addUIControl(f_CreateButton("开始", beginTimer_f_Select), { right: 70, top: 70 });
-    addUIControl(f_CreateButton("怪", async () => { await f_Tianfu(1); }), { right: 90, top: 100 });
-    addUIControl(f_CreateButton("攻", async () => { await f_Tianfu(2); }), { right: 60, top: 100 });
-    addUIControl(f_CreateButton("防", async () => { await f_Tianfu(3); }), { right: 30, top: 100 });
 
-    // addUIControl(f_CreateButton("熔炼", beginTimer_f_Ronglian), { right: 30, top: 130 });
-    // addUIControl(f_CreateButton("神台", findMochao_Occupy), { right: 70, top: 130 });
+    var cb_benfu = f_CreateCheckbox("本服活动", true); addUIControl(cb_benfu, { right: 100, top: 100 });
+    var cb_kuafu = f_CreateCheckbox("跨服活动", false); addUIControl(cb_kuafu, { right: 30, top: 100 });
+
+    addUIControl(f_CreateButton("怪", async () => { await f_Tianfu(1); }), { right: 90, top: 130 });
+    addUIControl(f_CreateButton("攻", async () => { await f_Tianfu(2); }), { right: 60, top: 130 });
+    addUIControl(f_CreateButton("防", async () => { await f_Tianfu(3); }), { right: 30, top: 130 });
+
+    // addUIControl(f_CreateButton("熔炼", beginTimer_f_Ronglian), { right: 30, top: 160 });
+    // addUIControl(f_CreateButton("神台", findMochao_Occupy), { right: 70, top: 160 });
 
     addUIControl(selDom, { right: 120, top: 75 });
     addUIControl(sel1Dom, { right: 120, top: 35 });

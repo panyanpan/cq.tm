@@ -104,6 +104,9 @@
                 if ((nowHourPY > 1155 || nowHourPY < 1145) && para_yabiaoCount != 0) {
                     para_yabiaoCount = 0;
                 }
+                if (GLOBAL_ENABLE && p_timerObj.Yiji == null) {
+                    beginTimer_f_Yiji();
+                }
                 if (GLOBAL_ENABLE && nowHourPY >= 1200 && nowHourPY < 1205 && p_timerObj.Wzzb == null) {
                     beginTimer_f_Wzzb();
                 }
@@ -262,10 +265,23 @@
             for (var i = 0; i < para_yiji.length; i++) {
                 var timeRelive = gd.boss.arpgBossTimeDic[para_yiji_mapid[i]];
                 // var timeRelive = gd.boss.arpgBossInfoDic[para_yiji_mapid[i]].reliveTime;
+                var p_go = true;
+                var p_left = gd.boss.arpgBossInfoDic[para_yiji_mapid[i]];
+                if (cb_helper && cb_owner && p_left) {
+                    if (cb_helper.input.checked && !cb_owner.input.checked && p_left.helperDropCount == 0) {
+                        p_go = false;
+                    }
+                    else if (!cb_helper.input.checked && cb_owner.input.checked && p_left.ownerDropCount == 0) {
+                        p_go = false;
+                    }
+                    else if (cb_helper.input.checked && cb_owner.input.checked && p_left.helperDropCount == 0 && p_left.ownerDropCount == 0) {
+                        p_go = false;
+                    }
+                }
                 console.log("Time-test:" + new Date().toLocaleString() + "--" + para_yiji[i] + "--" + para_yiji_mapid[i] + "--" + timeRelive + "--" + para_globalBool);
                 if (timeRelive === undefined) { timeRelive = 0; }
                 if (timeRelive == 0) { net.PlayModel.ins().send9(36); }
-                if (para_globalBool && timeRelive < 15 && gd.map.curMapId != para_yiji_mapid[i]) {
+                if (p_go && para_globalBool && timeRelive < 15 && gd.map.curMapId != para_yiji_mapid[i]) {
                     net.PlayModel.ins().send3(para_yiji_mapid[i]);
                     await f_Sleep(400);
                     if (gd.map.curMapId == para_yiji_mapid[i]) {
@@ -279,12 +295,6 @@
                     break;
                 }
             }
-
-            //if(guishu == 0 && xiezhu == 0)  {//-----not impl
-            //clearInterval(para_intervalIdYiji);
-            //console.log("clearIntervalTime:"+new Date().toLocaleString());
-            //}
-
         }, 6000);
         p_alert_success('开始（遗迹）');
     }
@@ -1371,6 +1381,25 @@
         });
     }
 
+    function saveCheckConfig() {
+        const config = {
+            cb_benfu: cb_benfu.input.checked,
+            cb_kuafu: cb_kuafu.input.checked,
+            cb_helper: cb_helper.input.checked,
+            cb_owner: cb_owner.input.checked
+        };
+        GM_setValue("p_CheckConfig", config);
+    }
+
+    function loadCheckConfig() {
+        const config = GM_getValue("p_CheckConfig");
+        if (!config) return;
+        cb_benfu.input.checked = config.cb_benfu;
+        cb_kuafu.input.checked = config.cb_kuafu;
+        cb_helper.input.checked = config.cb_helper;
+        cb_owner.input.checked = config.cb_owner;
+    }
+
     window.p_alert = function (type, msg) {
         const oldToast = document.querySelector('.custom-toast');// 移除旧的提示
         if (oldToast) oldToast.remove();
@@ -1457,27 +1486,31 @@
 
     addUIControl(f_CreateButton("关闭", () => { stopTimer_f_Com("Main"); }), { right: 30, top: 10 });
     addUIControl(f_CreateButton("关闭", () => { stopTimer_f_Com("Yiji"); }), { right: 30, top: 40 });
-    addUIControl(f_CreateButton("关闭", stopTimer_f_Select), { right: 30, top: 70 });
+    addUIControl(f_CreateButton("关闭", stopTimer_f_Select), { right: 30, top: 100 });
     addUIControl(f_CreateButton("开始", beginTimer), { right: 70, top: 10 });
     addUIControl(f_CreateButton("遗迹", beginTimer_f_Yiji), { right: 70, top: 40 });
-    addUIControl(f_CreateButton("开始", beginTimer_f_Select), { right: 70, top: 70 });
+    addUIControl(f_CreateButton("开始", beginTimer_f_Select), { right: 70, top: 100 });
 
-    var cb_benfu = f_CreateCheckbox("本服活动", true); addUIControl(cb_benfu, { right: 100, top: 100 });
-    var cb_kuafu = f_CreateCheckbox("跨服活动", false); addUIControl(cb_kuafu, { right: 30, top: 100 });
+    var cb_helper = f_CreateCheckbox("协助满不去", true, saveCheckConfig); addUIControl(cb_helper, { right: 130, top: 70 });
+    var cb_owner = f_CreateCheckbox("归属满不去", true, saveCheckConfig); addUIControl(cb_owner, { right: 30, top: 70 });
 
-    addUIControl(f_CreateButton("怪", async () => { await f_Tianfu(1); }), { right: 90, top: 130 });
-    addUIControl(f_CreateButton("攻", async () => { await f_Tianfu(2); }), { right: 60, top: 130 });
-    addUIControl(f_CreateButton("防", async () => { await f_Tianfu(3); }), { right: 30, top: 130 });
+    var cb_benfu = f_CreateCheckbox("本服活动", true, saveCheckConfig); addUIControl(cb_benfu, { right: 100, top: 130 });
+    var cb_kuafu = f_CreateCheckbox("跨服活动", false, saveCheckConfig); addUIControl(cb_kuafu, { right: 30, top: 130 });
+
+    addUIControl(f_CreateButton("怪", async () => { await f_Tianfu(1); }), { right: 90, top: 160 });
+    addUIControl(f_CreateButton("攻", async () => { await f_Tianfu(2); }), { right: 60, top: 160 });
+    addUIControl(f_CreateButton("防", async () => { await f_Tianfu(3); }), { right: 30, top: 160 });
 
     // addUIControl(f_CreateButton("熔炼", beginTimer_f_Ronglian), { right: 30, top: 160 });
     // addUIControl(f_CreateButton("神台", findMochao_Occupy), { right: 70, top: 160 });
 
-    addUIControl(selDom, { right: 120, top: 75 });
+    addUIControl(selDom, { right: 120, top: 105 });
     addUIControl(sel1Dom, { right: 120, top: 35 });
     addUIControl(mapSelDom, { right: 100, top: 10, width: 150 });
 
     loadYijiConfig();
     loadMapConfig();
+    loadCheckConfig();
 
     unsafeWindow.f_shentai = findMochao_Occupy;
 

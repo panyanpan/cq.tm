@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.14
+// @version      1.15
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -1491,8 +1491,8 @@
     addUIControl(f_CreateButton("遗迹", beginTimer_f_Yiji), { right: 70, top: 40 });
     addUIControl(f_CreateButton("开始", beginTimer_f_Select), { right: 70, top: 100 });
 
-    var cb_helper = f_CreateCheckbox("协助满不去", true, saveCheckConfig); addUIControl(cb_helper, { right: 130, top: 70 });
-    var cb_owner = f_CreateCheckbox("归属满不去", true, saveCheckConfig); addUIControl(cb_owner, { right: 30, top: 70 });
+    var cb_helper = f_CreateCheckbox("协助满不去", true, saveCheckConfig); addUIControl(cb_helper, { right: 130, top: 82 });
+    var cb_owner = f_CreateCheckbox("归属满不去", true, saveCheckConfig); addUIControl(cb_owner, { right: 30, top: 82 });
 
     var cb_benfu = f_CreateCheckbox("本服活动", true, saveCheckConfig); addUIControl(cb_benfu, { right: 100, top: 130 });
     var cb_kuafu = f_CreateCheckbox("跨服活动", false, saveCheckConfig); addUIControl(cb_kuafu, { right: 30, top: 130 });

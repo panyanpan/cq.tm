@@ -65,8 +65,8 @@
         p_timerObj.Main = setInterval(async () => {
             console.log("time-Main:" + Main);
             if (para_globalBool) {
-                if (cb_benfu && !cb_benfu.input.checked) { GLOBAL_ENABLE = false; }
-                if (cb_kuafu && cb_kuafu.input.checked) { GLOBAL_ENABLE_Kuafu = true; }
+                if (cb_benfu && !cb_benfu.input.checked) { GLOBAL_ENABLE = false; } else { GLOBAL_ENABLE = true; }
+                if (cb_kuafu && cb_kuafu.input.checked) { GLOBAL_ENABLE_Kuafu = true; } else { GLOBAL_ENABLE_Kuafu = false; }
                 const nowHourPY = f_getnowHourPY();
                 console.log("logServerTime:" + new Date(DateUtil.serverNow()).toLocaleString());
                 if (p_timerObj.Shentai == null) {

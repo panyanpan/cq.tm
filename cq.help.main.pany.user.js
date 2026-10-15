@@ -1501,8 +1501,8 @@
     addUIControl(f_CreateButton("攻", async () => { await f_Tianfu(2); }), { right: 60, top: 160 });
     addUIControl(f_CreateButton("防", async () => { await f_Tianfu(3); }), { right: 30, top: 160 });
 
-    // addUIControl(f_CreateButton("熔炼", beginTimer_f_Ronglian), { right: 30, top: 160 });
-    // addUIControl(f_CreateButton("神台", findMochao_Occupy), { right: 70, top: 160 });
+    // addUIControl(f_CreateButton("熔炼", beginTimer_f_Ronglian), { right: 30, top: 190 });
+    // addUIControl(f_CreateButton("神台", findMochao_Occupy), { right: 70, top: 190 });
 
     addUIControl(selDom, { right: 120, top: 105 });
     addUIControl(sel1Dom, { right: 120, top: 35 });

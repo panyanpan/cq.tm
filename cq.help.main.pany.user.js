@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cq.help.main.pany
 // @namespace    http://tampermonkey.net/
-// @version      1.15
+// @version      1.16
 // @description  try to take over the world!
 // @author       pany
 // @match        *://rk.hlxy.db9x.com/*
@@ -45,7 +45,7 @@
         Main: null, Wzzb: null, Blood: null, BloodChild: null, Yiji: null, Chechi: null
         , Ice3: null, Sifang: null, Qunxiong: null, Cjzc: null, Shenmo: null, Yanhuo: null
         , Jilin: null, Xian: null, Hot: null, Ronglian: null, Dianfeng: null, Shentai: null
-        , MochaoID: null, Common: null
+        , MochaoID: null, Shenhuo: null, Syzf: null, Common: null
     };
 
     //begin main------------------------------------------------------------------------------
@@ -112,6 +112,12 @@
                 }
                 if (GLOBAL_ENABLE && nowHourPY >= 1925 && nowHourPY < 1930 && p_timerObj.Blood == null) {
                     beginTimer_f_Blood();
+                }
+                if (GLOBAL_ENABLE && nowHourPY >= 1220 && nowHourPY < 1225 && p_timerObj.Shenhuo == null) {
+                    beginTimer_f_Shenhuo();
+                }
+                if (GLOBAL_ENABLE && nowHourPY >= 1720 && nowHourPY < 1725 && p_timerObj.Syzf == null) {
+                    beginTimer_f_Syzf();
                 }
                 if (GLOBAL_ENABLE && nowHourPY >= 1955 && nowHourPY < 2000 && p_timerObj.Sifang == null) {
                     if (new Date().getDay() == 2 || new Date().getDay() == 5) { beginTimer_f_Sifang(); }
@@ -710,7 +716,6 @@
             if (para_globalBool == true) {
                 para_globalBool = false;
             }
-            var nowDate = f_getnowHourPY();
             if (gd.tianti.tiantiInfo.leftCount > 0) {
                 if (gd.map.curMapId != 40004) {
                     await f_Sleep(200); net.TiantiModel.ins().send3();
@@ -720,7 +725,7 @@
                     await f_Sleep(200); gd.arpgInst.setAutoFight(1);
                 }
             }
-            if (nowDate > expireDate || gd.tianti.tiantiInfo?.leftCount == 0) {
+            if (new Date() > expireDate || gd.tianti.tiantiInfo?.leftCount == 0) {
                 await f_Sleep(10 * 1e3);
                 stopTimer_f_Com("Dianfeng");
             }
@@ -768,6 +773,61 @@
             }
         }, 10000);
         p_alert_success('开始（jilin）');
+    }
+
+    function beginTimer_f_Shenhuo() {
+        console.log("benginTime-Shenhuo:" + new Date().toLocaleString());
+        if (p_timerObj.Shenhuo != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Shenhuo");
+            p_alert_success('运行中...');
+            return;
+        }
+        var expireDate = new Date(Date.now() + 5 * 60 * 1000);
+        p_timerObj.Shenhuo = setInterval(async () => {
+            if (para_globalBool == true) {
+                para_globalBool = false;
+            }
+            if (gd.map.curMapId != 9001) {
+                await f_Sleep(200); net.DuplicateModel.ins().send2(9001);
+            }
+            if (gd.arpgInst.autoFightType == 3) {
+                await f_Sleep(200); gd.arpgInst.setAutoFight(1);
+            }
+            if (new Date() > expireDate) {
+                await f_Sleep(10 * 1e3);
+                stopTimer_f_Com("Shenhuo");
+            }
+        }, 5000);
+        p_alert_success('开始（Shenhuo）');
+    }
+
+
+    function beginTimer_f_Syzf() {
+        console.log("benginTime-Syzf:" + new Date().toLocaleString());
+        if (p_timerObj.Syzf != null) {
+            console.log("Time:" + new Date().toLocaleString() + "已有运行中的定时器-Syzf");
+            p_alert_success('运行中...');
+            return;
+        }
+        var expireDate = new Date(Date.now() + 5 * 60 * 1000);
+        p_timerObj.Syzf = setInterval(async () => {
+            if (emIns.firstPlayer.fighterObject.delayhp == 0) {
+                await f_Sleep(400); net.MapModel.ins().send25(1);//clickCanvasAt(1130, 400);
+            }
+            if (para_globalBool == true) {
+                para_globalBool = false;
+            }
+            if (gd.map.curMapId != 4092 && gd.arpgInst.WorldBossCountInfo > 0) {
+                await f_Sleep(200); net.WorldrankModel.ins().send6(4903);
+            }
+            if (gd.arpgInst.autoFightType == 3) {
+                await f_Sleep(200); gd.arpgInst.setAutoFight(1);
+            }
+            if (new Date() > expireDate) {
+                stopTimer_f_Com("Syzf");
+            }
+        }, 5000);
+        p_alert_success('开始（Syzf）');
     }
 
     function beginTimer_f_Yanhuo() {

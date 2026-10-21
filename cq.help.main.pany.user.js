@@ -729,7 +729,7 @@
                 await f_Sleep(10 * 1e3);
                 stopTimer_f_Com("Dianfeng");
             }
-        }, 2000);
+        }, 4000);
         p_alert_success('开始（Dianfeng）');
     }
 
